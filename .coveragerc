@@ -9,4 +9,4 @@ omit =
     */__init__.py
     */.pytest_cache/*
     tests/*
-    
+    */home/geo/.local/share/virtualenvs/*

@@ -1,1 +1,4 @@
 __pycache*
+pytest_cache
+.coverage
+.coveragerc
