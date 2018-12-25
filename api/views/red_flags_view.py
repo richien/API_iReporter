@@ -76,7 +76,13 @@ class RedFlagsView(MethodView):
                 message = {"status" : 400, "data" : "Incident[Red-flag] - not created"}
                 return jsonify(message), 400
             incidents_data['data'].append(red_flag.to_dict())
-            message = {"status" : 201, "data" : red_flag.to_dict()}
+            red_flag_id = red_flag.id
+            message = {"status" : 201, 
+                        "data" : {
+                                "id" : red_flag_id, 
+                                "message" : "Created red-flag record"
+                                }
+                        }
             return jsonify(message), 201
         except Exception as error:
             return jsonify(error), 400
