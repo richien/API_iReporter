@@ -3,7 +3,7 @@ from api.models.incident_model  import Incident
 from datetime import date, datetime
 
 
-class TestIncident(unittest.TestCase):
+class TestIncidentModel(unittest.TestCase):
 
     def test_initialize_incident_without_id(self):
         kwargs = {  

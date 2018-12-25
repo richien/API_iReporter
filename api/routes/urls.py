@@ -9,3 +9,4 @@ class Routes:
         app.add_url_rule('/api/v1/red-flags', defaults={'red_flag_id':None},
                             view_func=red_flags_view, methods=['GET'])
         app.add_url_rule('/api/v1/red-flags/<int:red_flag_id>', view_func=red_flags_view, methods=['GET'])
+        app.add_url_rule('/api/v1/red-flags', view_func=red_flags_view, methods=['POST'])

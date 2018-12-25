@@ -23,6 +23,7 @@ class RedFlagsView(MethodView):
     
     
     def get(self, red_flag_id):
+
         if red_flag_id is None:
             json_red_flags = []
             for data in incidents_data['data']:
@@ -60,3 +61,22 @@ class RedFlagsView(MethodView):
                     return jsonify(message), 404
             except Exception as error:
                 return jsonify(error), 400
+
+    def post(self):
+       
+        request_data = request.get_json()
+        try:
+            if 'createdBy' not in request_data.keys() or 'type' not in request_data.keys() or 'location' not in request_data.keys() or 'status' not in request_data.keys() or 'title' not in request_data.keys():         
+                message = {"status" : 400, "data" : "Invalid request body - Required fields missing in request body"}
+                return jsonify(message), 400
+            red_flag = Incident(createdBy=request_data['createdBy'], type=request_data['type'],
+            location=request_data['location'], status=request_data['status'], images=request_data['images'],
+            videos=request_data['videos'], comment=request_data['comment'], title=request_data['title'])
+            if not type(red_flag) is Incident:
+                message = {"status" : 400, "data" : "Incident[Red-flag] - not created"}
+                return jsonify(message), 400
+            incidents_data['data'].append(red_flag.to_dict())
+            message = {"status" : 201, "data" : red_flag.to_dict()}
+            return jsonify(message), 201
+        except Exception as error:
+            return jsonify(error), 400
