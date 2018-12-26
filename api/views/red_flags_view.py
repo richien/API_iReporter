@@ -76,9 +76,9 @@ class RedFlagsView(MethodView):
     def put(self, red_flag_id):
 
         request_data = request.get_json()
-        if request_data['red_flag_id'] != red_flag_id:
-            message = {'status': 400, 'data': "Invalid request body" }
-            return jsonify(message), 400
+        if not "red_flag_id" in request_data.keys() or request_data['red_flag_id'] != red_flag_id:
+                message = {'status': 400, 'data': "Invalid request - red_flag_id not supplied or key error in request body" }
+                return jsonify(message), 400
         try:
             for index, data in enumerate(incidents_data['data']):
                 if incidents_data['data'][index]['id'] == red_flag_id:
@@ -88,14 +88,15 @@ class RedFlagsView(MethodView):
                         if not type(red_flag) is Incident:
                             message = {"status" : 400, "data" : {"id" : red_flag_id, "message" : "Incident not created!"}}
                             return jsonify(message)
-                        if request_data['location']:    
+                        if 'location' in request_data.keys() :    
                             updated_data = red_flag.update_fields(location=request_data['location'])
                             if updated_data:
                                 message = {
                                             "status" : 200, 
                                             "data" : {
                                                     "id" : red_flag_id,
-                                                    "message" : "Updated red-flag record's location"
+                                                    "message" : "Updated red-flag record's location",
+                                                    "content" : updated_data
                                                     }
                                                 }
                                 return jsonify(message), 200
@@ -108,7 +109,27 @@ class RedFlagsView(MethodView):
                                                         }
                                                 }
                                 return jsonify(message), 400
-
+                        elif 'comment' in request_data.keys():
+                            updated_data = red_flag.update_fields(comment=request_data['comment'])
+                            if updated_data:
+                                message = {
+                                            "status" : 200, 
+                                            "data" : {
+                                                    "id" : red_flag_id,
+                                                    "message" : "Updated red-flag record's comment",
+                                                    "content" : updated_data
+                                                    }
+                                                }
+                                return jsonify(message), 200
+                            else:
+                                message = {
+                                            "status" : 400,
+                                            "data" : {
+                                                    "id" : red_flag_id,
+                                                    "message" : "Failed to update red-flag record's comment"
+                                                        }
+                                                }
+                                return jsonify(message), 400
                 else:
                     message = {
                                 "status" : 404,

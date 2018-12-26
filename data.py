@@ -19,10 +19,10 @@ def update(red_flag_id, location=None, comment=None):
     
     for index, data in enumerate(incidents_data['data']):
         if incidents_data['data'][index]['id'] == red_flag_id:
-            if location:
+            if location and not comment:
                 data['location'] = location
                 return data
-            elif comment:
+            elif comment and not location:
                 data['comment'] = comment
                 return data
         else:

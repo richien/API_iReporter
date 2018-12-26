@@ -59,6 +59,19 @@ class TestRedFlagsRoute(unittest.TestCase):
         red_flag_id = input_data['red_flag_id']  
         response = self.app_tester.put('/api/v1/red-flags/{0}/location'.format(red_flag_id), json=input_data)
         response_data = json.loads(response.data.decode())
-        print("RESPONSE : {0}".format(response_data))
         self.assertEqual(response.status_code, 200)
         self.assertIn("Updated red-flag record's location", response_data['data']['message'])
+        self.assertEqual("11.12345, 12.12345", response_data['data']['content']['location'])
+    
+    def test_edit_red_flag_comment(self):
+        input_data =  input_data =  { 
+                        "red_flag_id" : 2,
+                        "comment" : "Comment updated"
+        }
+        red_flag_id = input_data['red_flag_id']  
+        response = self.app_tester.put('/api/v1/red-flags/{0}/comment'.format(red_flag_id), json=input_data)
+        response_data = json.loads(response.data.decode())
+        print("RESPONSE : {0}".format(response_data))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Updated red-flag record's comment", response_data['data']['message'])
+        self.assertEqual("Comment updated", response_data['data']['content']['comment'])
