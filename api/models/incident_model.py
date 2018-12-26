@@ -19,7 +19,7 @@ class Incident:
         
     def to_dict(self):
 
-        indent_dict = {
+        incident_dict = {
             'id' : self.id,
             'createdOn' : self.createdOn,
             'createdBy' : self.createdBy,
@@ -31,7 +31,10 @@ class Incident:
             'comment' : self.comment,
             'title' : self.title
         }
-        return indent_dict
+        return incident_dict
+
+    def create_incident(self):
+        return data.do_create(self.to_dict())
 
     def update_fields(self, location=None, comment=None):
 
@@ -45,3 +48,9 @@ class Incident:
             if updated_data:
                 self.comment = comment
             return updated_data
+
+    def delete_incident(self):
+        deleted = data.do_delete(self.id)
+        if deleted:
+            self.to_dict = None
+            return deleted

@@ -27,24 +27,50 @@ class RedFlagsView(MethodView):
         else:
             request_data = request.get_json()
             if not "red_flag_id" in request_data.keys() or request_data['red_flag_id'] != red_flag_id:
-                message = {'status': 400, 'data': "Invalid request - red_flag_id not supplied or key error in request body" }
+                message = {
+                    'status': 400, 
+                    'data': {
+                        "id" : red_flag_id,
+                        "message" : "Invalid request - invalid red_flag_id supplied or key error in request body" 
+                        }
+                }
                 return jsonify(message), 400
             red_flag_data = None
             try:
-                index = 0
-                while index < len(incidents_data['data']):
+                # index = 0
+                # while index < len(incidents_data['data']):
+                #     if incidents_data['data'][index]['id'] == red_flag_id:
+                #         data = incidents_data['data'][index]
+                #     index += 1
+                # if data:
+                #         red_flag = Incident(createdBy=data['createdBy'], type=data['type'],location=data['location'],
+                #          status=data['status'], images=data['images'],videos=data['videos'], comment=data['comment'], 
+                #          title=data['title'], id=data['id'], createdOn=data['createdOn'])
+                #         message = {'status': 200, 'data': red_flag.to_dict() }
+                #         return jsonify(message), 200
+                red_flag = None
+                for index, data in enumerate(incidents_data['data']):
                     if incidents_data['data'][index]['id'] == red_flag_id:
-                        data = incidents_data['data'][index]
-                    index += 1
-                if data:
-                        red_flag = Incident(createdBy=data['createdBy'], type=data['type'],location=data['location'],
-                         status=data['status'], images=data['images'],videos=data['videos'], comment=data['comment'], 
-                         title=data['title'], id=data['id'], createdOn=data['createdOn'])
-                        message = {'status': 200, 'data': red_flag.to_dict() }
-                        return jsonify(message), 200
+                            red_flag = Incident(id = red_flag_id, createdBy=data['createdBy'], type=data['type'],
+                                    location=data['location'], status=data['status'], images=data['images'],
+                                    videos=data['videos'], comment=data['comment'], title=data['title'])
+                            if not type(red_flag) is Incident:
+                                message = {
+                                    "status" : 400, 
+                                    "data" : {"id" : red_flag_id, 
+                                    "message" : "Incident not created!"
+                                    }
+                                }
+                                return jsonify(message)
+                if red_flag:
+                    message = {
+                                "status" : 200,
+                                "data" : red_flag.to_dict()
+                                }
+                    return jsonify(message), 200
                 else:
-                    message = {'status': 404, 'data': "No record  with red_flag_id: {0} was found".format(red_flag_id) }
-                    return jsonify(message), 404
+                        message = {'status': 404, 'data': "No record  with red_flag_id: {0} was found".format(red_flag_id) }
+                        return jsonify(message), 404                  
             except Exception as error:
                 return jsonify(error), 400
 
@@ -53,7 +79,12 @@ class RedFlagsView(MethodView):
         request_data = request.get_json()
         try:
             if 'createdBy' not in request_data.keys() or 'type' not in request_data.keys() or 'location' not in request_data.keys() or 'status' not in request_data.keys() or 'title' not in request_data.keys():         
-                message = {"status" : 400, "data" : "Invalid request body - Required fields missing in request body"}
+                message = {
+                    'status': 400, 
+                    'data': {
+                        "message" : "Invalid request body - error in request body, missing required fields" 
+                        }
+                }
                 return jsonify(message), 400
             red_flag = Incident(createdBy=request_data['createdBy'], type=request_data['type'],
             location=request_data['location'], status=request_data['status'], images=request_data['images'],
@@ -77,7 +108,13 @@ class RedFlagsView(MethodView):
 
         request_data = request.get_json()
         if not "red_flag_id" in request_data.keys() or request_data['red_flag_id'] != red_flag_id:
-                message = {'status': 400, 'data': "Invalid request - red_flag_id not supplied or key error in request body" }
+                message = {
+                    'status': 400, 
+                    'data': {
+                        "id" : red_flag_id,
+                        "message" : "Invalid request - invalid red_flag_id supplied or key error in request body" 
+                        }
+                }
                 return jsonify(message), 400
         try:
             for index, data in enumerate(incidents_data['data']):
@@ -141,4 +178,64 @@ class RedFlagsView(MethodView):
                     return jsonify(message), 404
         except Exception as error:
             return jsonify(error), 400    
-            
+
+    def delete(self, red_flag_id):
+
+        request_data = request.get_json()
+        if not "red_flag_id" in request_data.keys() or request_data['red_flag_id'] != red_flag_id:
+                message = {
+                    'status': 400, 
+                    'data': {
+                        "id" : red_flag_id,
+                        "message" : "Invalid request - invalid red_flag_id supplied or key error in request body" 
+                        }
+                }
+                return jsonify(message), 400
+        try:
+            is_deleted = False 
+            found = False
+            for index, data in enumerate(incidents_data['data']):
+                if incidents_data['data'][index]['id'] == red_flag_id:            
+                    red_flag = Incident(id = red_flag_id, createdBy=data['createdBy'], type=data['type'],
+                                        location=data['location'], status=data['status'], images=data['images'],
+                                        videos=data['videos'], comment=data['comment'], title=data['title'])
+                    is_deleted = red_flag.delete_incident()
+                    found = True
+            if not found:
+                message = {
+                            "status" : 404,
+                            "data" : {
+                                "id" : red_flag_id,
+                                "message" : "No record  with ID: {0} was found".format(red_flag_id)
+                                }
+                            }
+                return jsonify(message), 404 
+            if is_deleted:
+                message = {
+                            "status" : 200,
+                            "data" : {
+                                        "id" : red_flag_id,
+                                        "message" : "Red-flag record deleted",                                            
+                                        }
+                            }
+                return jsonify(message), 200
+            else:
+                message = {
+                            "status" : 200,
+                            "data" : {
+                                    "id" : red_flag_id,
+                                    "message" : "Delete error: Record found but not deleted"
+                                        }
+                            }
+                return jsonify(message), 200           
+        except Exception as error:
+            message = {
+                        "status" : 400,
+                        "data" : {
+                            "id" : red_flag_id,
+                            "message" : str(error)
+                            }
+                        }
+            return jsonify(message), 400
+
+   

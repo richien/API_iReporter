@@ -12,3 +12,4 @@ class Routes:
         app.add_url_rule('/api/v1/red-flags', view_func=red_flags_view, methods=['POST'])
         app.add_url_rule('/api/v1/red-flags/<int:red_flag_id>/location', view_func=red_flags_view, methods=['PUT'])
         app.add_url_rule('/api/v1/red-flags/<int:red_flag_id>/comment', view_func=red_flags_view, methods=['PUT'])
+        app.add_url_rule('/api/v1/red-flags/<int:red_flag_id>', view_func=red_flags_view, methods=['DELETE'])

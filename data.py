@@ -14,6 +14,10 @@ incidents_data = {
                         }
                     ]
     }
+def do_create(incident):
+    incidents_data['data'].append(incident)
+    return True
+
 
 def update(red_flag_id, location=None, comment=None):
     
@@ -27,3 +31,12 @@ def update(red_flag_id, location=None, comment=None):
                 return data
         else:
             return None
+
+def do_delete(red_flag_id):
+    deleted = False
+    for index, data in enumerate(incidents_data['data']):
+        if incidents_data['data'][index]['id'] == red_flag_id:
+            incidents_data['data'].remove(data)
+            deleted =  True
+    return deleted
+
