@@ -1,8 +1,10 @@
 from flask import jsonify
 import random
 from datetime import date
+import data
 
 class Incident:
+
     def __init__(self, id=None, createdOn=None, **kwargs):
         self.id = id or random.randint(10000, 90000)
         self.createdOn = createdOn or date.today()
@@ -16,6 +18,7 @@ class Incident:
         self.title = kwargs['title']
         
     def to_dict(self):
+
         indent_dict = {
             'id' : self.id,
             'createdOn' : self.createdOn,
@@ -29,3 +32,17 @@ class Incident:
             'title' : self.title
         }
         return indent_dict
+
+    def update_fields(self, location=None, comment=None):
+
+        updated_data = None
+        if location:
+            updated_data = data.update(self.id, location)
+            if updated_data:
+                self.location = location
+        elif comment:
+            updated_data = data.update(self.id, comment)
+            if updated_data:
+                self.comment = comment
+        
+        return updated_data

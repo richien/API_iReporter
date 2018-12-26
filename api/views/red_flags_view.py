@@ -1,23 +1,9 @@
 from flask import request, jsonify
 from flask.views import MethodView
 from api.models.incident_model import Incident
+import data
 
-incidents_data = { 
-                        "data" : [
-                            {  
-                                "id" : 2,
-                                "createdOn" : "12-12-2018",
-                                "createdBy" : 5000,
-                                "type" : "red-flag",
-                                "location" : "33.92300, 44.9084551",
-                                "status" : "draft",
-                                "images" : ["image_1.png", "image_2.jpg" ],
-                                "videos" : ["vid_1.mp4"],
-                                "comment" : "Accidental post!",
-                                "title": "Roads in poor condition"
-                        }
-                    ]
-    }
+incidents_data = data.incidents_data
 
 class RedFlagsView(MethodView):
     
@@ -40,8 +26,8 @@ class RedFlagsView(MethodView):
             return jsonify(message)
         else:
             request_data = request.get_json()
-            if request_data['red_flag_id'] != red_flag_id:
-                message = {'status': 400, 'data': "Invalid request body" }
+            if not "red_flag_id" in request_data.keys() or request_data['red_flag_id'] != red_flag_id:
+                message = {'status': 400, 'data': "Invalid request - red_flag_id not supplied or key error in request body" }
                 return jsonify(message), 400
             red_flag_data = None
             try:
@@ -86,3 +72,52 @@ class RedFlagsView(MethodView):
             return jsonify(message), 201
         except Exception as error:
             return jsonify(error), 400
+
+    def put(self, red_flag_id):
+
+        request_data = request.get_json()
+        if request_data['red_flag_id'] != red_flag_id:
+            message = {'status': 400, 'data': "Invalid request body" }
+            return jsonify(message), 400
+        try:
+            for index, data in enumerate(incidents_data['data']):
+                if incidents_data['data'][index]['id'] == red_flag_id:
+                        red_flag = Incident(id = red_flag_id, createdBy=data['createdBy'], type=data['type'],
+                                location=data['location'], status=data['status'], images=data['images'],
+                                videos=data['videos'], comment=data['comment'], title=data['title'])
+                        if not type(red_flag) is Incident:
+                            message = {"status" : 400, "data" : {"id" : red_flag_id, "message" : "Incident not created!"}}
+                            return jsonify(message)
+                        if request_data['location']:    
+                            updated_data = red_flag.update_fields(location=request_data['location'])
+                            if updated_data:
+                                message = {
+                                            "status" : 200, 
+                                            "data" : {
+                                                    "id" : red_flag_id,
+                                                    "message" : "Updated red-flag record's location"
+                                                    }
+                                                }
+                                return jsonify(message), 200
+                            else:
+                                message = {
+                                            "status" : 400,
+                                            "data" : {
+                                                    "id" : red_flag_id,
+                                                    "message" : "Failed to update red-flag record's location"
+                                                        }
+                                                }
+                                return jsonify(message), 400
+
+                else:
+                    message = {
+                                "status" : 404,
+                                "data" : {
+                                        "id" : red_flag_id, 
+                                        "message" : "No record  with ID: {0} was found".format(red_flag_id)
+                                        }
+                                    }
+                    return jsonify(message), 404
+        except Exception as error:
+            return jsonify(error), 400    
+            
