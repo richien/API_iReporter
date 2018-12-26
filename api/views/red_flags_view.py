@@ -37,17 +37,6 @@ class RedFlagsView(MethodView):
                 return jsonify(message), 400
             red_flag_data = None
             try:
-                # index = 0
-                # while index < len(incidents_data['data']):
-                #     if incidents_data['data'][index]['id'] == red_flag_id:
-                #         data = incidents_data['data'][index]
-                #     index += 1
-                # if data:
-                #         red_flag = Incident(createdBy=data['createdBy'], type=data['type'],location=data['location'],
-                #          status=data['status'], images=data['images'],videos=data['videos'], comment=data['comment'], 
-                #          title=data['title'], id=data['id'], createdOn=data['createdOn'])
-                #         message = {'status': 200, 'data': red_flag.to_dict() }
-                #         return jsonify(message), 200
                 red_flag = None
                 for index, data in enumerate(incidents_data['data']):
                     if incidents_data['data'][index]['id'] == red_flag_id:
