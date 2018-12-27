@@ -3,6 +3,7 @@ from api.models.incident_model  import Incident
 from api.models.user_model  import User
 from datetime import date, datetime
 import data
+from api.models.validator import Validate
 
 
 class TestIncidentModel(unittest.TestCase):
@@ -199,3 +200,8 @@ class TestUserModel(unittest.TestCase):
         for key in user.to_dict().keys():
             to_dict_keys.append(key)
         self.assertEqual(to_dict_keys, expectedKeys)
+
+    # def test_is_valid_email_format(self):
+    #     email = "email@email.com"
+    #     is_valid = Validate.is_valid_email_format(email)
+    #     self.assertTrue(is_valid)

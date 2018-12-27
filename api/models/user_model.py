@@ -1,6 +1,7 @@
 import random
 from datetime import date
 import data
+import re
 
 
 class User:
@@ -32,5 +33,7 @@ class User:
     def create_user(self):
         return data.do_create(self, self.to_dict())
     
-    def validate_email(self, email):
-        pass
+    
+
+
+    
