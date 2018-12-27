@@ -1,7 +1,7 @@
-from flask import jsonify
 import random
 from datetime import date
 import data
+
 
 class Incident:
 
@@ -34,7 +34,7 @@ class Incident:
         return incident_dict
 
     def create_incident(self):
-        return data.do_create(self.to_dict())
+        return data.do_create(self, self.to_dict())
 
     def update_fields(self, location=None, comment=None):
 
@@ -44,7 +44,6 @@ class Incident:
                 self.location = location
             return updated_data['data']
         elif comment:
-            print("COMMENT: {0}, ID: {1}".format(comment, self.id))
             updated_data = data.update(self.id, comment=comment)
             if updated_data['updated']:
                 self.comment = comment
@@ -55,3 +54,5 @@ class Incident:
         if deleted:
             self.to_dict = None
             return deleted
+
+

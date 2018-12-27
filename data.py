@@ -1,3 +1,6 @@
+from api.models import incident_model 
+from api.models import user_model 
+
 incidents_data = { 
                         "data" : [
                             {  
@@ -12,16 +15,24 @@ incidents_data = {
                                 "comment" : "Accidental post!",
                                 "title": "Roads in poor condition"
                         }
-                    ]
+                    ],
+
+                        "users" : [
+
+                        ]
     }
-def do_create(incident):
-    incidents_data['data'].append(incident)
-    return True
+def do_create(object, object_dict):
+
+    if type(object) is incident_model.Incident:
+        incidents_data['data'].append(object_dict)
+        return True
+    elif type(object) is user_model.User:
+        incidents_data['users'].append(object_dict)
+        return True
 
 
 def update(red_flag_id, location=None, comment=None):
-    print("COMMENT_DATA: {0}, LOCATION_DATA: {1}".format(comment, location))
-    print (incidents_data)
+
     result = {}
     for index, data in enumerate(incidents_data['data']):
         if incidents_data['data'][index]['id'] == red_flag_id:            
