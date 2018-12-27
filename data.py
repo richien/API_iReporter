@@ -20,17 +20,19 @@ def do_create(incident):
 
 
 def update(red_flag_id, location=None, comment=None):
-    
+    print("COMMENT_DATA: {0}, LOCATION_DATA: {1}".format(comment, location))
+    print (incidents_data)
+    result = {}
     for index, data in enumerate(incidents_data['data']):
-        if incidents_data['data'][index]['id'] == red_flag_id:
+        if incidents_data['data'][index]['id'] == red_flag_id:            
             if location and not comment:
                 data['location'] = location
-                return data
+                result = {'data' : data, 'updated' : True}
             elif comment and not location:
                 data['comment'] = comment
-                return data
-        else:
-            return None
+                result = {'data' : data, 'updated' : True}
+    
+    return result
 
 def do_delete(red_flag_id):
     deleted = False

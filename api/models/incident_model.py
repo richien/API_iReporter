@@ -40,14 +40,15 @@ class Incident:
 
         if location:
             updated_data = data.update(self.id, location=location)
-            if updated_data:
+            if updated_data['updated']:
                 self.location = location
-            return updated_data
+            return updated_data['data']
         elif comment:
+            print("COMMENT: {0}, ID: {1}".format(comment, self.id))
             updated_data = data.update(self.id, comment=comment)
-            if updated_data:
+            if updated_data['updated']:
                 self.comment = comment
-            return updated_data
+            return updated_data['data']
 
     def delete_incident(self):
         deleted = data.do_delete(self.id)
