@@ -5,7 +5,7 @@ import re
 
 
 class User:
-    def __init__(self,  **kwargs):
+    def __init__(self, **kwargs):
         self.id = random.randint(1000, 9000)    
         self.firstname = kwargs['firstname']
         self.lastname = kwargs['lastname']
@@ -32,6 +32,33 @@ class User:
 
     def create_user(self):
         return data.do_create(self, self.to_dict())
+
+    def check_user_exists(self):
+        username = data.check_username(self.username)
+        email = data.check_email(self.email)
+        print("Username: {0}, email: {1}".format(username, email))
+
+        if username and email:
+                message = {
+                    "exists" : True,
+                    "error" : "A user with that account already exists"
+                    }
+        elif username :
+            message = {
+                    "exists" : True,
+                    "error" : "A user with that username already exists"
+                }
+        elif email :
+            message = {
+                    "exists" : True,
+                    "error" : "A user with that email address already exists"
+                }
+        else:
+            message = {
+                    "exists" : False,
+                }
+ 
+        return message
     
     
 

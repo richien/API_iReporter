@@ -36,7 +36,7 @@ class RedFlagsView(MethodView):
                         }
                 }
                 return jsonify(message), 400
-            red_flag_data = None
+           # red_flag_data = None
             try:
                 red_flag = None
                 for index, data in enumerate(incidents_data['data']):
@@ -69,7 +69,7 @@ class RedFlagsView(MethodView):
        
         request_data = request.get_json()
         try:
-            validation_result = Validate.validate_post_request(request_data)
+            validation_result = Validate.validate_incident_post_request(request_data)
             if validation_result["is_valid"]:
                 red_flag = Incident(createdBy=request_data['createdBy'], type=request_data['type'],
                 location=request_data['location'], status=request_data['status'], images=request_data['images'],

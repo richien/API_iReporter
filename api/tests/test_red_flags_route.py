@@ -24,7 +24,6 @@ class TestRedFlagsRoute(unittest.TestCase):
         red_flag_id = input_data['red_flag_id']
         response = self.app_tester.get('/api/v1/red-flags/{0}'.format(red_flag_id), json=input_data)
         response_data = json.loads(response.data.decode())        
-        print("DATA : {0}".format(response_data))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(type(response_data['data']['id']), int)
         self.assertEqual(red_flag_id, response_data['data']['id'])

@@ -52,7 +52,7 @@ class Incident:
     def delete_incident(self):
         deleted = data.do_delete(self.id)
         if deleted:
-            self.to_dict = None
+            del self
             return deleted
 
 
