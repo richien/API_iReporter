@@ -8,7 +8,7 @@ secret_key = "esi5xKgrycPdTE5f9d1"
 class Authenticate:
 
     @staticmethod
-    def generate_token(user_id, isAdmin=False):
+    def generate_access_token(user_id, isAdmin=False):
         payload = {
             "user_id" : user_id,
             "isAdmin" : isAdmin,

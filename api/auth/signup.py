@@ -5,6 +5,7 @@ from api.views.validator import Validate
 from api.models.user_model import User
 import data
 from werkzeug.security import generate_password_hash
+from api.auth.authenticate import Authenticate
 
 
 users_data = data.incidents_data["users"]
@@ -35,18 +36,17 @@ class Signup(MethodView):
                     return jsonify(message), 400 
                 exists = user.check_user_exists()
                 if not exists['exists']:
-                    #TO_DO: Hash the passwords
-                    #password_hash = generate_password_hash(user.password, method='sha256')
+                    password_hash = generate_password_hash(user.password, method='sha256')
+                    user.password = password_hash
                     users_data.append(user.to_dict())
                     #token = create_access_token(user.username)
-
-                    user_id = user.id
+                    token = Authenticate.generate_access_token(user.id, user.isAdmin)
                     message = {
                         "status" : 201,
                         "data" : {
-                            "id" : user_id,
+                            "id" : user.id,
                             "message" : "{0} registered successfully".format(user.username),
-                            #"access_token" : token
+                            "access_token" : token
                             }
                         }
                     return jsonify(message), 201

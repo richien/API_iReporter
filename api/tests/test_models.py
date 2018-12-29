@@ -120,6 +120,7 @@ class TestUserModel(unittest.TestCase):
             'email' : "james@email.com",
             'phonenumber' : "778334334",
             'username' : "jamblu",
+            'password' : "enTer-123",
             'isAdmin' : True,
         }
         user = User(**kwargs)
@@ -135,6 +136,7 @@ class TestUserModel(unittest.TestCase):
             'email' : "james@email.com",
             'phonenumber' : "778334334",
             'username' : "jamblu",
+            'password' : "enTer-123",
             'isAdmin' : True,
         }
         user = User(**kwargs)
@@ -149,6 +151,7 @@ class TestUserModel(unittest.TestCase):
             'email' : "james@email.com",
             'phonenumber' : "778334334",
             'username' : "jamblu",
+            'password' : "enTer-123",
             'isAdmin' : True,
         }
         user = User(**kwargs)
@@ -163,6 +166,7 @@ class TestUserModel(unittest.TestCase):
             'email' : "james@email.com",
             'phonenumber' : "778334334",
             'username' : "jamblu",
+            'password' : "enTer-123",
             'isAdmin' : True,
         }
         user = User(**kwargs)
@@ -176,6 +180,7 @@ class TestUserModel(unittest.TestCase):
             'email' : "james@email.com",
             'phonenumber' : "778334334",
             'username' : "jamblu",
+            'password' : "enTer-123",
             'isAdmin' : True,
         }
         user = User(**kwargs)
@@ -184,7 +189,7 @@ class TestUserModel(unittest.TestCase):
         self.assertEqual(user.email, user_dict['email'])
 
     def test_to_dict_method_returns_all_expected__keys(self):
-        expectedKeys = ['id', 'firstname', 'lastname', 'othernames', 'email', 'phonenumber', 'username', 'registered', 'isAdmin']
+        expectedKeys = ['id', 'firstname', 'lastname', 'othernames', 'email', 'phonenumber', 'username', 'password', 'registered', 'isAdmin']
         kwargs = {
             'firstname' : "James",
             'lastname' : "Blunt",
@@ -192,6 +197,7 @@ class TestUserModel(unittest.TestCase):
             'email' : "james@email.com",
             'phonenumber' : "778334334",
             'username' : "jamblu",
+            'password' : "enTer-123",
             'isAdmin' : True,
         }
         user = User(**kwargs)

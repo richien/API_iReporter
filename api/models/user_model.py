@@ -13,6 +13,7 @@ class User:
         self.email = kwargs['email']
         self.phonenumber = kwargs['phonenumber']
         self.username = kwargs['username']
+        self.password = kwargs['password']
         self.registered = date.today()
         self.isAdmin = kwargs['isAdmin']
     
@@ -25,6 +26,7 @@ class User:
             'email' : self.email,
             'phonenumber' : self.phonenumber,
             'username' : self.username,
+            'password' : self.password,
             'registered' : self.registered,
             'isAdmin' : self.isAdmin
         }
