@@ -1,9 +1,12 @@
 import datetime
 from os import environ
-from flask_jwt import jwt
-from flask import request, jsonify
 
-secret_key = "esi5xKgrycPdTE5f9d1"
+from flask import jsonify, request
+from flask_jwt import JWT, current_identity, jwt, jwt_required
+
+from api import app
+
+secret_key = app.config["JWT_SECRET_KEY"]
 
 class Authenticate:
 

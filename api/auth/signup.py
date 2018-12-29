@@ -1,12 +1,12 @@
-from flask.views import MethodView
 from flask import jsonify, request
-from flask_jwt import JWT, jwt_required, current_identity
-from api.views.validator import Validate
-from api.models.user_model import User
-import data
+from flask.views import MethodView
+from flask_jwt import JWT, current_identity, jwt_required
 from werkzeug.security import generate_password_hash
-from api.auth.authenticate import Authenticate
 
+import data
+from api.auth.authenticate import Authenticate
+from api.models.user_model import User
+from api.views.validator import Validate
 
 users_data = data.incidents_data["users"]
 
@@ -39,7 +39,6 @@ class Signup(MethodView):
                     password_hash = generate_password_hash(user.password, method='sha256')
                     user.password = password_hash
                     users_data.append(user.to_dict())
-                    #token = create_access_token(user.username)
                     token = Authenticate.generate_access_token(user.id, user.isAdmin)
                     message = {
                         "status" : 201,
@@ -59,5 +58,4 @@ class Signup(MethodView):
             else:
                 return jsonify(validation_result['message']), 400
         except Exception as error:
-            return jsonify(str(error)), 400
-            
+            return jsonify({"status" : 400, "error": str(error)}), 400

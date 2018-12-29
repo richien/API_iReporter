@@ -46,6 +46,7 @@ def update(red_flag_id, location=None, comment=None):
     return result
 
 def do_delete(red_flag_id):
+    
     deleted = False
     for index, data in enumerate(incidents_data['data']):
         if incidents_data['data'][index]['id'] == red_flag_id:
@@ -54,23 +55,27 @@ def do_delete(red_flag_id):
     return deleted
 
 def check_username(username):
+    
     exists = False
     for index, user in enumerate(incidents_data['users']):
         if user['username'] == username:
             exists = True 
-            print("INDEX_FOUND: {0}, USER: {1}".format(index, user))
             break
-
-    print("USERS_saved: {0}, EXISTS : {1}".format(incidents_data['users'], exists))
     return exists
 
 def check_email(email):
+    
     exists = False
-    print("EMAIL_DATA: {0}".format(email))
     for index, user in enumerate(incidents_data['users']):
         if  user['email'] == email:
             exists = True 
             break
-        
-    print("USERS_saved: {0}, EXISTS : {1}".format(incidents_data['users'], exists))
     return exists
+
+def do_signin(email):
+    
+    user = None
+    for index, usr in enumerate(incidents_data['users']):
+        if check_email(email):
+            user = usr
+    return user

@@ -1,11 +1,11 @@
 import random
 from datetime import date
 import data
-import re
 
 
 class User:
     def __init__(self, **kwargs):
+
         self.id = random.randint(1000, 9000)    
         self.firstname = kwargs['firstname']
         self.lastname = kwargs['lastname']
@@ -15,9 +15,10 @@ class User:
         self.username = kwargs['username']
         self.password = kwargs['password']
         self.registered = date.today()
-        self.isAdmin = kwargs['isAdmin']
+        self.isAdmin = kwargs['isAdmin'] 
     
     def to_dict(self):
+
         user_dict = {
             'id' : self.id,
             'firstname' : self.firstname,
@@ -33,13 +34,13 @@ class User:
         return user_dict
 
     def create_user(self):
+
         return data.do_create(self, self.to_dict())
 
     def check_user_exists(self):
+        
         username = data.check_username(self.username)
         email = data.check_email(self.email)
-        print("Username: {0}, email: {1}".format(username, email))
-
         if username and email:
                 message = {
                     "exists" : True,
@@ -59,7 +60,6 @@ class User:
             message = {
                     "exists" : False,
                 }
- 
         return message
     
     
