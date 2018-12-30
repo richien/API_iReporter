@@ -5,6 +5,7 @@ from api.auth.signin import Signin
 
 class Routes:
     
+    
     @staticmethod
     def fetch_urls(app):
         red_flags_view = RedFlagsView.as_view('redflag')
