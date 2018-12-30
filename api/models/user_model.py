@@ -4,9 +4,9 @@ import data
 
 
 class User:
-    def __init__(self, **kwargs):
+    def __init__(self, user_id=None, **kwargs):
 
-        self.id = random.randint(1000, 9000)    
+        self.id = user_id or random.randint(1000, 9000)    
         self.firstname = kwargs['firstname']
         self.lastname = kwargs['lastname']
         self.othernames = kwargs['othernames'] 

@@ -20,7 +20,6 @@ class Signin(MethodView):
             password = request_data["password"]
 
             user_data = data.do_signin(email)
-            print(f'USER_DATA : {user_data}')
             if user_data:
                 user = User(
                                 id = user_data['id'],
@@ -33,7 +32,6 @@ class Signin(MethodView):
                                 password=user_data["password"],
                                 isAdmin=user_data["isAdmin"]
                             )
-                print(f'USER_OBJ : {user.to_dict()}')
                 if check_password_hash(user.password, password):
                     token = Authenticate.generate_access_token(user.id, user.isAdmin)
                     message = {
