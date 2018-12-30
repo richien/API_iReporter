@@ -10,4 +10,4 @@ Routes.fetch_urls(app)
 
 @app.errorhandler(404)
 def page_not_founddd(e):
-    return jsonify({"status" : 404, "error" : "Unknown URL entered"})
+    return jsonify({"status" : 404, "error" : "Unknown URL entered"}), 404
