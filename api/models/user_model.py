@@ -36,7 +36,8 @@ class User:
     def create_user(self):
 
         return data.do_create(self, self.to_dict())
-
+    
+                        
     def check_user_exists(self):
         
         username = data.check_username(self.username)

@@ -22,7 +22,7 @@ class Signin(MethodView):
             user_data = data.do_signin(email)
             if user_data:
                 user = User(
-                                id = user_data['id'],
+                                user_id = user_data['id'],
                                 firstname=user_data['firstname'],
                                 lastname=user_data["lastname"],
                                 othernames=user_data["othernames"],
