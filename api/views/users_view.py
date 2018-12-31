@@ -51,6 +51,7 @@ class UsersView(MethodView):
                 return jsonify(message), 400
 
         else:
+            
             message = {
                 "status" : 200,
                 "data" : {
