@@ -18,8 +18,13 @@ class Signin(MethodView):
 
             email = request_data["email"]
             password = request_data["password"]
+            user_data = None
 
-            user_data = data.do_signin(email)
+            for index, usr in enumerate(users_data):
+                if usr['email'] == email:
+                    user_data = usr
+                    break
+
             if user_data:
                 user = User(
                                 user_id = user_data['id'],

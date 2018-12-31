@@ -78,4 +78,6 @@ def do_signin(email):
     for index, usr in enumerate(incidents_data['users']):
         if check_email(email):
             user = usr
+            print(f'USER : {user}')
+            break
     return user
