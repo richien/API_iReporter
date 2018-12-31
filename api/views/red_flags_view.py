@@ -36,7 +36,6 @@ class RedFlagsView(MethodView):
                         }
                 }
                 return jsonify(message), 400
-           # red_flag_data = None
             try:
                 red_flag = None
                 for index, data in enumerate(incidents_data['data']):

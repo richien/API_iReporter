@@ -8,7 +8,7 @@ from api.auth.authenticate import Authenticate
 from api.models.user_model import User
 from api.views.validator import Validate
 
-users_data = data.incidents_data["users"]
+users = data.incidents_data["users"]
 
 class Signup(MethodView):
 
@@ -38,7 +38,7 @@ class Signup(MethodView):
                 if not exists['exists']:
                     password_hash = generate_password_hash(user.password, method='sha256')
                     user.password = password_hash
-                    users_data.append(user.to_dict())
+                    users.append(user.to_dict())
                     token = Authenticate.generate_access_token(user.id, user.isAdmin)
                     message = {
                         "status" : 201,
