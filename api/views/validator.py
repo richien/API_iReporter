@@ -2,6 +2,7 @@ class Validate:
 
     @staticmethod
     def validate_incident_post_request(request):
+        
         required_fields = [
             "createdBy",
             "type",
@@ -28,6 +29,7 @@ class Validate:
 
     @staticmethod
     def validate_signup_details(request):
+
         required_fields = [
             "firstname",
             "lastname",
@@ -68,10 +70,35 @@ class Validate:
 
     @staticmethod
     def is_empty_string(string):
+
         if string.replace(" ", "") ==  "":
             return True
         else:
             return False
+
+    @staticmethod
+    def validate_signin_request(request):
+     
+        is_valid = True
+        message = None
+        if "email" not in request.keys():
+            if "username" not in request.keys():
+                message = {
+                        'status': 400, 
+                        'error': {
+                            "message" : "Invalid request body - error in request body, missing required field 'username' or 'email" 
+                            }
+                    }
+                is_valid = False
+        elif "password" not in request.keys():
+            message = {
+                     'status': 400, 
+                     'error': {
+                         "message" : "Invalid request body - error in request body, missing required field 'password'" 
+                         }
+                }
+            is_valid = False
+        return {"is_valid" : is_valid, "message" : message} 
 
 
                  

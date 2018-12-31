@@ -5,8 +5,9 @@ from werkzeug.security import check_password_hash
 import data
 from api.models.user_model import User
 from api.auth.authenticate import Authenticate
+from api.views.validator import Validate
 
-users_data = data.incidents_data["users"]
+users = data.incidents_data["users"]
 
 class Signin(MethodView):
 
@@ -15,13 +16,29 @@ class Signin(MethodView):
         request_data = request.get_json()
 
         try:
+            is_valid_request = Validate.validate_signin_request(request_data)
+            
+            if is_valid_request["is_valid"]:
+                if "email" in request_data.keys():
+                    email = request_data["email"]
+                    username = None
+                if "username" in request_data.keys():
+                    username = request_data["username"]
+                    email=None
+                password = request_data["password"]
+                user_data = None               
+            else:
+                message = {
+                    "status" : 400,
+                    "error" : is_valid_request["message"]
+                }
+                return jsonify(message), 400
 
-            email = request_data["email"]
-            password = request_data["password"]
-            user_data = None
-
-            for index, usr in enumerate(users_data):
-                if usr['email'] == email:
+            for index, usr in enumerate(users):        
+                if email and usr['email'] == email:
+                    user_data = usr
+                    break
+                elif usr['username'] == username:
                     user_data = usr
                     break
 
@@ -43,7 +60,7 @@ class Signin(MethodView):
                         "status" : 200,
                         "data" : {
                             "id" : user.id,
-                            "message" : f'{email} was successfully signed in',
+                            "message" : f'{email or username} was successfully signed in',
                             "access_token" : token
                         }
                     }
@@ -57,7 +74,7 @@ class Signin(MethodView):
             else:
                 message = {
                     "status" : 401,
-                    "error" : f'Unauthorized - User with email {email} not found'
+                    "error" : f'Unauthorized - User with credentials {email or username} not found'
                 }
                 return jsonify(message), 401
             

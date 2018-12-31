@@ -143,9 +143,9 @@ class TestAuthenticationRoutes(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn("pms@email.com was successfully signed in", response_data["data"]["message"])
         self.assertTrue(response_data["data"]["access_token"])
-        #self.assertEqual(token, response_data["data"]["access_token"])
 
-    def test_sign_in_with_invalid_email(self):
+
+    def test_sign_in_with_invalid_email_and_valid_password(self):
 
         input_data = {
             "firstname" : "Peter",
@@ -166,9 +166,33 @@ class TestAuthenticationRoutes(unittest.TestCase):
         response = self.app_tester.post('/api/v1/auth/signin', json=input_data)
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 401)
-        self.assertIn(f"User with email {input_data['email']} not found", response_data["error"])
+        self.assertIn(f"User with credentials {input_data['email']} not found", response_data["error"])
 
-    def test_sign_in_with_invalid_password(self):
+    def test_sign_in_with_invalid_email_and_password(self):
+
+        input_data = {
+            "firstname" : "Peter",
+            "lastname" : "Mercury",
+            "othernames" : "Simon",
+            "email" : "pms1@email.com",
+            "phonenumber" : "0713285332",
+            "username" : "pms1",
+            "password" : "W3l(0M3"
+        }
+        response = self.app_tester.post('/api/v1/auth/signup', json=input_data)
+        response_data = json.loads(response.data.decode())
+
+        input_data = {
+            "email" : "pete@email.com",
+            "password" : "password"
+        }
+        response = self.app_tester.post('/api/v1/auth/signin', json=input_data)
+        response_data = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 401)
+        self.assertIn(f"User with credentials {input_data['email']} not found", response_data["error"])
+
+
+    def test_sign_in_with_valid_email_and_invalid_password(self):
 
         input_data = {
                 "firstname" : "Peter",
@@ -184,6 +208,101 @@ class TestAuthenticationRoutes(unittest.TestCase):
 
         input_data = {
                 "email" : "pms2@email.com",
+                "password" : "password"
+            }
+        response = self.app_tester.post('/api/v1/auth/signin', json=input_data)
+        response_data = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 401)
+        self.assertIn(f"Unauthorized - Wrong signin credentials supplied", response_data["error"])
+        
+    def test_sign_in_with_valid_username_and_password(self):
+
+        input_data = {
+            "firstname" : "Peter",
+            "lastname" : "Mercury",
+            "othernames" : "Simon",
+            "email" : "pms3@email.com",
+            "phonenumber" : "0713285332",
+            "username" : "pms3",
+            "password" : "W3l(0M3"
+        }
+        response = self.app_tester.post('/api/v1/auth/signup', json=input_data)
+        response_data = json.loads(response.data.decode())
+        token = response_data["data"]["access_token"]
+
+        input_data = {
+            "username" : "pms3",
+            "password" : "W3l(0M3"
+        }
+        response = self.app_tester.post('/api/v1/auth/signin', json=input_data)
+        response_data = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(f"{input_data['username']} was successfully signed in", response_data["data"]["message"])
+        self.assertTrue(response_data["data"]["access_token"])
+
+    def test_sign_in_with_invalid_username_and_password(self):
+
+        input_data = {
+            "firstname" : "Peter",
+            "lastname" : "Mercury",
+            "othernames" : "Simon",
+            "email" : "pms1@email.com",
+            "phonenumber" : "0713285332",
+            "username" : "pms1",
+            "password" : "W3l(0M3"
+        }
+        response = self.app_tester.post('/api/v1/auth/signup', json=input_data)
+        response_data = json.loads(response.data.decode())
+
+        input_data = {
+            "username" : "pete@email.com",
+            "password" : "password"
+        }
+        response = self.app_tester.post('/api/v1/auth/signin', json=input_data)
+        response_data = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 401)
+        self.assertIn(f"User with credentials {input_data['username']} not found", response_data["error"])
+
+
+    def test_sign_in_with_invalid_username_and_valid_password(self):
+
+        input_data = {
+            "firstname" : "Peter",
+            "lastname" : "Mercury",
+            "othernames" : "Simon",
+            "email" : "pms4@email.com",
+            "phonenumber" : "0713285332",
+            "username" : "pms4",
+            "password" : "W3l(0M3"
+        }
+        response = self.app_tester.post('/api/v1/auth/signup', json=input_data)
+        response_data = json.loads(response.data.decode())
+
+        input_data = {
+            "username" : "pete",
+            "password" : "W3l(0M3"
+        }
+        response = self.app_tester.post('/api/v1/auth/signin', json=input_data)
+        response_data = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 401)
+        self.assertIn(f"User with credentials {input_data['username']} not found", response_data["error"])
+
+    def test_sign_in_with_valid_username_and_invalid_password(self):
+
+        input_data = {
+                "firstname" : "Peter",
+                "lastname" : "Mercury",
+                "othernames" : "Simon",
+                "email" : "pmerc@email.com",
+                "phonenumber" : "0713285332",
+                "username" : "pete",
+                "password" : "W3l(0M3"
+            }
+        response = self.app_tester.post('/api/v1/auth/signup', json=input_data)
+        response_data = json.loads(response.data.decode())
+
+        input_data = {
+                "username" : "pete",
                 "password" : "password"
             }
         response = self.app_tester.post('/api/v1/auth/signin', json=input_data)
