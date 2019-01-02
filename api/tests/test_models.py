@@ -141,7 +141,6 @@ class TestUserModel(unittest.TestCase):
         }
         user = User(**kwargs)
         self.assertTrue(user.create_user())
-        #self.assertEqual("James", data.incidents_data['users'][0]['firstname'])
 
     def test_user_has_id(self):
         kwargs = {
@@ -203,6 +202,24 @@ class TestUserModel(unittest.TestCase):
         user = User(**kwargs)
         to_dict_keys = []
         for key in user.to_dict().keys():
+            to_dict_keys.append(key)
+        self.assertEqual(to_dict_keys, expectedKeys)
+
+    def test_to_dict_minimal_method_returns_all_expected__keys(self):
+        expectedKeys = ['id', 'firstname', 'lastname', 'othernames', 'email', 'phonenumber', 'username', 'registered', 'isAdmin']
+        kwargs = {
+            'firstname' : "James",
+            'lastname' : "Blunt",
+            'othernames' : "",
+            'email' : "james@email.com",
+            'phonenumber' : "778334334",
+            'username' : "jamblu",
+            'password' : "enTer-123",
+            'isAdmin' : True,
+        }
+        user = User(**kwargs)
+        to_dict_keys = []
+        for key in user.to_dict_minimal().keys():
             to_dict_keys.append(key)
         self.assertEqual(to_dict_keys, expectedKeys)
 

@@ -1,6 +1,7 @@
 import random
 from datetime import date
 import data
+import re
 
 
 class User:
@@ -32,6 +33,21 @@ class User:
             'isAdmin' : self.isAdmin
         }
         return user_dict
+    
+    def to_dict_minimal(self):
+
+        user_dict = {
+            'id' : self.id,
+            'firstname' : self.firstname,
+            'lastname' : self.lastname,
+            'othernames' : self.othernames,
+            'email' : self.email,
+            'phonenumber' : self.phonenumber,
+            'username' : self.username,
+            'registered' : self.registered,
+            'isAdmin' : self.isAdmin
+        }
+        return user_dict        
 
     def create_user(self):
 
@@ -62,6 +78,15 @@ class User:
                     "exists" : False,
                 }
         return message
+
+    # def is_valid_password(self, pwd):
+        
+    #     is_valid = True
+
+    #     if len(pwd) < 8:
+    #         is_valid = False
+    #     elif  
+
     
     
     
