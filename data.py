@@ -57,8 +57,8 @@ def do_delete(red_flag_id):
 def check_username(username):
     
     exists = False
-    for index, user in enumerate(incidents_data['users']):
-        if user['username'] == username:
+    for user in enumerate(incidents_data['users']):
+        if user[1]['username'] == username:
             exists = True 
             break
     return exists
@@ -66,8 +66,8 @@ def check_username(username):
 def check_email(email):
     
     exists = False
-    for index, user in enumerate(incidents_data['users']):
-        if  user['email'] == email:
+    for user in enumerate(incidents_data['users']):
+        if  user[1]['email'] == email:
             exists = True 
             break
     return exists
@@ -75,9 +75,9 @@ def check_email(email):
 def do_signin(email):
     
     user = None
-    for index, usr in enumerate(incidents_data['users']):
+    for usr in enumerate(incidents_data['users']):
         if check_email(email):
-            user = usr
+            user = usr[1]
             print(f'USER : {user}')
             break
     return user

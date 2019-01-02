@@ -132,7 +132,7 @@ class TestAuthenticationRoutes(unittest.TestCase):
         }
         response = self.app_tester.post('/api/v1/auth/signup', json=input_data)
         response_data = json.loads(response.data.decode())
-        token = response_data["data"]["access_token"]
+        #token = response_data["data"]["access_token"]
 
         input_data = {
             "email" : "pms@email.com",
@@ -228,7 +228,7 @@ class TestAuthenticationRoutes(unittest.TestCase):
         }
         response = self.app_tester.post('/api/v1/auth/signup', json=input_data)
         response_data = json.loads(response.data.decode())
-        token = response_data["data"]["access_token"]
+        #token = response_data["data"]["access_token"]
 
         input_data = {
             "username" : "pms3",

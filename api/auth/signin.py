@@ -34,12 +34,12 @@ class Signin(MethodView):
                 }
                 return jsonify(message), 400
 
-            for index, usr in enumerate(users):        
-                if email and usr['email'] == email:
-                    user_data = usr
+            for usr in enumerate(users):        
+                if email and usr[1]['email'] == email:
+                    user_data = usr[1]
                     break
-                elif usr['username'] == username:
-                    user_data = usr
+                elif usr[1]['username'] == username:
+                    user_data = usr[1]
                     break
 
             if user_data:

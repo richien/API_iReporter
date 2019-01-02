@@ -13,18 +13,18 @@ class UsersView(MethodView):
         if user_id is None:
             users_list = []
             try:
-                for index, usr in enumerate(users):
+                for usr in enumerate(users):
                     user = User(
-                                user_id=usr['id'],
-                                firstname=usr['firstname'],
-                                lastname=usr['lastname'],
-                                othernames=usr['othernames'],
-                                email=usr['email'],
-                                phonenumber=usr['phonenumber'],
-                                username=usr['username'],
-                                password=usr["password"],
-                                registered=usr['registered'],
-                                isAdmin=usr['isAdmin']
+                                user_id=usr[1]['id'],
+                                firstname=usr[1]['firstname'],
+                                lastname=usr[1]['lastname'],
+                                othernames=usr[1]['othernames'],
+                                email=usr[1]['email'],
+                                phonenumber=usr[1]['phonenumber'],
+                                username=usr[1]['username'],
+                                password=usr[1]["password"],
+                                registered=usr[1]['registered'],
+                                isAdmin=usr[1]['isAdmin']
                             )
                     users_list.append(user)
 
@@ -64,19 +64,19 @@ class UsersView(MethodView):
                 return jsonify(message), 400
             try:
                 user = None
-                for index, usr in enumerate(users):
-                    if usr['id'] == user_id:
+                for usr in enumerate(users):
+                    if usr[1]['id'] == user_id:
                         user = User(
-                                    user_id=usr['id'],
-                                    firstname=usr['firstname'],
-                                    lastname=usr['lastname'],
-                                    othernames=usr['othernames'],
-                                    email=usr['email'],
-                                    phonenumber=usr['phonenumber'],
-                                    username=usr['username'],
-                                    password=usr["password"],
-                                    registered=usr['registered'],
-                                    isAdmin=usr['isAdmin']
+                                    user_id=usr[1]['id'],
+                                    firstname=usr[1]['firstname'],
+                                    lastname=usr[1]['lastname'],
+                                    othernames=usr[1]['othernames'],
+                                    email=usr[1]['email'],
+                                    phonenumber=usr[1]['phonenumber'],
+                                    username=usr[1]['username'],
+                                    password=usr[1]["password"],
+                                    registered=usr[1]['registered'],
+                                    isAdmin=usr[1]['isAdmin']
                                     ) 
                         if not type(user) is User:
                             message = {
