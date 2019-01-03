@@ -1,3 +1,5 @@
+from api.models.user_model import User
+
 class Validate:
 
     @staticmethod
@@ -54,6 +56,15 @@ class Validate:
                      'status': 400, 
                      'error': {
                          "message" : "Invalid request body -field '{0}' cannot be empty".format(field) 
+                         }
+                }
+                is_valid = False
+                break
+            elif field == "password" and not User.is_valid_password(request['password']):
+                message = {
+                     'status': 400, 
+                     'error': {
+                         "message" : "Password cannot be less than 8 characters" 
                          }
                 }
                 is_valid = False

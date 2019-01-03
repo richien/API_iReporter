@@ -16,7 +16,7 @@ class TestUsersRoute(unittest.TestCase):
             "email" : "hjones@email.com",
             "phonenumber" : "0773287332",
             "username" : "hjones",
-            "password" : "W3l(0M3"
+            "password" : "W3l(0M3_"
         }
         self.app_tester.post('/api/v1/auth/signup', json=input_data)
 
@@ -34,7 +34,7 @@ class TestUsersRoute(unittest.TestCase):
             "email" : "starry@email.com",
             "phonenumber" : "0773287332",
             "username" : "jstarr",
-            "password" : "W3l(0M3"
+            "password" : "W3l(0M3_"
         }
         response = self.app_tester.post('/api/v1/auth/signup', json=input_data)
         reponse_data = json.loads(response.data.decode())
@@ -56,7 +56,7 @@ class TestUsersRoute(unittest.TestCase):
             "email" : "starr@email.com",
             "phonenumber" : "0773287332",
             "username" : "starr",
-            "password" : "W3l(0M3"
+            "password" : "W3l(0M3_"
         }
         response = self.app_tester.post('/api/v1/auth/signup', json=input_data)
         reponse_data = json.loads(response.data.decode())

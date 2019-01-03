@@ -79,13 +79,14 @@ class User:
                 }
         return message
 
-    # def is_valid_password(self, pwd):
+    @staticmethod
+    def is_valid_password(pwd):
         
-    #     is_valid = True
+        is_valid = True
+        if len(pwd) < 8:
+            is_valid = False
 
-    #     if len(pwd) < 8:
-    #         is_valid = False
-    #     elif  
+        return is_valid  
 
     
     
