@@ -23,7 +23,7 @@ class Authenticate:
 
     @staticmethod
     def decode_token(token):
-        payload = jwt.decode(str(token), secret_key, algorithms="HS256")
+        payload = jwt.decode(str(token), secret_key, algorithm="HS256")
         return payload
 
     @staticmethod
