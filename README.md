@@ -146,7 +146,7 @@ Install virtual environment using the requirements.txt.
 
 * **Sample Call:**
 
-  `curl --header "Content-Type: application/json" --request PUT --data '{"red_flag_id":21622, "location" : "32.223, 43.990"}' https://api-ireporter-heroku.herokuapp.com/api/v1/red-flags/2/location`
+  `curl --header "Content-Type: application/json" --request PUT --data '{"red_flag_id":21622, "location" : "22.223, 33.990"}' https://api-ireporter-heroku.herokuapp.com/api/v1/red-flags/2/location`
 
 **Edit a red flag's comment**
 ----
