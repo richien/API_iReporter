@@ -4,6 +4,7 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/a6ce65585611a0f514e6/maintainability)](https://codeclimate.com/github/richien/API_iReporter/maintainability)
 
 The api endpoints to be integrated for the iReporter application of the Andela bootcamp challenge. 
+It can be accessed on [Heroku](https://api-ireporter-heroku.herokuapp.com).
 
 ## Getting Stated
 Install virtual environment using the requirements.txt.
@@ -234,3 +235,6 @@ Install virtual environment using the requirements.txt.
 * Python 3.7.1
 * Flask
 * Pytest
+
+### AUTHOR 
+* [Geoffrey Willis Barugahare](https://github.com/richien)
