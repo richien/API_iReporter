@@ -74,7 +74,7 @@ class RedFlagsView(MethodView):
                 location=request_data['location'], status=request_data['status'], images=request_data['images'],
                 videos=request_data['videos'], comment=request_data['comment'], title=request_data['title'])
                 if not type(red_flag) is Incident:
-                    message = {"status" : 400, "data" : "Incident[Red-flag] - not created"}
+                    message = {"status" : 400, "error" : "Incident[Red-flag] - not created"}
                     return jsonify(message), 400
                 incidents_data['data'].append(red_flag.to_dict())
                 red_flag_id = red_flag.id
