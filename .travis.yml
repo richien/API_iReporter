@@ -5,10 +5,8 @@ python:
 
 install:
 - pip install -r requirements.txt
-- pip install python-coveralls
-
 script:
-- python -m pytest --cov
+- python -m pytest --cov=tests
   
 after_success:
 - coveralls
