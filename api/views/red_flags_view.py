@@ -12,15 +12,15 @@ class RedFlagsView(MethodView):
     def get(self, red_flag_id):
 
         if not red_flag_id:
-            red_flags_list = []
+            red_flags = []
             for data in incidents_data['data']:
-                if data['type'] == 'red-flag':
+                if data['type'].lower() == 'red-flag':
                     red_flag = Incident(**data)
-                    red_flags_list.append(red_flag.to_dict())
-            if not red_flags_list:
+                    red_flags.append(red_flag.to_dict())
+            if not red_flags:
                 message = {'status': 200, 'data': "No records found" }
             else:
-                message = {'status': 200, 'data': red_flags_list }
+                message = {'status': 200, 'data': red_flags }
         else:
             request_data = request.get_json()
             try:

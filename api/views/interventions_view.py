@@ -38,3 +38,17 @@ class InterventionsView(MethodView):
         except Exception as error: 
             error_message.update({"error-type":str(error)})  
             return jsonify(error_message), error_message['status']
+
+    def get(self):
+        
+        interventions = []
+        for data in incidents:
+            if data['type'].lower() == 'intervention':
+                intervention = Incident(**data)
+                interventions.append(intervention.to_dict())
+        if not interventions:
+            message = {'status': 200, 'data': "No records found" }
+        else:
+                message = {'status': 200, 'data': interventions }
+
+        return jsonify(message), 200

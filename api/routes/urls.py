@@ -26,4 +26,4 @@ class Routes:
         app.add_url_rule('/api/v1/auth/signin', view_func=signin, methods=['POST'])
         app.add_url_rule('/api/v1/users', view_func=users_view, methods=['GET'])
         app.add_url_rule('/api/v1/users/<int:user_id>', view_func=users_view, methods=['GET'])
-        app.add_url_rule('/api/v1/interventions', view_func=interventions_view, methods=['POST'])
+        app.add_url_rule('/api/v1/interventions', view_func=interventions_view, methods=['GET','POST'])

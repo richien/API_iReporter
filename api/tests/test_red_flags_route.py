@@ -2,7 +2,9 @@ import unittest
 import json
 from api import app
 from datetime import datetime
+from data import incidents_data
 
+red_flags = incidents_data['data']
 
 class TestRedFlagsRoute(unittest.TestCase):
 
@@ -10,16 +12,51 @@ class TestRedFlagsRoute(unittest.TestCase):
 
         self.app_tester = app.test_client()
 
-    def test_get_red_flags(self):
+    def test_get_red_flags_with_data_present(self):
 
+        data = {  
+                "id" : 2,
+                "createdOn" : "12-12-2018",
+                "createdBy" : 5000,
+                "type" : "red-flag",
+                "location" : "33.92300, 44.9084551",
+                "status" : "draft",
+                "images" : ["image_1.png", "image_2.jpg" ],
+                "videos" : ["vid_1.mp4"],
+                "comment" : "Accidental post!",
+                "title": "Roads in poor condition"
+                        }
+        red_flags.append(data)
         response = self.app_tester.get('/api/v1/red-flags')
-        data = json.loads(response.data.decode())
+        response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 200)
-        self.assertIn('Roads in poor condition', data['data'][0]['title'])
-        self.assertEqual(200, data['status'])
+        self.assertIn(data, response_data['data'])
+        self.assertEqual(200, response_data['status'])
+
+    def test_get_red_flags_with_data_absent(self):
+        
+        red_flags.clear()
+        response = self.app_tester.get('/api/v1/red-flags')
+        response_data = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(200, response_data['status'])
+        self.assertIn ("No records found", response_data['data'])
 
     def test_get_red_flag_by_id(self):
 
+        data = {  
+                "id" : 2,
+                "createdOn" : "12-12-2018",
+                "createdBy" : 5000,
+                "type" : "red-flag",
+                "location" : "33.92300, 44.9084551",
+                "status" : "draft",
+                "images" : ["image_1.png", "image_2.jpg" ],
+                "videos" : ["vid_1.mp4"],
+                "comment" : "Accidental post!",
+                "title": "Roads in poor condition"
+                        }
+        red_flags.append(data)
         input_data = {"red_flag_id" : 2}
         red_flag_id = input_data['red_flag_id']
         response = self.app_tester.get('/api/v1/red-flags/{0}'.format(red_flag_id), json=input_data)
@@ -74,6 +111,19 @@ class TestRedFlagsRoute(unittest.TestCase):
     
     def test_edit_red_flag_location(self):
 
+        data = {  
+                "id" : 2,
+                "createdOn" : "12-12-2018",
+                "createdBy" : 5000,
+                "type" : "red-flag",
+                "location" : "33.92300, 44.9084551",
+                "status" : "draft",
+                "images" : ["image_1.png", "image_2.jpg" ],
+                "videos" : ["vid_1.mp4"],
+                "comment" : "Accidental post!",
+                "title": "Roads in poor condition"
+                        }
+        red_flags.append(data)
         input_data =  input_data =  { 
                         "red_flag_id" : 2,
                         "location" : "11.12345, 12.12345"
@@ -88,6 +138,19 @@ class TestRedFlagsRoute(unittest.TestCase):
     
     def test_edit_red_flag_comment(self):
 
+        data = {  
+                "id" : 2,
+                "createdOn" : "12-12-2018",
+                "createdBy" : 5000,
+                "type" : "red-flag",
+                "location" : "33.92300, 44.9084551",
+                "status" : "draft",
+                "images" : ["image_1.png", "image_2.jpg" ],
+                "videos" : ["vid_1.mp4"],
+                "comment" : "Accidental post!",
+                "title": "Roads in poor condition"
+                        }
+        red_flags.append(data)
         input_data =  input_data =  { 
                         "red_flag_id" : 2,
                         "comment" : "Comment updated"

@@ -1,26 +1,8 @@
 from api.models import incident_model 
 from api.models import user_model 
 
-incidents_data = { 
-                        "data" : [
-                            {  
-                                "id" : 2,
-                                "createdOn" : "12-12-2018",
-                                "createdBy" : 5000,
-                                "type" : "red-flag",
-                                "location" : "33.92300, 44.9084551",
-                                "status" : "draft",
-                                "images" : ["image_1.png", "image_2.jpg" ],
-                                "videos" : ["vid_1.mp4"],
-                                "comment" : "Accidental post!",
-                                "title": "Roads in poor condition"
-                        }
-                    ],
+incidents_data = { "data" : [], "users" : [] }
 
-                        "users" : [
-
-                        ]
-    }
 def do_create(object, object_dict):
 
     if type(object) is incident_model.Incident:
