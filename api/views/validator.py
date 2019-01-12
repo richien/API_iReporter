@@ -22,18 +22,14 @@ class Validate:
             if field not in request.keys():
                 message = {
                      'status': 400, 
-                     'error': {
-                         "message" : "Invalid request body - error in request body, missing required field '{0}'".format(field) 
-                         }
+                     'error': "Invalid request body - error in request body, missing required field '{0}'".format(field) 
                 }
                 is_valid = False
                 return {"is_valid" : is_valid, "message" : message} 
         if not Validate.is_valid_incident_type(request):
                 message = {
                      'status': 400, 
-                     'error': {
-                         "message" : "Invalid request body - invalid Incident type supplied" 
-                         }
+                     'error':  "Invalid request body - invalid Incident type supplied" 
                 }
                 is_valid = False
         return {"is_valid" : is_valid, "message" : message} 
@@ -42,7 +38,7 @@ class Validate:
     def is_valid_incident_type(request):
         
         is_valid = True
-        if request['type'] not in ['red-flag', 'intervention']:
+        if request['type'].lower() not in ['red-flag', 'intervention']:
             is_valid = False
         return is_valid
 

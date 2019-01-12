@@ -10,7 +10,7 @@ class TestRedFlagsRoute(unittest.TestCase):
 
         self.app_tester = app.test_client()
 
-    def test_get_red_flag_with_data(self):
+    def test_get_red_flags(self):
 
         response = self.app_tester.get('/api/v1/red-flags')
         data = json.loads(response.data.decode())
@@ -53,7 +53,24 @@ class TestRedFlagsRoute(unittest.TestCase):
         response = self.app_tester.post('/api/v1/red-flags', json=input_data)
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 400)
-        self.assertIn("Invalid request body", response_data["error"]["message"])
+        self.assertIn("Invalid request body", response_data["error"])
+
+    def test_create_red_flag_with_invalid_type_field(self):
+
+        input_data = {
+            "createdBy" : 1000,
+            "type" : "intervention",
+            "location" : "23.000, 55.90",
+            "status" : "draft",
+            "images" : ["image.png"],
+            "videos" : [],
+            "comment" : "Umeme employee asking for money to reconnect power.",
+            "title" : "No electricity after paying bill"
+        }
+        response = self.app_tester.post('/api/v1/red-flags', json=input_data)
+        response_data = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("field should be red-flag", response_data['error'])
     
     def test_edit_red_flag_location(self):
 

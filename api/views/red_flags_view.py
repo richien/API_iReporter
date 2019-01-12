@@ -52,22 +52,26 @@ class RedFlagsView(MethodView):
         try:
             validation_result = Validate.validate_incident_post_request(request_data)
             if validation_result["is_valid"]:
-                red_flag = Incident(**request_data)
-                incidents_data['data'].append(red_flag.to_dict())
-                red_flag_id = red_flag.id
-                message = {"status" : 201, 
-                            "data" : {
-                                    "id" : red_flag_id, 
-                                    "message" : "Created red-flag record"
-                                    }
-                            }
-                return jsonify(message), 201
+                if request_data['type'].lower() == 'red-flag':
+                    red_flag = Incident(**request_data)
+                    incidents_data['data'].append(red_flag.to_dict())
+                    red_flag_id = red_flag.id
+                    message = {"status" : 201, 
+                                "data" : {
+                                        "id" : red_flag_id, 
+                                        "message" : "Created red-flag record"
+                                        }
+                                }
+                    return jsonify(message), 201
+                else:
+                    error_message = {'status' : 400, 'error' : 'Type field should be red-flag'}
+                    raise Exception('Invalid request field')
             else:
                 error_message = validation_result['message']
                 raise Exception("Validation Error")
         except Exception as error:
             error_message.update({"error-type":str(error)})  
-            return jsonify(error_message), 400
+            return jsonify(error_message), error_message['status']
 
     def put(self, red_flag_id):
 

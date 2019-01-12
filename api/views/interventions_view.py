@@ -17,20 +17,24 @@ class InterventionsView(MethodView):
         try:
             validation_result = Validate.validate_incident_post_request(request_data)
             if validation_result["is_valid"]:
-                intervention = Incident(**request_data)
-                incidents.append(intervention.to_dict())
-                intervention_id = intervention.id
-                message = {
-                    'status' : 201,
-                    'data' : [{
-                        'id' : intervention_id,
-                        'message' : 'Created intervention record'
-                    }]
-                }
-                return jsonify(message), 201
+                if request_data['type'].lower() == 'intervention':
+                    intervention = Incident(**request_data)
+                    incidents.append(intervention.to_dict())
+                    intervention_id = intervention.id
+                    message = {
+                        'status' : 201,
+                        'data' : [{
+                            'id' : intervention_id,
+                            'message' : 'Created intervention record'
+                        }]
+                    }
+                    return jsonify(message), 201
+                else:
+                    error_message = {'status' : 400, 'error' : 'Type field should be intervention'}
+                    raise Exception('Invalid request field')
             else:
                 error_message = validation_result['message']
                 raise Exception("Validation Error")
         except Exception as error: 
             error_message.update({"error-type":str(error)})  
-            return jsonify(error_message), 400
+            return jsonify(error_message), error_message['status']
