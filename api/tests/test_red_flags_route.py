@@ -65,6 +65,52 @@ class TestRedFlagsRoute(unittest.TestCase):
         self.assertEqual(type(response_data['data']['id']), int)
         self.assertEqual(red_flag_id, response_data['data']['id'])
     
+    def test_get_red_flag_by_id_with_mismatch_in_request_id(self):
+
+        data = {  
+                "id" : 2,
+                "createdOn" : "12-12-2018",
+                "createdBy" : 5000,
+                "type" : "red-flag",
+                "location" : "33.92300, 44.9084551",
+                "status" : "draft",
+                "images" : ["image_1.png", "image_2.jpg" ],
+                "videos" : ["vid_1.mp4"],
+                "comment" : "Accidental post!",
+                "title": "Roads in poor condition"
+                        }
+        red_flags.append(data)
+        input_data = {"red_flag_id" : 211}
+        red_flag_id = data['id']
+        response = self.app_tester.get(f'/api/v1/red-flags/{red_flag_id}', json=input_data)
+        response_data = json.loads(response.data.decode())        
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(400, response_data['status'])
+        self.assertIn ("Invalid request", response_data['error'])
+    
+    def test_get_red_flag_by_id_with_invalid_key_in_request(self):
+
+        data = {  
+                "id" : 2,
+                "createdOn" : "12-12-2018",
+                "createdBy" : 5000,
+                "type" : "red-flag",
+                "location" : "33.92300, 44.9084551",
+                "status" : "draft",
+                "images" : ["image_1.png", "image_2.jpg" ],
+                "videos" : ["vid_1.mp4"],
+                "comment" : "Accidental post!",
+                "title": "Roads in poor condition"
+                        }
+        red_flags.append(data)
+        input_data = {"id" : 2}
+        red_flag_id = input_data['id']
+        response = self.app_tester.get(f'/api/v1/red-flags/{red_flag_id}', json=input_data)
+        response_data = json.loads(response.data.decode())        
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(400, response_data['status'])
+        self.assertIn ("Invalid request", response_data['error'])
+    
     def test_create_red_flag_with_data(self):
 
         input_data =  { 

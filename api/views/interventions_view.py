@@ -39,16 +39,47 @@ class InterventionsView(MethodView):
             error_message.update({"error-type":str(error)})  
             return jsonify(error_message), error_message['status']
 
-    def get(self):
-        
-        interventions = []
-        for data in incidents:
-            if data['type'].lower() == 'intervention':
-                intervention = Incident(**data)
-                interventions.append(intervention.to_dict())
-        if not interventions:
-            message = {'status': 200, 'data': "No records found" }
+    def get(self, intervention_id):
+        if not intervention_id:
+            interventions = []
+            for data in incidents:
+                if data['type'].lower() == 'intervention':
+                    intervention = Incident(**data)
+                    interventions.append(intervention.to_dict())
+            if not interventions:
+                message = {'status': 200, 'data': ["No records found"] }
+            else:
+                    message = {'status': 200, 'data': interventions }
         else:
-                message = {'status': 200, 'data': interventions }
-
+            request_data = request.get_json()
+            try:
+                if not "intervention_id" in request_data.keys() or request_data['intervention_id'] != intervention_id:
+                    error_message = {
+                        'status': 400, 
+                        'error': "Invalid request - invalid intervention_id supplied or key error in request body" 
+                    }
+                    raise KeyError("Invalid request")
+                intervention = None
+                for index, data in enumerate(incidents):
+                    if incidents[index]['id'] == intervention_id:
+                        intervention = Incident(**data)                       
+                if intervention:
+                    message = {
+                                "status" : 200,
+                                "data" : [{
+                                    "id" : intervention.id,
+                                    "message" : intervention.to_dict()
+                                }]
+                            }
+                else:
+                    message = {
+                                'status': 200, 
+                                'data': [ {
+                                    "id" : intervention_id,
+                                    "message" : f"No record  with intervention_id: {intervention_id} was found" 
+                                }]
+                    }
+            except KeyError as error:
+                error_message.update({"error-type":str(error)})  
+                return jsonify(error_message), 400
         return jsonify(message), 200
