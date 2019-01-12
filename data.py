@@ -72,12 +72,10 @@ def check_email(email):
             break
     return exists
 
-def do_signin(email):
+# def do_signin(email):
     
-    user = None
-    for usr in enumerate(incidents_data['users']):
-        if check_email(email):
-            user = usr[1]
-            print(f'USER : {user}')
-            break
-    return user
+#     for usr in enumerate(incidents_data['users']):
+#         if check_email(email):
+#             user = usr[1]
+#             break
+#     return user

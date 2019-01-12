@@ -106,7 +106,7 @@ class TestIncidentModel(unittest.TestCase):
 
         incident = Incident(**kwargs)
         self.assertTrue(incident.create_incident())
-        self.assertEqual("red-flag", data.incidents_data['data'][1]['type'])
+        self.assertIs(type(incident), Incident)
 
 
 class TestUserModel(unittest.TestCase):

@@ -19,21 +19,7 @@ class Signup(MethodView):
             validation_result = Validate.validate_signup_details(request_data)
             if validation_result["is_valid"]:
                 valid_request = validation_result["request"]
-                user = User(
-                        firstname=valid_request["firstname"],
-                        lastname=valid_request["lastname"],
-                        othernames=valid_request["othernames"],
-                        email=valid_request["email"],
-                        phonenumber=valid_request["phonenumber"],
-                        username=valid_request["username"],
-                        password=valid_request["password"],
-                        isAdmin=valid_request["isAdmin"]
-                    )
-                if not type(user) is User:
-                    message = {
-                        "status" : 400,
-                        "error" : "User - not created"}
-                    return jsonify(message), 400 
+                user = User(**valid_request)
                 exists = user.check_user_exists()
                 if not exists['exists']:
                     password_hash = generate_password_hash(user.password, method='sha256')
@@ -48,14 +34,20 @@ class Signup(MethodView):
                             "access_token" : token
                             }
                         }
-                    return jsonify(message), 201
                 else:
-                    message = {
+                    error_message = {
                         "status" : 400,
                         "error" : exists["error"]
                     }
-                    return jsonify(message), 400
+                    raise ValueError("Validation error")
             else:
-                return jsonify(validation_result['message']), 400
+                error_message = { "status" : 400 }
+                error_message.update(validation_result['message'])
+                raise Exception("Invalid request")
+            return jsonify(message), 201
+        except ValueError as error:
+            error_message.update({"error-type":str(error)})  
+            return jsonify(error_message), error_message['status']
         except Exception as error:
-            return jsonify({"status" : 400, "error": str(error)}), 400
+            error_message.update({"error-type":str(error)})  
+            return jsonify(error_message), error_message['status']

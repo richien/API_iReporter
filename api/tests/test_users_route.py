@@ -68,5 +68,5 @@ class TestUsersRoute(unittest.TestCase):
         response = self.app_tester.get(f'/api/v1/users/{user_id}', json=input_data)
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 400)
-        self.assertNotEqual(input_data["user_id"], response_data['error']["id"])
+        self.assertIn("Invalid request", response_data['error'])
         

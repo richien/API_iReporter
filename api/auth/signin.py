@@ -14,7 +14,6 @@ class Signin(MethodView):
     def post(self):
 
         request_data = request.get_json()
-
         try:
             is_valid_request = Validate.validate_signin_request(request_data)
             
@@ -28,12 +27,9 @@ class Signin(MethodView):
                 password = request_data["password"]
                 user_data = None               
             else:
-                message = {
-                    "status" : 400,
-                    "error" : is_valid_request["message"]
-                }
-                return jsonify(message), 400
-
+                error_message = { "status" : 400 }
+                error_message.update(is_valid_request["message"])
+                raise ValueError("Invalid request")
             for usr in enumerate(users):        
                 if email and usr[1]['email'] == email:
                     user_data = usr[1]
@@ -65,20 +61,22 @@ class Signin(MethodView):
                         }
                     }
                 else:
-                    message = {
+                    error_message = {
                         "status" : 401,
                         "error" : "Unauthorized - Wrong signin credentials supplied - Try again"
                     }
-                    return jsonify(message), 401
-
+                    raise Exception("Unauthorized")
             else:
-                message = {
+                error_message = {
                     "status" : 401,
                     "error" : f'Unauthorized - User with credentials {email or username} not found'
                 }
-                return jsonify(message), 401
-            
+                raise Exception("Unauthorized")   
             return jsonify(message), 200
-
+        except ValueError as error:
+            error_message.update({"error-type":str(error)})  
+            return jsonify(error_message), error_message['status']
         except Exception as error:
-            return jsonify({"status" : 400, "error" : str(error)}), 400
+            error_message.update({"error-type":str(error)})  
+            return jsonify(error_message), error_message['status']
+        

@@ -37,9 +37,8 @@ class TestAuthenticationRoutes(unittest.TestCase):
         }
         response = self.app_tester.post('/api/v1/auth/signup', json=input_data)
         response_data = json.loads(response.data.decode())
-        print("RESPONSE_DATA: {0}".format(response_data))
         self.assertEqual(response.status_code, 400)
-        self.assertIn("'firstname' cannot be empty", response_data["error"]["message"])
+        self.assertIn("'firstname' cannot be empty", response_data["error"])
 
     def test_signup_with_existing_username(self):
 

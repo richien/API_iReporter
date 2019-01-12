@@ -54,5 +54,6 @@ class Incident:
         if deleted:
             del self
             return deleted
-
+    
+    
 

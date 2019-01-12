@@ -29,14 +29,19 @@ class Authenticate:
     @staticmethod
     def retrieve_token_from_request(request):
         auth_header = request.headers.get("Authorization")
-        if not auth_header or "Bearer" not in auth_header:
-            message = {
-                "status" : 400,
-                "error" : "Invalid request header - No Authorization header or Bearer token found in request header"
-            }
-            return jsonify(message), 400
-        token = str(auth_header).split(" ")[1]
-        return token
+        try:
+            if not auth_header or "Bearer" not in auth_header:
+                error_message = {
+                    "status" : 400,
+                    "error" : "Invalid request header - No Authorization header or Bearer token found in request header"
+                }
+                raise Exception("Invalid request")
+            token = str(auth_header).split(" ")[1]
+            return token
+        except Exception as error:
+            error_message.update({"error-type":str(error)})  
+            return jsonify(error_message), error_message['status']
+
 
     @staticmethod
     def get_identity(request):
