@@ -1,7 +1,7 @@
 from api.models.user_model import User
 
-class Validate:
 
+class Validate:
 
     @staticmethod
     def validate_incident_post_request(request):

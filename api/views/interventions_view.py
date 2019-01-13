@@ -1,6 +1,6 @@
 from flask.views import MethodView
 from flask import jsonify, request
-from api.views.validator import Validate
+from api.validator import Validate
 from api.models.incident_model import Incident
 from data import incidents_data
 

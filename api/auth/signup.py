@@ -6,7 +6,7 @@ from werkzeug.security import generate_password_hash
 import data
 from api.auth.authenticate import Authenticate
 from api.models.user_model import User
-from api.views.validator import Validate
+from api.validator import Validate
 
 users = data.incidents_data["users"]
 
@@ -28,11 +28,11 @@ class Signup(MethodView):
                     token = Authenticate.generate_access_token(user.id, user.isAdmin)
                     message = {
                         "status" : 201,
-                        "data" : {
+                        "data" : [{
                             "id" : user.id,
                             "message" : "{0} registered successfully".format(user.username),
                             "access_token" : token
-                            }
+                            }]
                         }
                 else:
                     error_message = {

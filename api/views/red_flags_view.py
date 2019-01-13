@@ -2,7 +2,7 @@ from flask import request, jsonify
 from flask.views import MethodView
 from api.models.incident_model import Incident
 import data
-from api.views.validator import Validate
+from api.validator import Validate
 
 incidents_data = data.incidents_data
 
@@ -18,7 +18,7 @@ class RedFlagsView(MethodView):
                     red_flag = Incident(**data)
                     red_flags.append(red_flag.to_dict())
             if not red_flags:
-                message = {'status': 200, 'data': "No records found" }
+                message = {'status': 200, 'data': ["No records found"] }
             else:
                 message = {'status': 200, 'data': red_flags }
         else:
@@ -42,7 +42,7 @@ class RedFlagsView(MethodView):
                 else:
                     message = {
                                 'status': 200, 
-                                'data': [ {
+                                'data': [{
                                     "id" : red_flag_id,
                                     "message" : f"No record  with red_flag_id: {red_flag_id} was found" 
                                 }]
@@ -63,10 +63,10 @@ class RedFlagsView(MethodView):
                     incidents_data['data'].append(red_flag.to_dict())
                     red_flag_id = red_flag.id
                     message = {"status" : 201, 
-                                "data" : {
+                                "data" : [{
                                         "id" : red_flag_id, 
                                         "message" : "Created red-flag record"
-                                        }
+                                        }]
                                 }
                     return jsonify(message), 201
                 else:
@@ -105,11 +105,11 @@ class RedFlagsView(MethodView):
                     if updated_data:
                         message = {
                                     "status" : 200, 
-                                    "data" : {
+                                    "data" : [{
                                             "id" : red_flag_id,
                                             "message" : "Updated red-flag record's location",
                                             "content" : updated_data
-                                            }
+                                            }]
                                         }
                 else:
                     message = {
@@ -122,11 +122,11 @@ class RedFlagsView(MethodView):
                     if updated_data:
                         message = {
                                     "status" : 200, 
-                                    "data" : {
+                                    "data" : [{
                                             "id" : red_flag_id,
                                             "message" : "Updated red-flag record's comment",
                                             "content" : updated_data
-                                            }
+                                            }]
                                         }
                 else:
                     message = {
@@ -172,10 +172,10 @@ class RedFlagsView(MethodView):
             if is_deleted:
                 message = {
                             "status" : 200,
-                            "data" : {
+                            "data" : [{
                                         "id" : red_flag_id,
                                         "message" : "Red-flag record deleted",                                            
-                                        }
+                                        }]
                             }
             return jsonify(message), 200           
         except KeyError as error:

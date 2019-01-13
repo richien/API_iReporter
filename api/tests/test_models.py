@@ -222,3 +222,13 @@ class TestUserModel(unittest.TestCase):
             to_dict_keys.append(key)
         self.assertEqual(to_dict_keys, expectedKeys)
 
+    def test_is_valid_password_with_valid_password(self):
+        password = "password"
+        is_valid = User.is_valid_password(password)
+        self.assertTrue(is_valid)
+
+    def test_is_valid_password_with_invalid_password(self):
+        password = "passwd"
+        is_valid = User.is_valid_password(password)
+        self.assertFalse(is_valid)
+

@@ -139,8 +139,8 @@ class TestRedFlagsRoute(unittest.TestCase):
         response = self.app_tester.post('/api/v1/red-flags', json=input_data)
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 201)
-        self.assertIn("Created red-flag record", response_data['data']['message'])
-        self.assertIs(type(response_data['data']['id']), int)
+        self.assertIn("Created red-flag record", response_data['data'][0]['message'])
+        self.assertIs(type(response_data['data'][0]['id']), int)
 
     def test_create_red_flag_with_no_data(self):
 
@@ -191,8 +191,8 @@ class TestRedFlagsRoute(unittest.TestCase):
         response = self.app_tester.put('/api/v1/red-flags/{0}/location'.format(red_flag_id), json=input_data)
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 200)
-        self.assertIn("Updated red-flag record's location", response_data['data']['message'])
-        self.assertEqual("11.12345, 12.12345", response_data['data']['content']['location'])
+        self.assertIn("Updated red-flag record's location", response_data['data'][0]['message'])
+        self.assertEqual("11.12345, 12.12345", response_data['data'][0]['content']['location'])
     
     def test_edit_red_flag_comment(self):
 
@@ -218,8 +218,8 @@ class TestRedFlagsRoute(unittest.TestCase):
         response = self.app_tester.put('/api/v1/red-flags/{0}/comment'.format(red_flag_id), json=input_data)
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 200)
-        self.assertIn("Updated red-flag record's comment", response_data['data']['message'])
-        self.assertEqual("Comment updated", response_data['data']['content']['comment'])
+        self.assertIn("Updated red-flag record's comment", response_data['data'][0]['message'])
+        self.assertEqual("Comment updated", response_data['data'][0]['content']['comment'])
     
     def test_edit_red_flag_with_mismatch_in_request_id(self):
 
@@ -354,14 +354,14 @@ class TestRedFlagsRoute(unittest.TestCase):
 
         response = self.app_tester.post('/api/v1/red-flags', json=input_data)
         response_data = json.loads(response.data.decode())
-        red_flag_id = response_data['data']['id']
+        red_flag_id = response_data['data'][0]['id']
 
         input_data = {"red_flag_id" : red_flag_id}
         
         response = self.app_tester.delete('/api/v1/red-flags/{0}'.format(red_flag_id), json=input_data)
         response_data = json.loads(response.data)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(red_flag_id, response_data['data']['id'])
+        self.assertEqual(red_flag_id, response_data['data'][0]['id'])
     
     def test_delete_red_flag_with_mismatch_in_request_id(self):
 

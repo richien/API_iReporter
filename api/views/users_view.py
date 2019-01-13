@@ -12,39 +12,32 @@ class UsersView(MethodView):
 
         if user_id is None:
             users_list = []
-            try:
-                for usr in enumerate(users):
-                    user = User(
-                                user_id=usr[1]['id'],
-                                firstname=usr[1]['firstname'],
-                                lastname=usr[1]['lastname'],
-                                othernames=usr[1]['othernames'],
-                                email=usr[1]['email'],
-                                phonenumber=usr[1]['phonenumber'],
-                                username=usr[1]['username'],
-                                password=usr[1]["password"],
-                                registered=usr[1]['registered'],
-                                isAdmin=usr[1]['isAdmin']
-                            )
-                    users_list.append(user)
-                if users_list:
-                    message = {
+            for usr in enumerate(users):
+                user = User(
+                            user_id=usr[1]['id'],
+                            firstname=usr[1]['firstname'],
+                            lastname=usr[1]['lastname'],
+                            othernames=usr[1]['othernames'],
+                            email=usr[1]['email'],
+                            phonenumber=usr[1]['phonenumber'],
+                            username=usr[1]['username'],
+                            password=usr[1]["password"],
+                            registered=usr[1]['registered'],
+                            isAdmin=usr[1]['isAdmin']
+                        )
+                users_list.append(user)
+            if users_list:
+                message = {
                         "status" : 200,
-                        "data" : {
+                        "data" : [{
                             "message" : [u.to_dict_minimal() for u in users_list]
-                        }
+                        }]
                     }
-                else:
-                    message = {
+            else:
+                message = {
                         "status" : 200,
-                        "error" : "There are no users registered"
+                        "data" : ["There are no users registered"]
                     }
-            except Exception as error:
-                error_message = {
-                    "status" : 400,
-                    "error" : str(error)
-                }
-                return jsonify(error_message), 400
         else:
 
             request_data = request.get_json()
@@ -73,13 +66,13 @@ class UsersView(MethodView):
                 if user:
                     message = {
                         "status" : 200,
-                        "data" : {
+                        "data" : [{
                             "id" : user_id,
                             "message" : user.to_dict_minimal()
-                        }
+                        }]
                     }
                 else:
-                    message = {'status' : 200, 'data' : f'No user with ID: {user_id} was found'}
+                    message = {'status' : 200, 'data' : [f'No user with ID: {user_id} was found']}
             except KeyError as error:
                 error_message.update({"error-type":str(error)})  
                 return jsonify(error_message), error_message['status']
