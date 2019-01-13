@@ -111,6 +111,18 @@ class TestRedFlagsRoute(unittest.TestCase):
         self.assertEqual(400, response_data['status'])
         self.assertIn ("Invalid request", response_data['error'])
     
+    def test_get_red_flag_by_id_with_data_absent(self):
+
+        red_flags.clear()
+        input_data = {"red_flag_id" : 12}
+        red_flag_id = input_data['red_flag_id']
+        response = self.app_tester.get(f'/api/v1/red-flags/{red_flag_id}', json=input_data)
+        response_data = json.loads(response.data.decode())     
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(200, response_data['status'])
+        self.assertEqual ("No record  with red_flag_id: 12 was found", response_data['data'][0]['message'])
+
+    
     def test_create_red_flag_with_data(self):
 
         input_data =  { 
@@ -208,6 +220,124 @@ class TestRedFlagsRoute(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn("Updated red-flag record's comment", response_data['data']['message'])
         self.assertEqual("Comment updated", response_data['data']['content']['comment'])
+    
+    def test_edit_red_flag_with_mismatch_in_request_id(self):
+
+        data = {  
+                "id" : 2,
+                "createdOn" : "12-12-2018",
+                "createdBy" : 5000,
+                "type" : "red-flag",
+                "location" : "33.92300, 44.9084551",
+                "status" : "draft",
+                "images" : ["image_1.png", "image_2.jpg" ],
+                "videos" : ["vid_1.mp4"],
+                "comment" : "Accidental post!",
+                "title": "Roads in poor condition"
+                        }
+        red_flags.append(data)
+        input_data =  input_data =  { 
+                        "red_flag_id" : 22,
+                        "comment" : "Comment updated"
+        }
+        red_flag_id = data['id']
+        response = self.app_tester.put('/api/v1/red-flags/{0}/comment'.format(red_flag_id), json=input_data)
+        response_data = json.loads(response.data.decode())        
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(400, response_data['status'])
+        self.assertIn ("Invalid request", response_data['error'])
+    
+    def test_edit_red_flag_unknown_field_in_request_body(self):
+
+        data = {  
+                "id" : 2,
+                "createdOn" : "12-12-2018",
+                "createdBy" : 5000,
+                "type" : "red-flag",
+                "location" : "33.92300, 44.9084551",
+                "status" : "draft",
+                "images" : ["image_1.png", "image_2.jpg" ],
+                "videos" : ["vid_1.mp4"],
+                "comment" : "Accidental post!",
+                "title": "Roads in poor condition"
+                        }
+        red_flags.append(data)
+        input_data =  input_data =  { 
+                        "red_flag_id" : 2,
+                        "coment" : "Updated comment"
+        }
+
+        red_flag_id = input_data['red_flag_id']  
+        response = self.app_tester.put('/api/v1/red-flags/{0}/comment'.format(red_flag_id), json=input_data)
+        response_data = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 404)
+        self.assertIn("Invalid field in request body", response_data['error'])
+        
+
+    
+    def test_edit_red_flag_with_data_absent(self):
+
+        red_flags.clear()
+        input_data = {"red_flag_id" : 12}
+        red_flag_id = input_data['red_flag_id']
+        response = self.app_tester.put('/api/v1/red-flags/{0}/comment'.format(red_flag_id), json=input_data)
+        response_data = json.loads(response.data.decode())     
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(404, response_data['status'])
+        self.assertEqual ("No record  with ID:12 was found", response_data['error'])
+
+    def test_edit_red_flag_location_with_invalid_location(self):
+
+        data = {  
+                "id" : 2,
+                "createdOn" : "12-12-2018",
+                "createdBy" : 5000,
+                "type" : "red-flag",
+                "location" : "33.92300, 44.9084551",
+                "status" : "draft",
+                "images" : ["image_1.png", "image_2.jpg" ],
+                "videos" : ["vid_1.mp4"],
+                "comment" : "Accidental post!",
+                "title": "Roads in poor condition"
+                        }
+        red_flags.append(data)
+        input_data =  input_data =  { 
+                        "red_flag_id" : 2,
+                        "location" : "11.12345"
+        }
+
+        red_flag_id = input_data['red_flag_id']  
+        response = self.app_tester.put('/api/v1/red-flags/{0}/location'.format(red_flag_id), json=input_data)
+        response_data = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("Failed to update red-flag record's location", response_data['error'])
+        
+    def test_edit_red_flag_comment_with_empty_string(self):
+
+        data = {  
+                "id" : 2,
+                "createdOn" : "12-12-2018",
+                "createdBy" : 5000,
+                "type" : "red-flag",
+                "location" : "33.92300, 44.9084551",
+                "status" : "draft",
+                "images" : ["image_1.png", "image_2.jpg" ],
+                "videos" : ["vid_1.mp4"],
+                "comment" : "Accidental post!",
+                "title": "Roads in poor condition"
+                        }
+        red_flags.append(data)
+        input_data =  input_data =  { 
+                        "red_flag_id" : 2,
+                        "comment" : " "
+        }
+
+        red_flag_id = input_data['red_flag_id']  
+        response = self.app_tester.put('/api/v1/red-flags/{0}/comment'.format(red_flag_id), json=input_data)
+        response_data = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("Failed to update red-flag record's comment", response_data['error'])
+        
 
     def test_delete_red_flag(self):
 
@@ -232,3 +362,37 @@ class TestRedFlagsRoute(unittest.TestCase):
         response_data = json.loads(response.data)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(red_flag_id, response_data['data']['id'])
+    
+    def test_delete_red_flag_with_mismatch_in_request_id(self):
+
+        data = {  
+                "id" : 2,
+                "createdOn" : "12-12-2018",
+                "createdBy" : 5000,
+                "type" : "red-flag",
+                "location" : "33.92300, 44.9084551",
+                "status" : "draft",
+                "images" : ["image_1.png", "image_2.jpg" ],
+                "videos" : ["vid_1.mp4"],
+                "comment" : "Accidental post!",
+                "title": "Roads in poor condition"
+                        }
+        red_flags.append(data)
+        input_data =  input_data =  { "red_flag_id" : 22 }
+        red_flag_id = data['id']
+        response = self.app_tester.delete('/api/v1/red-flags/{0}'.format(red_flag_id), json=input_data)
+        response_data = json.loads(response.data.decode())        
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(400, response_data['status'])
+        self.assertIn ("Invalid request", response_data['error'])
+    
+    def test_delete_red_flag_with_data_absent(self):
+
+        red_flags.clear()
+        input_data = {"red_flag_id" : 12}
+        red_flag_id = input_data['red_flag_id']
+        response = self.app_tester.delete('/api/v1/red-flags/{0}'.format(red_flag_id), json=input_data)
+        response_data = json.loads(response.data.decode())     
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(404, response_data['status'])
+        self.assertEqual ("No record  with ID:12 was found", response_data['error'])

@@ -40,7 +40,13 @@ class RedFlagsView(MethodView):
                                 "data" : red_flag.to_dict()
                                 }
                 else:
-                    message = {'status': 200, "error": "No record  with red_flag_id: {0} was found".format(red_flag_id) }
+                    message = {
+                                'status': 200, 
+                                'data': [ {
+                                    "id" : red_flag_id,
+                                    "message" : f"No record  with red_flag_id: {red_flag_id} was found" 
+                                }]
+                    }
             except KeyError as error:
                 error_message.update({"error-type":str(error)})  
                 return jsonify(error_message), 400
@@ -90,7 +96,7 @@ class RedFlagsView(MethodView):
             if not red_flag:
                 error_message = {
                             "status" : 404,
-                            "error" :  "No record  with ID: {0} was found".format(red_flag_id)
+                            "error" :  "No record  with ID:{0} was found".format(red_flag_id)
                                 }
                 raise Exception("Resource Not Found")                
             if 'location' in request_data.keys():    
@@ -111,16 +117,17 @@ class RedFlagsView(MethodView):
                                 "error" : "Failed to update red-flag record's location"
                                     }
             elif 'comment' in request_data.keys():
-                updated_data = red_flag.update_fields(comment=request_data['comment'])
-                if updated_data:
-                    message = {
-                                "status" : 200, 
-                                "data" : {
-                                        "id" : red_flag_id,
-                                        "message" : "Updated red-flag record's comment",
-                                        "content" : updated_data
+                if not Validate.is_empty_string(request_data['comment']):
+                    updated_data = red_flag.update_fields(comment=request_data['comment'])
+                    if updated_data:
+                        message = {
+                                    "status" : 200, 
+                                    "data" : {
+                                            "id" : red_flag_id,
+                                            "message" : "Updated red-flag record's comment",
+                                            "content" : updated_data
+                                            }
                                         }
-                                    }
                 else:
                     message = {
                                 "status" : 400,
