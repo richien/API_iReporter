@@ -28,7 +28,7 @@ It can be accessed on [Heroku](https://api-ireporter-heroku.herokuapp.com).
 
     ```pip install requirements.txt```
 
-** Running tests**
+**Running tests**
 
 From within the virtual environment, you can run the test code and view the test coverage for each of the unit tests.
 
