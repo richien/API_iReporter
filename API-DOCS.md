@@ -1,10 +1,12 @@
-#iReporter API documentation
+# iReporter API documentation
+
 [![Build Status](https://travis-ci.com/richien/API_iReporter.svg?branch=develop)](https://travis-ci.com/richien/API_iReporter)
 [![Coverage Status](https://coveralls.io/repos/github/richien/API_iReporter/badge.svg?branch=develop)](https://coveralls.io/github/richien/API_iReporter?branch=develop)
 [![Maintainability](https://api.codeclimate.com/v1/badges/a6ce65585611a0f514e6/maintainability)](https://codeclimate.com/github/richien/API_iReporter/maintainability)
 
 The api endpoints for the iReporter application from the Andela bootcamp challenge 15. 
 It can be accessed on [Heroku](https://api-ireporter-heroku.herokuapp.com).
+
 **Get all red flags**
 ----
   Returns json data with a list of all red flags.
