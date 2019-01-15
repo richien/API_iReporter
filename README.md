@@ -3,7 +3,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/richien/API_iReporter/badge.svg?branch=develop)](https://coveralls.io/github/richien/API_iReporter?branch=develop)
 [![Maintainability](https://api.codeclimate.com/v1/badges/a6ce65585611a0f514e6/maintainability)](https://codeclimate.com/github/richien/API_iReporter/maintainability)
 
-The api endpoints to be integrated for the iReporter application of the Andela bootcamp challenge. 
+The api endpoints for the iReporter application of the Andela bootcamp challenge 15. 
 It can be accessed on [Heroku](https://api-ireporter-heroku.herokuapp.com).
 
 ## Getting Stated
