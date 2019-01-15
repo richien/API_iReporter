@@ -24,7 +24,7 @@ class RedFlagsView(MethodView):
         else:
             request_data = request.get_json()
             try:
-                if not "red_flag_id" in request_data.keys() or request_data['red_flag_id'] != red_flag_id:
+                if "red_flag_id" not in request_data.keys() or request_data['red_flag_id'] != red_flag_id:
                     error_message = {
                         'status': 400,
                         'error': "Invalid request - invalid red_flag_id supplied or key error in request body"
@@ -85,7 +85,7 @@ class RedFlagsView(MethodView):
 
         request_data = request.get_json()
         try:
-            if not "red_flag_id" in request_data.keys() or request_data['red_flag_id'] != red_flag_id:
+            if  "red_flag_id" not in request_data.keys() or request_data['red_flag_id'] != red_flag_id:
                 error_message = {
                     'status': 400,
                     'error': "Invalid request - invalid red_flag_id supplied or key error in request body"
@@ -154,7 +154,7 @@ class RedFlagsView(MethodView):
 
         request_data = request.get_json()
         try:
-            if not "red_flag_id" in request_data.keys() or request_data['red_flag_id'] != red_flag_id:
+            if "red_flag_id"not in request_data.keys() or request_data['red_flag_id'] != red_flag_id:
                 error_message = {
                     'status': 400,
                     'error': "Invalid request - invalid red_flag_id supplied or key error in request body"
