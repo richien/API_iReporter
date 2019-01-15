@@ -1,5 +1,5 @@
 __pycache*
-pytest_cache
-.coverage
-.coveragerc
-.vscode
+pytest_cache*
+.coverage*
+.coveragerc*
+.vscode*
