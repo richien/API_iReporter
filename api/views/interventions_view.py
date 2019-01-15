@@ -15,28 +15,30 @@ class InterventionsView(MethodView):
         request_data = request.get_json()
         error_message = {}
         try:
-            validation_result = Validate.validate_incident_post_request(request_data)
+            validation_result = Validate.validate_incident_post_request(
+                request_data)
             if validation_result["is_valid"]:
                 if request_data['type'].lower() == 'intervention':
                     intervention = Incident(**request_data)
                     incidents.append(intervention.to_dict())
                     intervention_id = intervention.id
                     message = {
-                        'status' : 201,
-                        'data' : [{
-                            'id' : intervention_id,
-                            'message' : 'Created intervention record'
+                        'status': 201,
+                        'data': [{
+                            'id': intervention_id,
+                            'message': 'Created intervention record'
                         }]
                     }
                     return jsonify(message), 201
                 else:
-                    error_message = {'status' : 400, 'error' : 'Type field should be intervention'}
+                    error_message = {
+                        'status': 400, 'error': 'Type field should be intervention'}
                     raise Exception('Invalid request field')
             else:
                 error_message = validation_result['message']
                 raise Exception("Validation Error")
-        except Exception as error: 
-            error_message.update({"error-type":str(error)})  
+        except Exception as error:
+            error_message.update({"error-type": str(error)})
             return jsonify(error_message), error_message['status']
 
     def get(self, intervention_id):
@@ -47,16 +49,16 @@ class InterventionsView(MethodView):
                     intervention = Incident(**data)
                     interventions.append(intervention.to_dict())
             if not interventions:
-                message = {'status': 200, 'data': ["No records found"] }
+                message = {'status': 200, 'data': ["No records found"]}
             else:
-                    message = {'status': 200, 'data': interventions }
+                message = {'status': 200, 'data': interventions}
         else:
             request_data = request.get_json()
             try:
                 if not "intervention_id" in request_data.keys() or request_data['intervention_id'] != intervention_id:
                     error_message = {
-                        'status': 400, 
-                        'error': "Invalid request - invalid intervention_id supplied or key error in request body" 
+                        'status': 400,
+                        'error': "Invalid request - invalid intervention_id supplied or key error in request body"
                     }
                     raise KeyError("Invalid request")
                 intervention = None
@@ -74,12 +76,10 @@ class InterventionsView(MethodView):
                 else:
                     message = {
                         'status': 200,
-                                'status': 200, 
-                        'status': 200,
-                                'data': [ {
-                                    "id" : intervention_id,
-                                    "message" : f"No record  with intervention_id: {intervention_id} was found" 
-                                }]
+                        'data': [{
+                            "id": intervention_id,
+                            "message": f"No record  with intervention_id: {intervention_id} was found"
+                        }]
                     }
             except KeyError as error:
                 error_message.update({"error-type": str(error)})
