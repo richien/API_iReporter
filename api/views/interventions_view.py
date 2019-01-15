@@ -9,9 +9,9 @@ incidents = incidents_data['data']
 
 
 class InterventionsView(MethodView):
-    
+
     def post(self):
-        
+
         request_data = request.get_json()
         error_message = {}
         try:
@@ -62,24 +62,26 @@ class InterventionsView(MethodView):
                 intervention = None
                 for index, data in enumerate(incidents):
                     if incidents[index]['id'] == intervention_id:
-                        intervention = Incident(**data)                       
+                        intervention = Incident(**data)
                 if intervention:
                     message = {
-                                "status" : 200,
-                                "data" : [{
-                                    "id" : intervention.id,
-                                    "message" : intervention.to_dict()
-                                }]
-                            }
+                        "status": 200,
+                        "data": [{
+                            "id": intervention.id,
+                            "message": intervention.to_dict()
+                        }]
+                    }
                 else:
                     message = {
+                        'status': 200,
                                 'status': 200, 
+                        'status': 200,
                                 'data': [ {
                                     "id" : intervention_id,
                                     "message" : f"No record  with intervention_id: {intervention_id} was found" 
                                 }]
                     }
             except KeyError as error:
-                error_message.update({"error-type":str(error)})  
+                error_message.update({"error-type": str(error)})
                 return jsonify(error_message), 400
         return jsonify(message), 200
