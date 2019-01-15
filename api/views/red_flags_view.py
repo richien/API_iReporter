@@ -85,18 +85,14 @@ class RedFlagsView(MethodView):
 
         request_data = request.get_json()
         try:
-            if  "red_flag_id" not in request_data.keys():
-                error_message = {
-                    'status': 400,
-                    'error': "Invalid request - red_flag_id missing in request body"
-                }
-                raise KeyError("Invalid request")
-            if request_data['red_flag_id'] != red_flag_id:
-                error_message = {
-                    'status': 400,
-                    'error': "Invalid request - red_flag_id in request body does not match id in url "
-                }
-                raise ValueError("Invalid request")
+            error_message = {}
+            if  request_data["red_flag_id"]:
+                if request_data['red_flag_id'] != red_flag_id:
+                    error_message = {
+                        'status': 400,
+                        'error': "Invalid request - red_flag_id in request body does not match id in url"
+                    }
+                    raise ValueError("Invalid request")
             red_flag = None
             for index, data in enumerate(incidents_data['data']):
                 if incidents_data['data'][index]['id'] == red_flag_id:
@@ -150,7 +146,7 @@ class RedFlagsView(MethodView):
                 }
             return jsonify(message), message['status']
         except KeyError as error:
-            error_message.update({"error-type": str(error)})
+            error_message.update({"error-type": f'Key Error : {error}'})
             return jsonify(error_message), 400
         except ValueError as error:
             error_message.update({"error-type": str(error)})

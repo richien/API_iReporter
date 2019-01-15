@@ -203,6 +203,62 @@ class TestRedFlagsRoute(unittest.TestCase):
         self.assertEqual("11.12345, 12.12345",
                          response_data['data'][0]['content']['location'])
 
+    def test_edit_red_flag_location_with_mismatch_in_id(self):
+
+        data = {
+            "id": 21,
+            "createdOn": "12-12-2018",
+            "createdBy": 5000,
+            "type": "red-flag",
+            "location": "33.92300, 44.9084551",
+            "status": "draft",
+            "images": ["image_1.png", "image_2.jpg"],
+            "videos": ["vid_1.mp4"],
+            "comment": "Accidental post!",
+            "title": "Roads in poor condition"
+        }
+        red_flags.append(data)
+        input_data = input_data = {
+            "red_flag_id": 2,
+            "location": "11.12345, 12.12345"
+        }
+
+        red_flag_id = data['id']
+        response = self.app_tester.patch(
+            '/api/v1/red-flags/{0}/location'.format(red_flag_id), json=input_data)
+        response_data = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("red_flag_id in request body does not match id in url",
+                      response_data['error'])
+
+    def test_edit_red_flag_location_with_invalid_id_key(self):
+
+        data = {
+            "id": 2,
+            "createdOn": "12-12-2018",
+            "createdBy": 5000,
+            "type": "red-flag",
+            "location": "33.92300, 44.9084551",
+            "status": "draft",
+            "images": ["image_1.png", "image_2.jpg"],
+            "videos": ["vid_1.mp4"],
+            "comment": "Accidental post!",
+            "title": "Roads in poor condition"
+        }
+        red_flags.append(data)
+        input_data = input_data = {
+            "id": 2,
+            "location": "11.12345, 12.12345"
+        }
+
+        red_flag_id = data['id']
+        response = self.app_tester.patch(
+            '/api/v1/red-flags/{0}/location'.format(red_flag_id), json=input_data)
+        response_data = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("red_flag_id",
+                      response_data['error-type'])
+
     def test_edit_red_flag_comment(self):
 
         data = {
