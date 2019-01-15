@@ -7,90 +7,82 @@ import re
 class User:
     def __init__(self, user_id=None, **kwargs):
 
-        self.id = user_id or random.randint(1000, 9000)    
+        self.id = user_id or random.randint(1000, 9000)
         self.firstname = kwargs['firstname']
         self.lastname = kwargs['lastname']
-        self.othernames = kwargs['othernames'] 
+        self.othernames = kwargs['othernames']
         self.email = kwargs['email']
         self.phonenumber = kwargs['phonenumber']
         self.username = kwargs['username']
         self.password = kwargs['password']
         self.registered = date.today()
-        self.isAdmin = kwargs['isAdmin'] 
-    
+        self.isAdmin = kwargs['isAdmin']
+
     def to_dict(self):
 
         user_dict = {
-            'id' : self.id,
-            'firstname' : self.firstname,
-            'lastname' : self.lastname,
-            'othernames' : self.othernames,
-            'email' : self.email,
-            'phonenumber' : self.phonenumber,
-            'username' : self.username,
-            'password' : self.password,
-            'registered' : self.registered,
-            'isAdmin' : self.isAdmin
+            'id': self.id,
+            'firstname': self.firstname,
+            'lastname': self.lastname,
+            'othernames': self.othernames,
+            'email': self.email,
+            'phonenumber': self.phonenumber,
+            'username': self.username,
+            'password': self.password,
+            'registered': self.registered,
+            'isAdmin': self.isAdmin
         }
         return user_dict
-    
+
     def to_dict_minimal(self):
 
         user_dict = {
-            'id' : self.id,
-            'firstname' : self.firstname,
-            'lastname' : self.lastname,
-            'othernames' : self.othernames,
-            'email' : self.email,
-            'phonenumber' : self.phonenumber,
-            'username' : self.username,
-            'registered' : self.registered,
-            'isAdmin' : self.isAdmin
+            'id': self.id,
+            'firstname': self.firstname,
+            'lastname': self.lastname,
+            'othernames': self.othernames,
+            'email': self.email,
+            'phonenumber': self.phonenumber,
+            'username': self.username,
+            'registered': self.registered,
+            'isAdmin': self.isAdmin
         }
-        return user_dict        
+        return user_dict
 
     def create_user(self):
 
         return data.do_create(self, self.to_dict())
-    
-                        
+
     def check_user_exists(self):
-        
+
         username = data.check_username(self.username)
         email = data.check_email(self.email)
         if username and email:
-                message = {
-                    "exists" : True,
-                    "error" : "A user with that account already exists"
-                    }
-        elif username :
             message = {
-                    "exists" : True,
-                    "error" : "A user with that username already exists"
-                }
-        elif email :
+                "exists": True,
+                "error": "A user with that account already exists"
+            }
+        elif username:
             message = {
-                    "exists" : True,
-                    "error" : "A user with that email address already exists"
-                }
+                "exists": True,
+                "error": "A user with that username already exists"
+            }
+        elif email:
+            message = {
+                "exists": True,
+                "error": "A user with that email address already exists"
+            }
         else:
             message = {
-                    "exists" : False,
-                }
+                "exists": False,
+            }
         return message
 
     @staticmethod
     def is_valid_password(pwd):
-        
+
         is_valid = True
         if len(pwd) < 8:
             is_valid = False
 
-        return is_valid  
-
-    
-    
-    
-
-
-    
+        return is_valid

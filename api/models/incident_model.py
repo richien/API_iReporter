@@ -16,20 +16,20 @@ class Incident:
         self.images = kwargs['images']
         self.videos = kwargs['videos']
         self.title = kwargs['title']
-        
+
     def to_dict(self):
 
         incident_dict = {
-            'id' : self.id,
-            'createdOn' : self.createdOn,
-            'createdBy' : self.createdBy,
-            'type' : self.type,
-            'location' : self.location,
-            'status' : self.status,
-            'images' : self.images,
-            'videos' : self.videos,
-            'comment' : self.comment,
-            'title' : self.title
+            'id': self.id,
+            'createdOn': self.createdOn,
+            'createdBy': self.createdBy,
+            'type': self.type,
+            'location': self.location,
+            'status': self.status,
+            'images': self.images,
+            'videos': self.videos,
+            'comment': self.comment,
+            'title': self.title
         }
         return incident_dict
 
@@ -54,6 +54,3 @@ class Incident:
         if deleted:
             del self
             return deleted
-    
-    
-
