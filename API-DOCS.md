@@ -114,7 +114,7 @@ It can be accessed on [Heroku](https://api-ireporter-heroku.herokuapp.com).
 
 * **Method:**
 
-  `PUT`
+  `PATCH`
   
 *  **URL Params**
 
@@ -156,7 +156,7 @@ It can be accessed on [Heroku](https://api-ireporter-heroku.herokuapp.com).
 
 * **Method:**
 
-  `PUT`
+  `PATCH`
   
 *  **URL Params**
 
