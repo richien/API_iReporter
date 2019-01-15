@@ -1,4 +1,4 @@
-# iReporter API documentation
+# iReporter API Documentation
 
 [![Build Status](https://travis-ci.com/richien/API_iReporter.svg?branch=develop)](https://travis-ci.com/richien/API_iReporter)
 [![Coverage Status](https://coveralls.io/repos/github/richien/API_iReporter/badge.svg?branch=develop)](https://coveralls.io/github/richien/API_iReporter?branch=develop)
