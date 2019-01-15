@@ -194,7 +194,7 @@ class TestRedFlagsRoute(unittest.TestCase):
         }
 
         red_flag_id = input_data['red_flag_id']
-        response = self.app_tester.put(
+        response = self.app_tester.patch(
             '/api/v1/red-flags/{0}/location'.format(red_flag_id), json=input_data)
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 200)
@@ -224,7 +224,7 @@ class TestRedFlagsRoute(unittest.TestCase):
         }
 
         red_flag_id = input_data['red_flag_id']
-        response = self.app_tester.put(
+        response = self.app_tester.patch(
             '/api/v1/red-flags/{0}/comment'.format(red_flag_id), json=input_data)
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 200)
@@ -253,7 +253,7 @@ class TestRedFlagsRoute(unittest.TestCase):
             "comment": "Comment updated"
         }
         red_flag_id = data['id']
-        response = self.app_tester.put(
+        response = self.app_tester.patch(
             '/api/v1/red-flags/{0}/comment'.format(red_flag_id), json=input_data)
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 400)
@@ -281,7 +281,7 @@ class TestRedFlagsRoute(unittest.TestCase):
         }
 
         red_flag_id = input_data['red_flag_id']
-        response = self.app_tester.put(
+        response = self.app_tester.patch(
             '/api/v1/red-flags/{0}/comment'.format(red_flag_id), json=input_data)
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 404)
@@ -292,7 +292,7 @@ class TestRedFlagsRoute(unittest.TestCase):
         red_flags.clear()
         input_data = {"red_flag_id": 12}
         red_flag_id = input_data['red_flag_id']
-        response = self.app_tester.put(
+        response = self.app_tester.patch(
             '/api/v1/red-flags/{0}/comment'.format(red_flag_id), json=input_data)
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 404)
@@ -321,7 +321,7 @@ class TestRedFlagsRoute(unittest.TestCase):
         }
 
         red_flag_id = input_data['red_flag_id']
-        response = self.app_tester.put(
+        response = self.app_tester.patch(
             '/api/v1/red-flags/{0}/location'.format(red_flag_id), json=input_data)
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 400)
@@ -349,7 +349,7 @@ class TestRedFlagsRoute(unittest.TestCase):
         }
 
         red_flag_id = input_data['red_flag_id']
-        response = self.app_tester.put(
+        response = self.app_tester.patch(
             '/api/v1/red-flags/{0}/comment'.format(red_flag_id), json=input_data)
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 400)

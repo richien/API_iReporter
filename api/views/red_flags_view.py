@@ -81,7 +81,7 @@ class RedFlagsView(MethodView):
             error_message.update({"error-type": str(error)})
             return jsonify(error_message), error_message['status']
 
-    def put(self, red_flag_id):
+    def patch(self, red_flag_id):
 
         request_data = request.get_json()
         try:
