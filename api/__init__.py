@@ -23,8 +23,8 @@ def page_not_found(e):
 			          "comment" : "string",
 			          "title": "string"
 			          }}],
-        ['/api/v1/red-flags/<int:red_flag_id>/location', 'PUT', {'body' : {'red_flag_id': 'int'}}],
-        ['/api/v1/red-flags/<int:red_flag_id>/comment', 'PUT', {'body' : {'red_flag_id': 'int'}}],
+        ['/api/v1/red-flags/<int:red_flag_id>/location', 'PATCH', {'body' : {'red_flag_id': 'int'}}],
+        ['/api/v1/red-flags/<int:red_flag_id>/comment', 'PATCH', {'body' : {'red_flag_id': 'int'}}],
         ['/api/v1/red-flags/<int:red_flag_id>', 'DELETE', {'body' : {'red_flag_id': 'int'}}],
         ['/api/v1/auth/signup', 'POST', {'body': {
         			"firstname" : "string",
