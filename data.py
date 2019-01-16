@@ -1,26 +1,9 @@
-from api.models import incident_model 
-from api.models import user_model 
+from api.models import incident_model
+from api.models import user_model
 
-incidents_data = { 
-                        "data" : [
-                            {  
-                                "id" : 2,
-                                "createdOn" : "12-12-2018",
-                                "createdBy" : 5000,
-                                "type" : "red-flag",
-                                "location" : "33.92300, 44.9084551",
-                                "status" : "draft",
-                                "images" : ["image_1.png", "image_2.jpg" ],
-                                "videos" : ["vid_1.mp4"],
-                                "comment" : "Accidental post!",
-                                "title": "Roads in poor condition"
-                        }
-                    ],
+incidents_data = {"data": [], "users": []}
 
-                        "users" : [
 
-                        ]
-    }
 def do_create(object, object_dict):
 
     if type(object) is incident_model.Incident:
@@ -35,49 +18,50 @@ def update(red_flag_id, location=None, comment=None):
 
     result = {}
     for index, data in enumerate(incidents_data['data']):
-        if incidents_data['data'][index]['id'] == red_flag_id:            
+        if incidents_data['data'][index]['id'] == red_flag_id:
             if location and not comment:
                 data['location'] = location
-                result = {'data' : data, 'updated' : True}
+                result = {'data': data, 'updated': True}
             elif comment and not location:
                 data['comment'] = comment
-                result = {'data' : data, 'updated' : True}
-    
+                result = {'data': data, 'updated': True}
+
     return result
 
+
 def do_delete(red_flag_id):
-    
+
     deleted = False
     for index, data in enumerate(incidents_data['data']):
         if incidents_data['data'][index]['id'] == red_flag_id:
             incidents_data['data'].remove(data)
-            deleted =  True
+            deleted = True
     return deleted
 
+
 def check_username(username):
-    
+
     exists = False
     for user in enumerate(incidents_data['users']):
         if user[1]['username'] == username:
-            exists = True 
+            exists = True
             break
     return exists
+
 
 def check_email(email):
-    
+
     exists = False
     for user in enumerate(incidents_data['users']):
-        if  user[1]['email'] == email:
-            exists = True 
+        if user[1]['email'] == email:
+            exists = True
             break
     return exists
 
-def do_signin(email):
-    
-    user = None
-    for usr in enumerate(incidents_data['users']):
-        if check_email(email):
-            user = usr[1]
-            print(f'USER : {user}')
-            break
-    return user
+# def do_signin(email):
+
+#     for usr in enumerate(incidents_data['users']):
+#         if check_email(email):
+#             user = usr[1]
+#             break
+#     return user

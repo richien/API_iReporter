@@ -5,36 +5,33 @@ from werkzeug.security import check_password_hash
 import data
 from api.models.user_model import User
 from api.auth.authenticate import Authenticate
-from api.views.validator import Validate
+from api.validator import Validate
 
 users = data.incidents_data["users"]
+
 
 class Signin(MethodView):
 
     def post(self):
 
         request_data = request.get_json()
-
         try:
             is_valid_request = Validate.validate_signin_request(request_data)
-            
+
             if is_valid_request["is_valid"]:
                 if "email" in request_data.keys():
                     email = request_data["email"]
                     username = None
                 if "username" in request_data.keys():
                     username = request_data["username"]
-                    email=None
+                    email = None
                 password = request_data["password"]
-                user_data = None               
+                user_data = None
             else:
-                message = {
-                    "status" : 400,
-                    "error" : is_valid_request["message"]
-                }
-                return jsonify(message), 400
-
-            for usr in enumerate(users):        
+                error_message = {"status": 400}
+                error_message.update(is_valid_request["message"])
+                raise ValueError("Invalid request")
+            for usr in enumerate(users):
                 if email and usr[1]['email'] == email:
                     user_data = usr[1]
                     break
@@ -44,41 +41,43 @@ class Signin(MethodView):
 
             if user_data:
                 user = User(
-                                user_id = user_data['id'],
-                                firstname=user_data['firstname'],
-                                lastname=user_data["lastname"],
-                                othernames=user_data["othernames"],
-                                email=user_data["email"],
-                                phonenumber=user_data["phonenumber"],
-                                username=user_data["username"],
-                                password=user_data["password"],
-                                isAdmin=user_data["isAdmin"]
-                            )
+                    user_id=user_data['id'],
+                    firstname=user_data['firstname'],
+                    lastname=user_data["lastname"],
+                    othernames=user_data["othernames"],
+                    email=user_data["email"],
+                    phonenumber=user_data["phonenumber"],
+                    username=user_data["username"],
+                    password=user_data["password"],
+                    isAdmin=user_data["isAdmin"]
+                )
                 if check_password_hash(user.password, password):
-                    token = Authenticate.generate_access_token(user.id, user.isAdmin)
+                    token = Authenticate.generate_access_token(
+                        user.id, user.isAdmin)
                     message = {
-                        "status" : 200,
-                        "data" : {
-                            "id" : user.id,
-                            "message" : f'{email or username} was successfully signed in',
-                            "access_token" : token
-                        }
+                        "status": 200,
+                        "data": [{
+                            "id": user.id,
+                            "message": f'{email or username} was successfully signed in',
+                            "access_token": token
+                        }]
                     }
                 else:
-                    message = {
-                        "status" : 401,
-                        "error" : "Unauthorized - Wrong signin credentials supplied - Try again"
+                    error_message = {
+                        "status": 401,
+                        "error": "Unauthorized - Wrong signin credentials supplied - Try again"
                     }
-                    return jsonify(message), 401
-
+                    raise Exception("Unauthorized")
             else:
-                message = {
-                    "status" : 401,
-                    "error" : f'Unauthorized - User with credentials {email or username} not found'
+                error_message = {
+                    "status": 401,
+                    "error": f'Unauthorized - User with credentials {email or username} not found'
                 }
-                return jsonify(message), 401
-            
+                raise Exception("Unauthorized")
             return jsonify(message), 200
-
+        except ValueError as error:
+            error_message.update({"error-type": str(error)})
+            return jsonify(error_message), error_message['status']
         except Exception as error:
-            return jsonify({"status" : 400, "error" : str(error)}), 400
+            error_message.update({"error-type": str(error)})
+            return jsonify(error_message), error_message['status']

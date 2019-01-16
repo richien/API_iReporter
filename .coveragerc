@@ -1,3 +1,4 @@
+
 [report]
 omit =
     */python?.?/*
@@ -5,8 +6,7 @@ omit =
     */__pycache__/*
     *.pyc
     */usr/lib/python3/*
-    db.py
     */__init__.py
     */.pytest_cache/*
-    tests/*
+    */tests/*
     */home/geo/.local/share/virtualenvs/*
