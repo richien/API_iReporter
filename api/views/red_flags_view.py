@@ -24,7 +24,8 @@ class RedFlagsView(MethodView):
         else:
             request_data = request.get_json()
             try:
-                if "red_flag_id" not in request_data.keys() or request_data['red_flag_id'] != red_flag_id:
+                if "red_flag_id" not in request_data.keys(
+                ) or request_data['red_flag_id'] != red_flag_id:
                     error_message = {
                         'status': 400,
                         'error': "Invalid request - invalid red_flag_id supplied or key error in request body"
@@ -86,7 +87,7 @@ class RedFlagsView(MethodView):
         request_data = request.get_json()
         try:
             error_message = {}
-            if  request_data["red_flag_id"]:
+            if request_data["red_flag_id"]:
                 if request_data['red_flag_id'] != red_flag_id:
                     error_message = {
                         'status': 400,
@@ -100,8 +101,7 @@ class RedFlagsView(MethodView):
             if not red_flag:
                 error_message = {
                     "status": 404,
-                    "error":  "No record  with ID:{0} was found".format(red_flag_id)
-                }
+                    "error": "No record  with ID:{0} was found".format(red_flag_id)}
                 raise Exception("Resource Not Found")
             if 'location' in request_data.keys():
                 if Validate.is_valid_location(request_data['location']):
@@ -137,13 +137,12 @@ class RedFlagsView(MethodView):
                 else:
                     message = {
                         "status": 400,
-                        "error":  "Failed to update red-flag record's comment"
+                        "error": "Failed to update red-flag record's comment"
                     }
             else:
                 message = {
                     "status": 404,
-                    "error":  "Resource not found -  Invalid field in request body"
-                }
+                    "error": "Resource not found -  Invalid field in request body"}
             return jsonify(message), message['status']
         except KeyError as error:
             error_message.update({"error-type": f'Key Error : {error}'})
@@ -159,7 +158,8 @@ class RedFlagsView(MethodView):
 
         request_data = request.get_json()
         try:
-            if "red_flag_id"not in request_data.keys() or request_data['red_flag_id'] != red_flag_id:
+            if "red_flag_id"not in request_data.keys(
+            ) or request_data['red_flag_id'] != red_flag_id:
                 error_message = {
                     'status': 400,
                     'error': "Invalid request - invalid red_flag_id supplied or key error in request body"
@@ -175,8 +175,7 @@ class RedFlagsView(MethodView):
             if not found:
                 error_message = {
                     "status": 404,
-                    "error": "No record  with ID:{0} was found".format(red_flag_id)
-                }
+                    "error": "No record  with ID:{0} was found".format(red_flag_id)}
                 raise Exception("Record not found")
             if is_deleted:
                 message = {

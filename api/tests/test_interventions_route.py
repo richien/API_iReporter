@@ -90,16 +90,12 @@ class TestInterventions(unittest.TestCase):
             "id": 73691,
             "images": [
                 "image_1.png",
-                "image_2.jpg"
-            ],
+                "image_2.jpg"],
             "location": "33.92300, 44.9084551",
             "status": "draft",
             "title": "Roads in poor condition",
             "type": "intervention",
-            "videos": [
-                "vid_1.mp4"
-            ]
-        }
+            "videos": ["vid_1.mp4"]}
         incidents.append(data)
         response = self.app_tester.get('/api/v1/interventions')
         response_data = json.loads(response.data.decode())
@@ -123,13 +119,14 @@ class TestInterventions(unittest.TestCase):
             "createdBy": 5000,
             "createdOn": "Sun, 13 Jan 2019 00:00:00 GMT",
             "id": 73691,
-            "images": ["image_1.png", "image_2.jpg"],
+            "images": [
+                "image_1.png",
+                "image_2.jpg"],
             "location": "33.92300, 44.9084551",
             "status": "draft",
             "title": "Roads in poor condition",
             "type": "intervention",
-            "videos": ["vid_1.mp4"]
-        }
+            "videos": ["vid_1.mp4"]}
         incidents.append(data)
         input_data = {"intervention_id": 73691}
         intervention_id = input_data['intervention_id']
@@ -147,13 +144,14 @@ class TestInterventions(unittest.TestCase):
             "createdBy": 5000,
             "createdOn": "Sun, 13 Jan 2019 00:00:00 GMT",
             "id": 73691,
-            "images": ["image_1.png", "image_2.jpg"],
+            "images": [
+                "image_1.png",
+                "image_2.jpg"],
             "location": "33.92300, 44.9084551",
             "status": "draft",
             "title": "Roads in poor condition",
             "type": "intervention",
-            "videos": ["vid_1.mp4"]
-        }
+            "videos": ["vid_1.mp4"]}
         incidents.append(data)
         input_data = {"intervention_id": 736}
         intervention_id = data['id']
@@ -171,13 +169,14 @@ class TestInterventions(unittest.TestCase):
             "createdBy": 5000,
             "createdOn": "Sun, 13 Jan 2019 00:00:00 GMT",
             "id": 73691,
-            "images": ["image_1.png", "image_2.jpg"],
+            "images": [
+                "image_1.png",
+                "image_2.jpg"],
             "location": "33.92300, 44.9084551",
             "status": "draft",
             "title": "Roads in poor condition",
             "type": "intervention",
-            "videos": ["vid_1.mp4"]
-        }
+            "videos": ["vid_1.mp4"]}
         incidents.append(data)
         input_data = {"id": 73691}
         intervention_id = input_data['id']

@@ -86,8 +86,17 @@ class TestIncidentModel(unittest.TestCase):
         }
 
         incident = Incident(**kwargs)
-        expectedKeys = ['id', 'createdOn', 'createdBy', 'type',
-                        'location', 'status', 'images', 'videos', 'comment', 'title']
+        expectedKeys = [
+            'id',
+            'createdOn',
+            'createdBy',
+            'type',
+            'location',
+            'status',
+            'images',
+            'videos',
+            'comment',
+            'title']
         to_dict_keys = []
         for key in incident.to_dict().keys():
             to_dict_keys.append(key)
@@ -188,8 +197,17 @@ class TestUserModel(unittest.TestCase):
         self.assertEqual(user.email, user_dict['email'])
 
     def test_to_dict_method_returns_all_expected__keys(self):
-        expectedKeys = ['id', 'firstname', 'lastname', 'othernames', 'email',
-                        'phonenumber', 'username', 'password', 'registered', 'isAdmin']
+        expectedKeys = [
+            'id',
+            'firstname',
+            'lastname',
+            'othernames',
+            'email',
+            'phonenumber',
+            'username',
+            'password',
+            'registered',
+            'isAdmin']
         kwargs = {
             'firstname': "James",
             'lastname': "Blunt",
@@ -207,8 +225,16 @@ class TestUserModel(unittest.TestCase):
         self.assertEqual(to_dict_keys, expectedKeys)
 
     def test_to_dict_minimal_method_returns_all_expected__keys(self):
-        expectedKeys = ['id', 'firstname', 'lastname', 'othernames',
-                        'email', 'phonenumber', 'username', 'registered', 'isAdmin']
+        expectedKeys = [
+            'id',
+            'firstname',
+            'lastname',
+            'othernames',
+            'email',
+            'phonenumber',
+            'username',
+            'registered',
+            'isAdmin']
         kwargs = {
             'firstname': "James",
             'lastname': "Blunt",

@@ -42,10 +42,11 @@ class UsersView(MethodView):
 
             request_data = request.get_json()
             try:
-                if not "user_id" in request_data.keys() or request_data['user_id'] != user_id:
+                if "user_id" not in request_data.keys(
+                ) or request_data['user_id'] != user_id:
                     error_message = {
                         'status': 400,
-                        'error':  "Invalid request - invalid user_id supplied or key error in request body"
+                        'error': "Invalid request - invalid user_id supplied or key error in request body"
                     }
                     raise KeyError("Invalid request")
                 user = None

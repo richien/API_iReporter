@@ -46,8 +46,10 @@ class Authenticate:
 
     @staticmethod
     def get_identity(request):
-        return Authenticate.decode_token(Authenticate.retrieve_token_from_request(request))["user_id"]
+        return Authenticate.decode_token(
+            Authenticate.retrieve_token_from_request(request))["user_id"]
 
     @staticmethod
     def get_role(request):
-        return Authenticate.decode_token(Authenticate.retrieve_token_from_request(request))["isAdmin"]
+        return Authenticate.decode_token(
+            Authenticate.retrieve_token_from_request(request))["isAdmin"]

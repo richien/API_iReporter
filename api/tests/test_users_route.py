@@ -23,9 +23,11 @@ class TestUsersRoute(unittest.TestCase):
             'phonenumber': '0773287332',
             'username': 'hjones',
             'password': 'sha256$FJFz4dTw$e02642d454ee9de9fdd7bfb5e12969e633d86f899dd541a0f7ca80cebc872ef7',
-            'registered': datetime.date(2019, 1, 13),
-            'isAdmin': False
-        }
+            'registered': datetime.date(
+                2019,
+                1,
+                13),
+            'isAdmin': False}
         users.append(data)
         response = self.app_tester.get('/api/v1/users')
         response_data = json.loads(response.data.decode())

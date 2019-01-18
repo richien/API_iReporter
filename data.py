@@ -6,10 +6,10 @@ incidents_data = {"data": [], "users": []}
 
 def do_create(object, object_dict):
 
-    if type(object) is incident_model.Incident:
+    if isinstance(object, incident_model.Incident):
         incidents_data['data'].append(object_dict)
         return True
-    elif type(object) is user_model.User:
+    elif isinstance(object, user_model.User):
         incidents_data['users'].append(object_dict)
         return True
 

@@ -65,14 +65,12 @@ class Signin(MethodView):
                 else:
                     error_message = {
                         "status": 401,
-                        "error": "Unauthorized - Wrong signin credentials supplied - Try again"
-                    }
+                        "error": "Unauthorized - Wrong signin credentials supplied - Try again"}
                     raise Exception("Unauthorized")
             else:
                 error_message = {
                     "status": 401,
-                    "error": f'Unauthorized - User with credentials {email or username} not found'
-                }
+                    "error": f'Unauthorized - User with credentials {email or username} not found'}
                 raise Exception("Unauthorized")
             return jsonify(message), 200
         except ValueError as error:

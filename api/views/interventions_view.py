@@ -32,7 +32,8 @@ class InterventionsView(MethodView):
                     return jsonify(message), 201
                 else:
                     error_message = {
-                        'status': 400, 'error': 'Type field should be intervention'}
+                        'status': 400,
+                        'error': 'Type field should be intervention'}
                     raise Exception('Invalid request field')
             else:
                 error_message = validation_result['message']
@@ -55,7 +56,8 @@ class InterventionsView(MethodView):
         else:
             request_data = request.get_json()
             try:
-                if not "intervention_id" in request_data.keys() or request_data['intervention_id'] != intervention_id:
+                if "intervention_id" not in request_data.keys(
+                ) or request_data['intervention_id'] != intervention_id:
                     error_message = {
                         'status': 400,
                         'error': "Invalid request - invalid intervention_id supplied or key error in request body"

@@ -167,7 +167,8 @@ class TestAuthenticationRoutes(unittest.TestCase):
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 401)
         self.assertIn(
-            f"User with credentials {input_data['email']} not found", response_data["error"])
+            f"User with credentials {input_data['email']} not found",
+            response_data["error"])
 
     def test_sign_in_with_invalid_email_and_password(self):
 
@@ -191,7 +192,8 @@ class TestAuthenticationRoutes(unittest.TestCase):
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 401)
         self.assertIn(
-            f"User with credentials {input_data['email']} not found", response_data["error"])
+            f"User with credentials {input_data['email']} not found",
+            response_data["error"])
 
     def test_sign_in_with_valid_email_and_invalid_password(self):
 
@@ -215,7 +217,8 @@ class TestAuthenticationRoutes(unittest.TestCase):
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 401)
         self.assertIn(
-            f"Unauthorized - Wrong signin credentials supplied", response_data["error"])
+            f"Unauthorized - Wrong signin credentials supplied",
+            response_data["error"])
 
     def test_sign_in_with_valid_username_and_password(self):
 
@@ -240,7 +243,8 @@ class TestAuthenticationRoutes(unittest.TestCase):
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 200)
         self.assertIn(
-            f"{input_data['username']} was successfully signed in", response_data["data"][0]["message"])
+            f"{input_data['username']} was successfully signed in",
+            response_data["data"][0]["message"])
         self.assertTrue(response_data["data"][0]["access_token"])
 
     def test_sign_in_with_invalid_username_and_password(self):
@@ -265,7 +269,8 @@ class TestAuthenticationRoutes(unittest.TestCase):
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 401)
         self.assertIn(
-            f"User with credentials {input_data['username']} not found", response_data["error"])
+            f"User with credentials {input_data['username']} not found",
+            response_data["error"])
 
     def test_sign_in_with_invalid_username_and_valid_password(self):
 
@@ -289,7 +294,8 @@ class TestAuthenticationRoutes(unittest.TestCase):
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 401)
         self.assertIn(
-            f"User with credentials {input_data['username']} not found", response_data["error"])
+            f"User with credentials {input_data['username']} not found",
+            response_data["error"])
 
     def test_sign_in_with_valid_username_and_invalid_password(self):
 
@@ -313,7 +319,8 @@ class TestAuthenticationRoutes(unittest.TestCase):
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 401)
         self.assertIn(
-            f"Unauthorized - Wrong signin credentials supplied", response_data["error"])
+            f"Unauthorized - Wrong signin credentials supplied",
+            response_data["error"])
 
     def test_sign_in_with_invalid_key_in_request_body(self):
 
@@ -325,4 +332,5 @@ class TestAuthenticationRoutes(unittest.TestCase):
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 400)
         self.assertIn(
-            f"Invalid request body - error in request body", response_data["error"])
+            f"Invalid request body - error in request body",
+            response_data["error"])
