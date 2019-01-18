@@ -18,7 +18,8 @@ class Signup(MethodView):
         try:
             if request.json:
                 request_data = request.get_json()
-                validation_result = Validate.validate_signup_details(request_data)
+                validation_result = Validate.validate_signup_details(
+                    request_data)
             else:
                 error_message = {
                     'status': 400,

@@ -40,9 +40,9 @@ class InterventionsView(MethodView):
                     raise Exception("Validation Error")
             else:
                 error_message = {
-                        'status': 400,
-                        'error': "Invalid request - request body cannot be empty"}
-                raise ValueError('Empty request body')       
+                    'status': 400,
+                    'error': "Invalid request - request body cannot be empty"}
+                raise ValueError('Empty request body')
         except ValueError as error:
             error_message.update({"error-type": str(error)})
             return jsonify(error_message), error_message['status']
@@ -85,7 +85,7 @@ class InterventionsView(MethodView):
                     }
             except Exception as error:
                 error_message = {
-                            'status': 400,
-                            'error': error}
+                    'status': 400,
+                    'error': error}
                 return jsonify(error_message), error_message['status']
         return jsonify(message), message['status']

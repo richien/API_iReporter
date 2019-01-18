@@ -42,9 +42,9 @@ class RedFlagsView(MethodView):
                     }
             except Exception as error:
                 error_message = {
-                        'status': 400,
-                        'error': error
-                    }
+                    'status': 400,
+                    'error': error
+                }
                 return jsonify(error_message), error_message['status']
         return jsonify(message), message['status']
 
@@ -54,9 +54,11 @@ class RedFlagsView(MethodView):
             if request.json:
                 request_data = request.get_json()
                 validation_result = Validate.validate_incident_post_request(
-                request_data)
+                    request_data)
             else:
-                error_message = {'status': 400, 'error': "Invalid request - request body cannot be empty"}
+                error_message = {
+                    'status': 400,
+                    'error': "Invalid request - request body cannot be empty"}
                 raise ValueError("Empty request body")
             if validation_result["is_valid"]:
                 if request_data['type'].lower() == 'red-flag':
@@ -88,12 +90,12 @@ class RedFlagsView(MethodView):
 
         try:
             if not request.json:
-                    error_message = {
-                        'status': 400,
-                        'error': "Invalid request - request body cannot be empty"
-                    }
-                    raise ValueError("Empty request body")
-            
+                error_message = {
+                    'status': 400,
+                    'error': "Invalid request - request body cannot be empty"
+                }
+                raise ValueError("Empty request body")
+
             request_data = request.get_json()
             red_flag = None
             for index, data in enumerate(incidents):

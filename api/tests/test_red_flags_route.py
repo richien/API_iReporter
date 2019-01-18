@@ -42,7 +42,7 @@ class TestRedFlagsRoute(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(200, response_data['status'])
         self.assertIn("No records found", response_data['data'])
-    
+
     def test_get_red_flags_with_data_structure_missing(self):
 
         response = self.app_tester.get('/api/v1/red-flags')
@@ -72,8 +72,6 @@ class TestRedFlagsRoute(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(type(response_data['data']['id']), int)
         self.assertEqual(red_flag_id, response_data['data']['id'])
-
-    
 
     def test_get_red_flag_by_id_with_data_absent(self):
 
@@ -116,7 +114,7 @@ class TestRedFlagsRoute(unittest.TestCase):
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 400)
         self.assertIn("Invalid request - request body cannot be empty",
-         response_data["error"])
+                      response_data["error"])
 
     def test_create_red_flag_with_invalid_type_field(self):
 
@@ -194,7 +192,6 @@ class TestRedFlagsRoute(unittest.TestCase):
                       response_data['data'][0]['message'])
         self.assertEqual("Comment updated",
                          response_data['data'][0]['content']['comment'])
-
 
     def test_edit_red_flag_unknown_field_in_request_body(self):
 
@@ -317,7 +314,6 @@ class TestRedFlagsRoute(unittest.TestCase):
         response_data = json.loads(response.data)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(red_flag_id, response_data['data'][0]['id'])
-
 
     def test_delete_red_flag_with_data_absent(self):
 

@@ -68,8 +68,8 @@ class UsersView(MethodView):
                         f'No user with ID: {user_id} was found']}
             except Exception as error:
                 error_message = {
-                        'status': 400,
-                        'error': error
-                    }
+                    'status': 400,
+                    'error': error
+                }
                 return jsonify(error_message), error_message['status']
         return jsonify(message), message['status']

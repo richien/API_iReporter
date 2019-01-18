@@ -77,7 +77,6 @@ class TestUsersRoute(unittest.TestCase):
         self.assertIs(type(response_data['data'][0]["id"]), int)
         self.assertEqual(user_id, response_data['data'][0]['id'])
 
-
     def test_get_user_by_id_when_user_does_not_exist(self):
 
         input_data = {

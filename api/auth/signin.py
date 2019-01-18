@@ -17,7 +17,8 @@ class Signin(MethodView):
         try:
             if request.json:
                 request_data = request.get_json()
-                is_valid_request = Validate.validate_signin_request(request_data)
+                is_valid_request = Validate.validate_signin_request(
+                    request_data)
             else:
                 error_message = {
                     'status': 400,
