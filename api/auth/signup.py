@@ -15,9 +15,16 @@ class Signup(MethodView):
 
     def post(self):
 
-        request_data = request.get_json()
         try:
-            validation_result = Validate.validate_signup_details(request_data)
+            if request.json:
+                request_data = request.get_json()
+                validation_result = Validate.validate_signup_details(request_data)
+            else:
+                error_message = {
+                    'status': 400,
+                    'error': "Invalid request - request body cannot be empty"
+                }
+                raise ValueError("Empty request body")
             if validation_result["is_valid"]:
                 valid_request = validation_result["request"]
                 user = User(**valid_request)

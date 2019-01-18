@@ -56,7 +56,7 @@ class TestUsersRoute(unittest.TestCase):
         self.assertIn("There are no users registered",
                       response_data['data'][0])
 
-    def test_get_user_by_id_with_valid_id(self):
+    def test_get_user_by_id_when_user_exsits(self):
         input_data = {
             "firstname": "Jane",
             "lastname": "Starr",
@@ -70,37 +70,13 @@ class TestUsersRoute(unittest.TestCase):
         reponse_data = json.loads(response.data.decode())
         user_id = reponse_data["data"][0]["id"]
 
-        input_data = {
-            "user_id": user_id
-        }
         response = self.app_tester.get(
-            f'/api/v1/users/{user_id}', json=input_data)
+            f'/api/v1/users/{user_id}')
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(input_data["user_id"], response_data['data'][0]["id"])
+        self.assertIs(type(response_data['data'][0]["id"]), int)
+        self.assertEqual(user_id, response_data['data'][0]['id'])
 
-    def test_get_user_by_id_with_invalid_request_id(self):
-        input_data = {
-            "firstname": "Jane",
-            "lastname": "Starr",
-            "othernames": "",
-            "email": "starr@email.com",
-            "phonenumber": "0773287332",
-            "username": "starr",
-            "password": "W3l(0M3_"
-        }
-        response = self.app_tester.post('/api/v1/auth/signup', json=input_data)
-        reponse_data = json.loads(response.data.decode())
-        user_id = reponse_data["data"][0]["id"]
-
-        input_data = {
-            "user_id": 1
-        }
-        response = self.app_tester.get(
-            f'/api/v1/users/{user_id}', json=input_data)
-        response_data = json.loads(response.data.decode())
-        self.assertEqual(response.status_code, 400)
-        self.assertIn("Invalid request", response_data['error'])
 
     def test_get_user_by_id_when_user_does_not_exist(self):
 

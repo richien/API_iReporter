@@ -14,10 +14,16 @@ class Signin(MethodView):
 
     def post(self):
 
-        request_data = request.get_json()
         try:
-            is_valid_request = Validate.validate_signin_request(request_data)
-
+            if request.json:
+                request_data = request.get_json()
+                is_valid_request = Validate.validate_signin_request(request_data)
+            else:
+                error_message = {
+                    'status': 400,
+                    'error': "Invalid request - request body cannot be empty"
+                }
+                raise ValueError("Empty request body")
             if is_valid_request["is_valid"]:
                 if "email" in request_data.keys():
                     email = request_data["email"]
