@@ -1,6 +1,7 @@
 from config import config
 import psycopg2
 
+
 class Connect():
 
     def __init__(self):
@@ -18,7 +19,7 @@ class Connect():
             self.cursor = self.connect.cursor()
             return self.cursor
         except (Exception, psycopg2.DatabaseError) as error:
-            return error
+            return error.message
     
     def down(self):
         """
@@ -28,3 +29,6 @@ class Connect():
         if self.connect is not None:
             self.cursor.close()
             self.connect.close()
+    
+    def commit(self):
+        self.connect.commit()
