@@ -138,7 +138,7 @@ class TestAuthenticationRoutes(unittest.TestCase):
             "email": "pms@email.com",
             "password": "W3l(0M3_"
         }
-        response = self.app_tester.post('/api/v1/auth/signin', json=input_data)
+        response = self.app_tester.post('/api/v1/auth/login', json=input_data)
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 200)
         self.assertIn("pms@email.com was successfully signed in",
@@ -163,7 +163,7 @@ class TestAuthenticationRoutes(unittest.TestCase):
             "email": "pms@email.com",
             "password": "W3l(0M3_"
         }
-        response = self.app_tester.post('/api/v1/auth/signin', json=input_data)
+        response = self.app_tester.post('/api/v1/auth/login', json=input_data)
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 401)
         self.assertIn(
@@ -188,7 +188,7 @@ class TestAuthenticationRoutes(unittest.TestCase):
             "email": "pete@email.com",
             "password": "password"
         }
-        response = self.app_tester.post('/api/v1/auth/signin', json=input_data)
+        response = self.app_tester.post('/api/v1/auth/login', json=input_data)
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 401)
         self.assertIn(
@@ -213,11 +213,11 @@ class TestAuthenticationRoutes(unittest.TestCase):
             "email": "pms2@email.com",
             "password": "password"
         }
-        response = self.app_tester.post('/api/v1/auth/signin', json=input_data)
+        response = self.app_tester.post('/api/v1/auth/login', json=input_data)
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 401)
         self.assertIn(
-            f"Unauthorized - Wrong signin credentials supplied",
+            f"Unauthorized - Wrong login credentials supplied",
             response_data["error"])
 
     def test_sign_in_with_valid_username_and_password(self):
@@ -239,7 +239,7 @@ class TestAuthenticationRoutes(unittest.TestCase):
             "username": "pms3",
             "password": "W3l(0M3_"
         }
-        response = self.app_tester.post('/api/v1/auth/signin', json=input_data)
+        response = self.app_tester.post('/api/v1/auth/login', json=input_data)
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 200)
         self.assertIn(
@@ -265,7 +265,7 @@ class TestAuthenticationRoutes(unittest.TestCase):
             "username": "pete@email.com",
             "password": "password"
         }
-        response = self.app_tester.post('/api/v1/auth/signin', json=input_data)
+        response = self.app_tester.post('/api/v1/auth/login', json=input_data)
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 401)
         self.assertIn(
@@ -290,7 +290,7 @@ class TestAuthenticationRoutes(unittest.TestCase):
             "username": "pete",
             "password": "W3l(0M3_"
         }
-        response = self.app_tester.post('/api/v1/auth/signin', json=input_data)
+        response = self.app_tester.post('/api/v1/auth/login', json=input_data)
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 401)
         self.assertIn(
@@ -315,11 +315,11 @@ class TestAuthenticationRoutes(unittest.TestCase):
             "username": "pete",
             "password": "password"
         }
-        response = self.app_tester.post('/api/v1/auth/signin', json=input_data)
+        response = self.app_tester.post('/api/v1/auth/login', json=input_data)
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 401)
         self.assertIn(
-            f"Unauthorized - Wrong signin credentials supplied",
+            f"Unauthorized - Wrong login credentials supplied",
             response_data["error"])
 
     def test_sign_in_with_invalid_key_in_request_body(self):
@@ -328,7 +328,7 @@ class TestAuthenticationRoutes(unittest.TestCase):
             "user": "pete",
             "password": "W3l(0M3_"
         }
-        response = self.app_tester.post('/api/v1/auth/signin', json=input_data)
+        response = self.app_tester.post('/api/v1/auth/login', json=input_data)
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 400)
         self.assertIn(

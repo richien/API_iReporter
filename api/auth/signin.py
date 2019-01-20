@@ -72,7 +72,7 @@ class Signin(MethodView):
                 else:
                     error_message = {
                         "status": 401,
-                        "error": "Unauthorized - Wrong signin credentials supplied - Try again"}
+                        "error": "Unauthorized - Wrong login credentials supplied - Try again"}
                     raise Exception("Unauthorized")
             else:
                 error_message = {

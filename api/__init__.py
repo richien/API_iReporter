@@ -35,10 +35,10 @@ def page_not_found(e):
             		"username" : "string",
             		"password" : "string - Atleast 8 characters long"
         			}}],
-        ['/api/v1/auth/signin', 'POST', {'body': {
+        ['/api/v1/auth/login', 'POST', {'body': {
         			'username': 'String',
         			'password': 'Enter user password.',
-        			'Options' : "Can use email instead of username, to signin"
+        			'Options' : "Can use email instead of username, to log in"
         		}}],
         ['/api/v1/users', 'GET'],
         ['/api/v1/users/<int:user_id>', 'GET', {'body': {'user_id': 'int'}}]
