@@ -32,7 +32,8 @@ It can be accessed on [Heroku](https://api-ireporter-heroku.herokuapp.com).
 
    From within the virtual environment, set the application name and environment and then start the developement server.
    
-   ``` export FLASK_ENV=development
+   ```
+       export FLASK_ENV=development
        export FLASK_NAME=app
        flask run
    ```
