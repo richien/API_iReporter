@@ -6,9 +6,10 @@ from api.models.database import userdb_api
 
 
 class User:
-    def __init__(self, user_id=None, **kwargs):
+    def __init__(self, user_id=None, registered=None, **kwargs):
 
         self.id = user_id 
+        self.registered = registered
         self.firstname = kwargs['firstname']
         self.lastname = kwargs['lastname']
         self.othernames = kwargs['othernames']
@@ -16,7 +17,6 @@ class User:
         self.phonenumber = kwargs['phonenumber']
         self.username = kwargs['username']
         self.password = kwargs['password']
-        self.registered = None
         self.isAdmin = kwargs['isAdmin']
 
     def to_dict(self):
