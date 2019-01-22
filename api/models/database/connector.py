@@ -1,5 +1,6 @@
 from config import config
 import psycopg2
+import psycopg2.extras
 
 
 class Connect():
@@ -16,7 +17,7 @@ class Connect():
         try:
             params = config()
             self.connect = psycopg2.connect(**params)
-            self.cursor = self.connect.cursor()
+            self.cursor = self.connect.cursor(cursor_factory = psycopg2.extras.RealDictCursor)
             return self.cursor
         except (Exception, psycopg2.DatabaseError) as error:
             return error.message

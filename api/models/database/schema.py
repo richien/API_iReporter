@@ -12,10 +12,10 @@ def create_tables():
             firstname VARCHAR(50) NOT NULL, 
             lastname VARCHAR(50) NOT NULL,
             othernames VARCHAR(50), 
-            email VARCHAR(100) NOT NULL,
+            email VARCHAR(50) NOT NULL,
             phonenumber VARCHAR(20), 
             username VARCHAR(20) NOT NULL,
-            password VARCHAR(50) NOT NULL,
+            password TEXT NOT NULL,
             registered DATE NOT NULL DEFAULT CURRENT_DATE,
             isAdmin BOOLEAN NOT NULL
         )

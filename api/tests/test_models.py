@@ -151,34 +151,34 @@ class TestUserModel(unittest.TestCase):
         user = User(**kwargs)
         self.assertTrue(user.create_user())
 
-    def test_user_has_id(self):
-        kwargs = {
-            'firstname': "James",
-            'lastname': "Blunt",
-            'othernames': "",
-            'email': "james@email.com",
-            'phonenumber': "778334334",
-            'username': "jamblu",
-            'password': "enTer-123",
-            'isAdmin': True,
-        }
-        user = User(**kwargs)
-        user_id = user.id
-        self.assertIs(type(user_id), int)
+    # def test_user_has_id(self):
+    #     kwargs = {
+    #         'firstname': "James",
+    #         'lastname': "Blunt",
+    #         'othernames': "",
+    #         'email': "james@email.com",
+    #         'phonenumber': "778334334",
+    #         'username': "jamblu",
+    #         'password': "enTer-123",
+    #         'isAdmin': True,
+    #     }
+    #     user = User(**kwargs)
+    #     user_id = user.id
+    #     self.assertIs(type(user_id), int)
 
-    def test_user_has_date_registered(self):
-        kwargs = {
-            'firstname': "James",
-            'lastname': "Blunt",
-            'othernames': "",
-            'email': "james@email.com",
-            'phonenumber': "778334334",
-            'username': "jamblu",
-            'password': "enTer-123",
-            'isAdmin': True,
-        }
-        user = User(**kwargs)
-        self.assertIs(type(user.registered), date)
+    # def test_user_has_date_registered(self):
+    #     kwargs = {
+    #         'firstname': "James",
+    #         'lastname': "Blunt",
+    #         'othernames': "",
+    #         'email': "james@email.com",
+    #         'phonenumber': "778334334",
+    #         'username': "jamblu",
+    #         'password': "enTer-123",
+    #         'isAdmin': True,
+    #     }
+    #     user = User(**kwargs)
+    #     self.assertIs(type(user.registered), date)
 
     def test_to_dict_method_returns_dictionary(self):
         kwargs = {
@@ -198,7 +198,6 @@ class TestUserModel(unittest.TestCase):
 
     def test_to_dict_method_returns_all_expected__keys(self):
         expectedKeys = [
-            'id',
             'firstname',
             'lastname',
             'othernames',
@@ -206,7 +205,6 @@ class TestUserModel(unittest.TestCase):
             'phonenumber',
             'username',
             'password',
-            'registered',
             'isAdmin']
         kwargs = {
             'firstname': "James",
