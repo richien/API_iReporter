@@ -11,7 +11,7 @@ class TestValidate(unittest.TestCase):
     def test_validate_incident_post_request_with_valid_request_data(self):
 
         request_data = {
-            "createdBy": 5000,
+            "createdby": 5000,
             "type": "red-flag",
             "location": "33.92300, 44.9084551",
             "status": "draft",

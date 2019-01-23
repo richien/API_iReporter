@@ -19,7 +19,7 @@ class RedFlagsView(MethodView):
             incidents = incidentdb_api.get_all_redflag_incidents()
             for data in incidents:
                 if data['type'].lower() == 'red-flag':
-                    red_flag = Incident(**data)
+                    red_flag = Incident(data['incident_id'], data['createdon'], **data)
                     red_flags.append(red_flag.to_dict())
                     
             if not red_flags:
