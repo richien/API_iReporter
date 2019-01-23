@@ -13,9 +13,7 @@ class TestRedFlagsRoute(unittest.TestCase):
     def setUp(self):
         self.app_tester = app.test_client()
         self.input_data = {
-    #         "id": 2,
-            # "createdOn": "12-12-2018",
-            "createdBy": 498,
+            "createdby": 498,
             "type": "red-flag",
             "location": "33.92300, 44.9084551",
             "status": "draft",
@@ -26,29 +24,15 @@ class TestRedFlagsRoute(unittest.TestCase):
          }
     def tearDown(self):
         incidentdb_api.delete_user_by_type_and_user_id(
-            self.input_data['type'], self.input_data['createdBy'])
+            self.input_data['type'], self.input_data['createdby'])
 
 
-    # def test_get_red_flags_with_data_present(self):
+    def test_get_red_flags_with_data_present(self):
 
-    #     data = {
-    #         "id": 2,
-    #         "createdOn": "12-12-2018",
-    #         "createdBy": 5000,
-    #         "type": "red-flag",
-    #         "location": "33.92300, 44.9084551",
-    #         "status": "draft",
-    #         "images": ["image_1.png", "image_2.jpg"],
-    #         "videos": ["vid_1.mp4"],
-    #         "comment": "Accidental post!",
-    #         "title": "Roads in poor condition"
-    #     }
-    #     red_flags.append(data)
-    #     response = self.app_tester.get('/api/v1/red-flags')
-    #     response_data = json.loads(response.data.decode())
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertIn(data, response_data['data'])
-    #     self.assertEqual(200, response_data['status'])
+        response = self.app_tester.get('/api/v1/red-flags')
+        response_data = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(200, response_data['status'])
 
     # def test_get_red_flags_with_data_absent(self):
 
@@ -71,7 +55,7 @@ class TestRedFlagsRoute(unittest.TestCase):
     #     data = {
     #         "id": 2,
     #         "createdOn": "12-12-2018",
-    #         "createdBy": 5000,
+    #         "createdby": 5000,
     #         "type": "red-flag",
     #         "location": "33.92300, 44.9084551",
     #         "status": "draft",
@@ -125,7 +109,7 @@ class TestRedFlagsRoute(unittest.TestCase):
     def test_create_red_flag_with_invalid_type_field(self):
 
         input_data = {
-            "createdBy": 1000,
+            "createdby": 1000,
             "type": "intervention",
             "location": "23.000, 55.90",
             "status": "draft",
@@ -144,7 +128,7 @@ class TestRedFlagsRoute(unittest.TestCase):
     #     data = {
     #         "id": 2,
     #         "createdOn": "12-12-2018",
-    #         "createdBy": 5000,
+    #         "createdby": 5000,
     #         "type": "red-flag",
     #         "location": "33.92300, 44.9084551",
     #         "status": "draft",
@@ -174,7 +158,7 @@ class TestRedFlagsRoute(unittest.TestCase):
     #     data = {
     #         "id": 2,
     #         "createdOn": "12-12-2018",
-    #         "createdBy": 5000,
+    #         "createdby": 5000,
     #         "type": "red-flag",
     #         "location": "33.92300, 44.9084551",
     #         "status": "draft",
@@ -204,7 +188,7 @@ class TestRedFlagsRoute(unittest.TestCase):
     #     data = {
     #         "id": 2,
     #         "createdOn": "12-12-2018",
-    #         "createdBy": 5000,
+    #         "createdby": 5000,
     #         "type": "red-flag",
     #         "location": "33.92300, 44.9084551",
     #         "status": "draft",
@@ -244,7 +228,7 @@ class TestRedFlagsRoute(unittest.TestCase):
     #     data = {
     #         "id": 2,
     #         "createdOn": "12-12-2018",
-    #         "createdBy": 5000,
+    #         "createdby": 5000,
     #         "type": "red-flag",
     #         "location": "33.92300, 44.9084551",
     #         "status": "draft",
@@ -272,7 +256,7 @@ class TestRedFlagsRoute(unittest.TestCase):
     #     data = {
     #         "id": 2,
     #         "createdOn": "12-12-2018",
-    #         "createdBy": 5000,
+    #         "createdby": 5000,
     #         "type": "red-flag",
     #         "location": "33.92300, 44.9084551",
     #         "status": "draft",
@@ -298,7 +282,7 @@ class TestRedFlagsRoute(unittest.TestCase):
     # def test_delete_red_flag(self):
 
     #     input_data = {
-    #         "createdBy": 5000,
+    #         "createdby": 5000,
     #         "type": "red-flag",
     #         "location": "33.92300, 44.9084551",
     #         "status": "draft",

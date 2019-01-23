@@ -8,7 +8,6 @@ from api.auth.authenticate import Authenticate
 from api.models.user_model import User
 from api.validator import Validate
 
-users = data.incidents_data["users"]
 
 
 class Signup(MethodView):

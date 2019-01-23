@@ -8,7 +8,7 @@ class Incident:
     def __init__(self, id=None, createdOn=None, **kwargs):
         self.id = id 
         self.createdOn = createdOn 
-        self.createdBy = kwargs['createdBy']
+        self.createdBy = kwargs['createdby']
         self.type = kwargs['type']
         self.location = kwargs['location']
         self.status = kwargs['status']

@@ -7,7 +7,7 @@ class Validate:
     def validate_incident_post_request(request):
 
         required_fields = [
-            "createdBy",
+            "createdby",
             "type",
             "location",
             "status",

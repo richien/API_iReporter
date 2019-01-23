@@ -5,9 +5,9 @@ import data
 from api.validator import Validate
 from api.models.database import incidentdb_api
 from api.auth.authenticate import Authenticate
+from api.models.database import incidentdb_api
 
 incidents = data.incidents_data['data']
-
 
 
 class RedFlagsView(MethodView):
@@ -16,10 +16,12 @@ class RedFlagsView(MethodView):
 
         if not red_flag_id:
             red_flags = []
+            incidents = incidentdb_api.get_all_redflag_incidents()
             for data in incidents:
                 if data['type'].lower() == 'red-flag':
-                    red_flag = Incident(**data)
+                    red_flag = Incident(data['incident_id'], data['createdon'], **data)
                     red_flags.append(red_flag.to_dict())
+                    
             if not red_flags:
                 message = {'status': 200, 'data': ["No records found"]}
             else:
@@ -55,7 +57,6 @@ class RedFlagsView(MethodView):
 
         try:
             error_message = {'status': 500}
-            print(f"REQUEST: {request.json}")
             if request.json:
                 request_data = request.get_json()
                 validation_result = Validate.validate_incident_post_request(
@@ -70,7 +71,6 @@ class RedFlagsView(MethodView):
                     #user_id = Authenticate.get_identity(request)
                     #if user_id == request_data["createdBy"]:
                     red_flag = Incident(**request_data)
-                        #incidents.append(red_flag.to_dict())
                     red_flag_id = incidentdb_api.create_incident(**red_flag.to_dict())
                     message = {"status": 201,
                                 "data": [{

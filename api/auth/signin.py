@@ -8,7 +8,6 @@ from api.auth.authenticate import Authenticate
 from api.validator import Validate
 from api.models.database import userdb_api
 
-#users = data.incidents_data["users"]
 
 
 class Signin(MethodView):
@@ -64,8 +63,6 @@ class Signin(MethodView):
                     isAdmin=user_data["isadmin"]
                 )
                 if check_password_hash(user.password, password):
-                    # token = Authenticate.retrieve_token_from_request(request)
-                    # if not token:
                     token = Authenticate.generate_access_token(
                         user.id, user.isAdmin)
                     message = {

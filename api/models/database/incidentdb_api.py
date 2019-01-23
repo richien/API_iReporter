@@ -47,17 +47,7 @@ def get_all_redflag_incidents():
     recent records first.
     """
     sql = """
-        SELECT (
-            incident_id,
-            createdOn,
-            createdBy,
-            type,
-            location,
-            status,
-            comment,
-            images,
-            videos,
-            title )
+        SELECT *
         FROM incidents
         WHERE type = 'red-flag'
         ORDER BY createdOn DESC
@@ -80,17 +70,7 @@ def get_all_intervention_incidents():
     recent records first.
     """
     sql = """
-        SELECT (
-            incident_id,
-            createdOn,
-            createdBy,
-            type,
-            location,
-            status,
-            comment,
-            images,
-            videos,
-            title )
+        SELECT *
         FROM incidents
         WHERE type = 'intervention'
         ORDER BY createdOn DESC
