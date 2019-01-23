@@ -64,6 +64,27 @@ def get_all_redflag_incidents():
     finally:
         conn.down()
 
+def get_incident_by_id(incident_id):
+    """
+    Retrieve an incident by ID
+    """
+    sql = f"""
+        SELECT *
+        FROM incidents
+        WHERE incident_id = {incident_id}
+    """
+    try:
+        conn = Connect()
+        cur = conn.up()
+        cur.execute(sql)
+        row = cur.fetchone()
+        cur.close()
+        return row
+    except Exception as error:
+        return error
+    finally:
+        conn.down()
+
 def get_all_intervention_incidents():
     """
     Retrieve all interventions with most 

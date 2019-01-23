@@ -29,13 +29,13 @@ class RedFlagsView(MethodView):
         else:
             try:
                 red_flag = None
-                for index, data in enumerate(incidents):
-                    if incidents[index]['id'] == red_flag_id:
-                        red_flag = Incident(**data)
+                incident = incidentdb_api.get_incident_by_id(red_flag_id)
+                if incident and incident['incident_id'] == red_flag_id:
+                        red_flag = Incident(incident['incident_id'], incident['createdon'], **incident)
                 if red_flag:
                     message = {
                         "status": 200,
-                        "data": red_flag.to_dict()
+                        "data": [red_flag.to_dict()]
                     }
                 else:
                     message = {
