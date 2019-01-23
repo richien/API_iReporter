@@ -92,35 +92,39 @@ class TestRedFlagsRoute(unittest.TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertIn("field should be red-flag", response_data['error'])
 
-    # def test_edit_red_flag_location(self):
+    def test_edit_red_flag_location(self):
 
-    #     data = {
-    #         "id": 2,
-    #         "createdOn": "12-12-2018",
-    #         "createdby": 5000,
-    #         "type": "red-flag",
-    #         "location": "33.92300, 44.9084551",
-    #         "status": "draft",
-    #         "images": ["image_1.png", "image_2.jpg"],
-    #         "videos": ["vid_1.mp4"],
-    #         "comment": "Accidental post!",
-    #         "title": "Roads in poor condition"
-    #     }
-    #     red_flags.append(data)
-    #     input_data = input_data = {
-    #         "location": "11.12345, 12.12345"
-    #     }
+        data = {"id": 36}
+        input_data = input_data = {
+            "location": "00.0000, 00.0001"
+        }
 
-    #     red_flag_id = data['id']
-    #     response = self.app_tester.patch(
-    #         '/api/v1/red-flags/{0}/location'.format(red_flag_id),
-    #         json=input_data)
-    #     response_data = json.loads(response.data.decode())
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertIn("Updated red-flag record's location",
-    #                   response_data['data'][0]['message'])
-    #     self.assertEqual("11.12345, 12.12345",
-    #                      response_data['data'][0]['content']['location'])
+        red_flag_id = data['id']
+        response = self.app_tester.patch(
+            '/api/v1/red-flags/{0}/location'.format(red_flag_id),
+            json=input_data)
+        response_data = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Updated red-flag record's location",
+                      response_data['data'][0]['message'])
+        self.assertEqual("00.0000, 00.0001",
+                         response_data['data'][0]['content']['location'])
+    
+    def test_edit_red_flag_location_with_invalid_location(self):
+
+        data = {"id": 36}
+        input_data = input_data = {
+            "location": "11.12345"
+        }
+
+        red_flag_id = data['id']
+        response = self.app_tester.patch(
+            '/api/v1/red-flags/{0}/location'.format(red_flag_id),
+            json=input_data)
+        response_data = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("Failed to update red-flag record's location",
+                      response_data['error'])
 
     # def test_edit_red_flag_comment(self):
 
@@ -192,33 +196,6 @@ class TestRedFlagsRoute(unittest.TestCase):
     #     self.assertEqual("""Invalid request - request body cannot be empty""",
     #                      response_data['error'])
 
-    # def test_edit_red_flag_location_with_invalid_location(self):
-
-    #     data = {
-    #         "id": 2,
-    #         "createdOn": "12-12-2018",
-    #         "createdby": 5000,
-    #         "type": "red-flag",
-    #         "location": "33.92300, 44.9084551",
-    #         "status": "draft",
-    #         "images": ["image_1.png", "image_2.jpg"],
-    #         "videos": ["vid_1.mp4"],
-    #         "comment": "Accidental post!",
-    #         "title": "Roads in poor condition"
-    #     }
-    #     red_flags.append(data)
-    #     input_data = input_data = {
-    #         "location": "11.12345"
-    #     }
-
-    #     red_flag_id = data['id']
-    #     response = self.app_tester.patch(
-    #         '/api/v1/red-flags/{0}/location'.format(red_flag_id),
-    #         json=input_data)
-    #     response_data = json.loads(response.data.decode())
-    #     self.assertEqual(response.status_code, 400)
-    #     self.assertIn("Failed to update red-flag record's location",
-    #                   response_data['error'])
 
     # def test_edit_red_flag_comment_with_empty_string(self):
 

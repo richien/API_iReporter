@@ -108,6 +108,28 @@ def get_all_intervention_incidents():
     finally:
         conn.down()
 
+def update_location(incident_id, location=None):
+    """
+    Update an incident's location.
+    """
+    sql = f"""
+        UPDATE incidents
+        SET location='{location}'
+        WHERE incident_id = {incident_id}
+        RETURNING incident_id
+    """    
+    try:
+        conn = Connect()
+        cur = conn.up()
+        cur.execute(sql)
+        row = cur.fetchone()
+        cur.close()
+        return row
+    except Exception as error:
+        return error
+    finally:
+        conn.down()
+
 def delete_user_by_type_and_user_id(type, user_id):
     """
     Delete all users.

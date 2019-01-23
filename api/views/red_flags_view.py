@@ -68,8 +68,6 @@ class RedFlagsView(MethodView):
                 raise ValueError("Empty request body")
             if validation_result["is_valid"]:
                 if request_data['type'].lower() == 'red-flag':
-                    #user_id = Authenticate.get_identity(request)
-                    #if user_id == request_data["createdBy"]:
                     red_flag = Incident(**request_data)
                     red_flag_id = incidentdb_api.create_incident(**red_flag.to_dict())
                     message = {"status": 201,
@@ -105,9 +103,12 @@ class RedFlagsView(MethodView):
 
             request_data = request.get_json()
             red_flag = None
-            for index, data in enumerate(incidents):
-                if incidents[index]['id'] == red_flag_id:
-                    red_flag = Incident(**data)
+            incident = incidentdb_api.get_incident_by_id(red_flag_id)
+            if incident and incident['incident_id'] == red_flag_id:
+                    red_flag = Incident(
+                        incident['incident_id'], 
+                        incident['createdon'], 
+                        **incident)                   
             if not red_flag:
                 error_message = {
                     "status": 404,
@@ -123,7 +124,7 @@ class RedFlagsView(MethodView):
                             "data": [{
                                 "id": red_flag_id,
                                 "message": "Updated red-flag record's location",
-                                "content": updated_data
+                                "content": red_flag.to_dict()
                             }]
                         }
                 else:
