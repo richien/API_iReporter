@@ -26,11 +26,11 @@ def create_tables():
             createdOn DATE NOT NULL DEFAULT CURRENT_DATE,
             createdBy INTEGER NOT NULL, 
             type VARCHAR(15) NOT NULL, 
-            location VARCHAR(20),
+            location TEXT,
             status VARCHAR(30) NOT NULL,
             comment TEXT NOT NULL,
-            images TEXT [], 
-            videos TEXT [],
+            images TEXT, 
+            videos TEXT,
             title TEXT NOT NULL,
             FOREIGN KEY (createdBy)
             REFERENCES users (user_id)

@@ -7,54 +7,21 @@ import data
 
 class TestIncidentModel(unittest.TestCase):
 
-    def test_initialize_incident_without_id(self):
-        kwargs = {
-            'createdBy': "1020",
-            'type': "red-flag",
-            'location': "77.8334334, 65.09873",
-            'status': "draft",
-            'images': [],
-            'videos': ['vid_1.mp4'],
-            'comment': "bad road",
-            'title': 'really needs repair'
-        }
-        incident = Incident(**kwargs)
-        self.assertIsInstance(incident, Incident)
-        self.assertIn("vid_1.mp4", incident.videos)
-        self.assertIs(type(incident.createdOn), date)
-
-    def test_initialize_incident_with_id(self):
-        kwargs = {
-            'createdBy': "1020",
-            'type': "red-flag",
-            'location': "77.8334334, 65.09873",
-            'status': "draft",
-            'images': [],
-            'videos': ['vid_1.mp4'],
-            'comment': "bad road",
-            'title': 'really needs repair'
-        }
-        incident = Incident(id=1, **kwargs)
-        self.assertIsInstance(incident, Incident)
-        self.assertEqual(1, incident.id)
-        self.assertIs(type(incident.createdOn), date)
-
-    def test_initialize_incident_with_date(self):
-        kwargs = {
-            'createdBy': "1020",
-            'createdOn': datetime.strptime('20181212', '%Y%m%d').date(),
-            'type': "red-flag",
-            'location': "77.8334334, 65.09873",
-            'status': "draft",
-            'images': [],
-            'videos': ['vid_1.mp4'],
-            'comment': "bad road",
-            'title': 'really needs repair'
-        }
-        incident = Incident(id=1, **kwargs)
-        self.assertIsInstance(incident, Incident)
-        self.assertEqual(1, incident.id)
-        self.assertIs(type(incident.createdOn), date)
+    # def test_initialize_incident_without_id(self):
+    #     kwargs = {
+    #         'createdBy': "1020",
+    #         'type': "red-flag",
+    #         'location': "77.8334334, 65.09873",
+    #         'status': "draft",
+    #         'images': [],
+    #         'videos': ['vid_1.mp4'],
+    #         'comment': "bad road",
+    #         'title': 'really needs repair'
+    #     }
+    #     incident = Incident(**kwargs)
+    #     self.assertIsInstance(incident, Incident)
+    #     self.assertIn("vid_1.mp4", incident.videos)
+    #     self.assertIs(type(incident.createdOn), date)
 
     def test_to_dict_method_returns_dictionary(self):
         kwargs = {

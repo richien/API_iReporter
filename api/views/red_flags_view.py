@@ -3,8 +3,11 @@ from flask.views import MethodView
 from api.models.incident_model import Incident
 import data
 from api.validator import Validate
+from api.models.database import incidentdb_api
+from api.auth.authenticate import Authenticate
 
 incidents = data.incidents_data['data']
+
 
 
 class RedFlagsView(MethodView):
@@ -51,6 +54,8 @@ class RedFlagsView(MethodView):
     def post(self):
 
         try:
+            error_message = {'status': 500}
+            print(f"REQUEST: {request.json}")
             if request.json:
                 request_data = request.get_json()
                 validation_result = Validate.validate_incident_post_request(
@@ -62,15 +67,17 @@ class RedFlagsView(MethodView):
                 raise ValueError("Empty request body")
             if validation_result["is_valid"]:
                 if request_data['type'].lower() == 'red-flag':
+                    #user_id = Authenticate.get_identity(request)
+                    #if user_id == request_data["createdBy"]:
                     red_flag = Incident(**request_data)
-                    incidents.append(red_flag.to_dict())
-                    red_flag_id = red_flag.id
+                        #incidents.append(red_flag.to_dict())
+                    red_flag_id = incidentdb_api.create_incident(**red_flag.to_dict())
                     message = {"status": 201,
-                               "data": [{
-                                   "id": red_flag_id,
-                                        "message": "Created red-flag record"
-                                        }]
-                               }
+                                "data": [{
+                                    "id": red_flag_id,
+                                            "message": "Created red-flag record"
+                                            }]
+                                }
                     return jsonify(message), message['status']
                 else:
                     error_message = {'status': 400,
