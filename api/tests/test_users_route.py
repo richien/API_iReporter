@@ -56,26 +56,26 @@ class TestUsersRoute(unittest.TestCase):
         self.assertIn("There are no users registered",
                       response_data['data'][0])
 
-    def test_get_user_by_id_when_user_exsits(self):
-        input_data = {
-            "firstname": "Jane",
-            "lastname": "Starr",
-            "othernames": "",
-            "email": "starry@email.com",
-            "phonenumber": "0773287332",
-            "username": "jstarr",
-            "password": "W3l(0M3_"
-        }
-        response = self.app_tester.post('/api/v1/auth/signup', json=input_data)
-        reponse_data = json.loads(response.data.decode())
-        user_id = reponse_data["data"][0]["id"]
+    # def test_get_user_by_id_when_user_exsits(self):
+    #     input_data = {
+    #         "firstname": "Jane",
+    #         "lastname": "Starr",
+    #         "othernames": "",
+    #         "email": "starry@email.com",
+    #         "phonenumber": "0773287332",
+    #         "username": "jstarr",
+    #         "password": "W3l(0M3_"
+    #     }
+    #     response = self.app_tester.post('/api/v1/auth/signup', json=input_data)
+    #     reponse_data = json.loads(response.data.decode())
+    #     user_id = reponse_data["data"][0]["id"]
 
-        response = self.app_tester.get(
-            f'/api/v1/users/{user_id}')
-        response_data = json.loads(response.data.decode())
-        self.assertEqual(response.status_code, 200)
-        self.assertIs(type(response_data['data'][0]["id"]), int)
-        self.assertEqual(user_id, response_data['data'][0]['id'])
+    #     response = self.app_tester.get(
+    #         f'/api/v1/users/{user_id}')
+    #     response_data = json.loads(response.data.decode())
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertIs(type(response_data['data'][0]["id"]), int)
+    #     self.assertEqual(user_id, response_data['data'][0]['id'])
 
     def test_get_user_by_id_when_user_does_not_exist(self):
 

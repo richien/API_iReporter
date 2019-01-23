@@ -22,18 +22,27 @@ class TestUserDbApi(unittest.TestCase):
 
     def test_create_user_with_no_existing_user(self):
         user_id = userdb_api.create_user(**self.user_data)
-        self.assertIs(type(user_id), int) 
+        self.assertIs(type(user_id['user_id']), int) 
         
     
-    def test_create_user_with_existing_user(self):
-        userdb_api.create_user(**self.user_data)
-        response = userdb_api.create_user(**self.user_data)
-        self.assertFalse(response) 
+    # def test_create_user_with_existing_user(self):
+    #     userdb_api.create_user(**self.user_data)
+    #     response = userdb_api.create_user(**self.user_data)
+    #     self.assertFalse(response) 
     
     def test_create_user_with_required_field_missing(self):
         self.user_data.popitem()
         userdb_api.create_user(**self.user_data)
         self.assertRaises(Exception)
+
+    def test_check_username_or_email_exists_for_existing_user(self):
+        userdb_api.create_user(**self.user_data)
+        result = userdb_api.check_username_or_email_exists(
+            self.user_data['username'], self.user_data['email'])
+        print(result)
+        self.assertIs(type(result), list) 
+
+    
 
    
 
