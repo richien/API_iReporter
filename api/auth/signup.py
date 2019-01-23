@@ -62,6 +62,6 @@ class Signup(MethodView):
             error_message.update({"error-type": str(error)})
             return jsonify(error_message), error_message['status']
         except Exception as error:
-            error_message = {"status": 500}
+            error_message = {"status": 400}
             error_message.update({"error-type": str(error)})
             return jsonify(error_message), error_message['status']

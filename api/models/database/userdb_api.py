@@ -66,6 +66,50 @@ def check_username_or_email_exists(username, email):
     finally:
         conn.down()
 
+def check_username_exists(username):
+    """
+    check whether a username exists in
+    the users table.
+    Return the username, email, password, user_id and isAdmin if it exists
+    """
+    sql_select = """
+        SELECT * 
+        FROM users 
+        WHERE username = '{0}'
+    """.format(username)
+    try:
+        conn = Connect()
+        cur = conn.up()
+        cur.execute(sql_select)    
+        row = cur.fetchone()
+        return row
+    except Exception as error:
+        return error
+    finally:
+        conn.down()
+
+def check_email_exists(email):
+    """
+    check whether a email exists in
+    the users table.
+    Return the username, email, password, user_id and isAdmin if it exists
+    """
+    sql_select = """
+        SELECT *
+        FROM users 
+        WHERE email = '{0}'
+    """.format(email)
+    try:
+        conn = Connect()
+        cur = conn.up()
+        cur.execute(sql_select)    
+        row = cur.fetchone()
+        return row
+    except Exception as error:
+        return error
+    finally:
+        conn.down()
+
 
 def get_all_users():
     """
