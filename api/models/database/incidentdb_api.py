@@ -34,7 +34,6 @@ def create_incident(**incident):
         ))
         incident_id = cur.fetchone()
         conn.commit()
-        cur.close()
         return incident_id
     except Exception as error:
         return error
@@ -57,7 +56,6 @@ def get_all_redflag_incidents():
         cur = conn.up()
         cur.execute(sql)
         rows = cur.fetchall()
-        cur.close()
         return rows
     except Exception as error:
         return error
@@ -78,7 +76,6 @@ def get_incident_by_id(incident_id):
         cur = conn.up()
         cur.execute(sql)
         row = cur.fetchone()
-        cur.close()
         return row
     except Exception as error:
         return error
@@ -101,7 +98,6 @@ def get_all_intervention_incidents():
         cur = conn.up()
         cur.execute(sql)
         rows = cur.fetchall()
-        cur.close()
         return rows
     except Exception as error:
         return error
@@ -123,7 +119,29 @@ def update_location(incident_id, location=None):
         cur = conn.up()
         cur.execute(sql)
         row = cur.fetchone()
-        cur.close()
+        conn.commit()
+        return row
+    except Exception as error:
+        return error
+    finally:
+        conn.down()
+
+def update_comment(incident_id, comment=None):
+    """
+    Update an incident's comment.
+    """
+    sql = f"""
+        UPDATE incidents
+        SET comment='{comment}'
+        WHERE incident_id = {incident_id}
+        RETURNING incident_id
+    """    
+    try:
+        conn = Connect()
+        cur = conn.up()
+        cur.execute(sql)
+        row = cur.fetchone()
+        conn.commit()
         return row
     except Exception as error:
         return error

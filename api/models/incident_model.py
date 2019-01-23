@@ -45,10 +45,10 @@ class Incident:
                 self.location = location
             return updated_data
         elif comment:
-            updated_data = data.update(self.id, comment=comment)
-            if updated_data['updated']:
+            updated_data = incidentdb_api.update_comment(self.id, comment=comment)
+            if updated_data['incident_id']:
                 self.comment = comment
-            return updated_data['data']
+            return updated_data
 
     def delete_incident(self):
         deleted = data.do_delete(self.id)

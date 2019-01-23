@@ -142,7 +142,7 @@ class RedFlagsView(MethodView):
                             "data": [{
                                 "id": red_flag_id,
                                 "message": "Updated red-flag record's comment",
-                                "content": updated_data
+                                "content": red_flag.to_dict()
                             }]
                         }
                 else:
