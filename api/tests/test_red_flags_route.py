@@ -13,8 +13,6 @@ class TestRedFlagsRoute(unittest.TestCase):
     def setUp(self):
         self.app_tester = app.test_client()
         self.input_data = {
-    #         "id": 2,
-            # "createdOn": "12-12-2018",
             "createdBy": 498,
             "type": "red-flag",
             "location": "33.92300, 44.9084551",
@@ -29,26 +27,12 @@ class TestRedFlagsRoute(unittest.TestCase):
             self.input_data['type'], self.input_data['createdBy'])
 
 
-    # def test_get_red_flags_with_data_present(self):
+    def test_get_red_flags_with_data_present(self):
 
-    #     data = {
-    #         "id": 2,
-    #         "createdOn": "12-12-2018",
-    #         "createdBy": 5000,
-    #         "type": "red-flag",
-    #         "location": "33.92300, 44.9084551",
-    #         "status": "draft",
-    #         "images": ["image_1.png", "image_2.jpg"],
-    #         "videos": ["vid_1.mp4"],
-    #         "comment": "Accidental post!",
-    #         "title": "Roads in poor condition"
-    #     }
-    #     red_flags.append(data)
-    #     response = self.app_tester.get('/api/v1/red-flags')
-    #     response_data = json.loads(response.data.decode())
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertIn(data, response_data['data'])
-    #     self.assertEqual(200, response_data['status'])
+        response = self.app_tester.get('/api/v1/red-flags')
+        response_data = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(200, response_data['status'])
 
     # def test_get_red_flags_with_data_absent(self):
 

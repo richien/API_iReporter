@@ -6,9 +6,9 @@ import data
 class Incident:
 
     def __init__(self, id=None, createdOn=None, **kwargs):
-        self.id = id 
-        self.createdOn = createdOn 
-        self.createdBy = kwargs['createdBy']
+        self.id = id or kwargs['incident_id']
+        self.createdOn = createdOn or kwargs['createdon']
+        self.createdBy = kwargs['createdby']
         self.type = kwargs['type']
         self.location = kwargs['location']
         self.status = kwargs['status']
