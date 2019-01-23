@@ -6,8 +6,8 @@ import data
 class Incident:
 
     def __init__(self, id=None, createdOn=None, **kwargs):
-        self.id = id or random.randint(10000, 90000)
-        self.createdOn = createdOn or date.today()
+        self.id = id 
+        self.createdOn = createdOn 
         self.createdBy = kwargs['createdBy']
         self.type = kwargs['type']
         self.location = kwargs['location']
