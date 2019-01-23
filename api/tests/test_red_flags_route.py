@@ -5,8 +5,6 @@ from datetime import datetime
 from data import incidents_data
 from api.models.database import incidentdb_api
 
-red_flags = incidents_data['data']
-
 
 class TestRedFlagsRoute(unittest.TestCase):
 
@@ -34,57 +32,28 @@ class TestRedFlagsRoute(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(200, response_data['status'])
 
-    # def test_get_red_flags_with_data_absent(self):
+    def test_get_red_flag_by_id(self):
 
-    #     red_flags.clear()
-    #     response = self.app_tester.get('/api/v1/red-flags')
-    #     response_data = json.loads(response.data.decode())
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertEqual(200, response_data['status'])
-    #     self.assertIn("No records found", response_data['data'])
+        data = {"id": 34}
+        
+        red_flag_id = data['id']
+        response = self.app_tester.get(
+            '/api/v1/red-flags/{0}'.format(red_flag_id))
+        response_data = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(type(response_data['data'][0]['id']), int)
+        self.assertEqual(red_flag_id, response_data['data'][0]['id'])
 
-    # def test_get_red_flags_with_data_structure_missing(self):
-
-    #     response = self.app_tester.get('/api/v1/red-flags')
-    #     response_data = json.loads(response.data.decode())
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertEqual(200, response_data['status'])
-
-    # def test_get_red_flag_by_id(self):
-
-    #     data = {
-    #         "id": 2,
-    #         "createdOn": "12-12-2018",
-    #         "createdby": 5000,
-    #         "type": "red-flag",
-    #         "location": "33.92300, 44.9084551",
-    #         "status": "draft",
-    #         "images": ["image_1.png", "image_2.jpg"],
-    #         "videos": ["vid_1.mp4"],
-    #         "comment": "Accidental post!",
-    #         "title": "Roads in poor condition"
-    #     }
-    #     red_flags.append(data)
-    #     red_flag_id = data['id']
-    #     response = self.app_tester.get(
-    #         '/api/v1/red-flags/{0}'.format(red_flag_id))
-    #     response_data = json.loads(response.data.decode())
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertEqual(type(response_data['data']['id']), int)
-    #     self.assertEqual(red_flag_id, response_data['data']['id'])
-
-    # def test_get_red_flag_by_id_with_data_absent(self):
-
-    #     red_flags.clear()
-    #     input_data = {"red_flag_id": 12}
-    #     red_flag_id = input_data['red_flag_id']
-    #     response = self.app_tester.get(
-    #         f'/api/v1/red-flags/{red_flag_id}')
-    #     response_data = json.loads(response.data.decode())
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertEqual(200, response_data['status'])
-    #     self.assertEqual("No record  with ID:12 was found",
-    #                      response_data['data'][0]['message'])
+    def test_get_red_flag_by_id_with_data_absent(self):
+        input_data = {"red_flag_id": 12}
+        red_flag_id = input_data['red_flag_id']
+        response = self.app_tester.get(
+            f'/api/v1/red-flags/{red_flag_id}')
+        response_data = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(200, response_data['status'])
+        self.assertEqual("No record  with ID:12 was found",
+                         response_data['data'][0]['message'])
 
     def test_create_red_flag_with_data(self):
 
