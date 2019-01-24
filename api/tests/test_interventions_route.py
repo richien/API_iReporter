@@ -123,5 +123,98 @@ class TestInterventions(unittest.TestCase):
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 200)
         self.assertEqual(200, response_data['status'])
-        self.assertEqual("No record  with ID:12 was found",
-                         response_data['data'][0]['message'])
+        self.assertEqual(
+            "No record  with ID:12 was found", 
+            response_data['data'][0]['message'])
+    
+    def test_edit_red_flag_location(self):
+
+        input_data = input_data = {
+            "location": "00.0000, 00.0001"
+        }
+
+        red_flag_id = self.data['incident_id']
+        response = self.app_tester.patch(
+            '/api/v1/red-flags/{0}/location'.format(red_flag_id),
+            json=input_data)
+        response_data = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Updated red-flag record's location",
+                      response_data['data'][0]['message'])
+        self.assertEqual("00.0000, 00.0001",
+                         response_data['data'][0]['content']['location'])
+    
+    # def test_edit_red_flag_location_with_invalid_location(self):
+
+    #     input_data = input_data = {
+    #         "location": "11.12345"
+    #     }
+
+    #     red_flag_id = self.data['incident_id']
+    #     response = self.app_tester.patch(
+    #         '/api/v1/red-flags/{0}/location'.format(red_flag_id),
+    #         json=input_data)
+    #     response_data = json.loads(response.data.decode())
+    #     self.assertEqual(response.status_code, 400)
+    #     self.assertIn("Failed to update red-flag record's location",
+    #                   response_data['error'])
+
+    # def test_edit_red_flag_comment(self):
+
+    #     input_data = input_data = {
+    #         "comment": "Comment updated"
+    #     }
+
+    #     red_flag_id = self.data['incident_id']
+    #     response = self.app_tester.patch(
+    #         '/api/v1/red-flags/{0}/comment'.format(red_flag_id),
+    #         json=input_data)
+    #     response_data = json.loads(response.data.decode())
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertIn("Updated red-flag record's comment",
+    #                   response_data['data'][0]['message'])
+    #     self.assertEqual("Comment updated",
+    #                      response_data['data'][0]['content']['comment'])
+
+    # def test_edit_red_flag_unknown_field_in_request_body(self):
+
+    #     input_data = input_data = {
+    #         "coment": "Updated comment"
+    #     }
+
+    #     red_flag_id = self.data['incident_id']
+    #     response = self.app_tester.patch(
+    #         '/api/v1/red-flags/{0}/comment'.format(red_flag_id),
+    #         json=input_data)
+    #     response_data = json.loads(response.data.decode())
+    #     self.assertEqual(response.status_code, 404)
+    #     self.assertIn("Invalid field in request body", response_data['error'])
+
+    # def test_edit_red_flag_with_data_absent(self):
+
+    #     red_flag_id = self.data['incident_id']
+    #     response = self.app_tester.patch(
+    #         '/api/v1/red-flags/{0}/comment'.format(red_flag_id))
+    #     response_data = json.loads(response.data.decode())
+    #     self.assertEqual(response.status_code, 400)
+    #     self.assertEqual(400, response_data['status'])
+    #     self.assertEqual("""Invalid request - request body cannot be empty""",
+    #                      response_data['error'])
+
+
+    # def test_edit_red_flag_comment_with_empty_string(self):
+
+    #     input_data = input_data = {
+    #         "comment": " "
+    #     }
+
+    #     red_flag_id = self.data['incident_id']
+    #     response = self.app_tester.patch(
+    #         '/api/v1/red-flags/{0}/comment'.format(red_flag_id),
+    #         json=input_data)
+    #     response_data = json.loads(response.data.decode())
+    #     self.assertEqual(response.status_code, 400)
+    #     self.assertIn(
+    #         "Failed to update red-flag record's comment", 
+    #         response_data['error'])
+    

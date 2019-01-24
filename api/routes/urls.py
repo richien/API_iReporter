@@ -49,3 +49,7 @@ class Routes:
                          view_func=interventions_view, methods=['GET'])
         app.add_url_rule('/api/v1/interventions',
                          view_func=interventions_view, methods=['POST'])
+        app.add_url_rule('/api/v1/interventions/<int:intervention_id>/location',
+                         view_func=interventions_view, methods=['PATCH'])
+        app.add_url_rule('/api/v1/interventions/<int:intervention_id>/comment',
+                         view_func=interventions_view, methods=['PATCH'])
