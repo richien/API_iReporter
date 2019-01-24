@@ -1,13 +1,10 @@
-from flask import request, jsonify
+from flask import jsonify, request
 from flask.views import MethodView
-from api.models.incident_model import Incident
-import data
-from api.validator import Validate
-from api.models.database import incidentdb_api
+
 from api.auth.authenticate import Authenticate
 from api.models.database import incidentdb_api
-
-incidents = data.incidents_data['data']
+from api.models.incident_model import Incident
+from api.validator import Validate
 
 
 class RedFlagsView(MethodView):
@@ -68,13 +65,11 @@ class RedFlagsView(MethodView):
                 raise ValueError("Empty request body")
             if validation_result["is_valid"]:
                 if request_data['type'].lower() == 'red-flag':
-                    #user_id = Authenticate.get_identity(request)
-                    #if user_id == request_data["createdBy"]:
                     red_flag = Incident(**request_data)
                     red_flag_id = incidentdb_api.create_incident(**red_flag.to_dict())
                     message = {"status": 201,
                                 "data": [{
-                                    "id": red_flag_id,
+                                    "id": red_flag_id['incident_id'],
                                             "message": "Created red-flag record"
                                             }]
                                 }
@@ -105,9 +100,12 @@ class RedFlagsView(MethodView):
 
             request_data = request.get_json()
             red_flag = None
-            for index, data in enumerate(incidents):
-                if incidents[index]['id'] == red_flag_id:
-                    red_flag = Incident(**data)
+            incident = incidentdb_api.get_incident_by_id(red_flag_id)
+            if incident and incident['incident_id'] == red_flag_id:
+                    red_flag = Incident(
+                        incident['incident_id'], 
+                        incident['createdon'], 
+                        **incident)                   
             if not red_flag:
                 error_message = {
                     "status": 404,
@@ -123,7 +121,7 @@ class RedFlagsView(MethodView):
                             "data": [{
                                 "id": red_flag_id,
                                 "message": "Updated red-flag record's location",
-                                "content": updated_data
+                                "content": red_flag.to_dict()
                             }]
                         }
                 else:
@@ -141,7 +139,7 @@ class RedFlagsView(MethodView):
                             "data": [{
                                 "id": red_flag_id,
                                 "message": "Updated red-flag record's comment",
-                                "content": updated_data
+                                "content": red_flag.to_dict()
                             }]
                         }
                 else:
@@ -164,19 +162,20 @@ class RedFlagsView(MethodView):
     def delete(self, red_flag_id):
 
         try:
-            is_deleted = False
-            found = False
-            for index, data in enumerate(incidents):
-                if incidents[index]['id'] == red_flag_id:
-                    red_flag = Incident(**data)
-                    is_deleted = red_flag.delete_incident()
-                    found = True
-            if not found:
+            red_flag = None
+            incident = incidentdb_api.get_incident_by_id(red_flag_id)
+            if incident:
+                red_flag = Incident(
+                        incident['incident_id'], 
+                        incident['createdon'], 
+                        **incident)
+            if not red_flag:
                 error_message = {
                     "status": 404,
                     "error": "No record  with ID:{0} was found".format(red_flag_id)}
                 raise Exception("Record not found")
-            if is_deleted:
+            else:
+                red_flag.delete_incident();
                 message = {
                     "status": 200,
                     "data": [{
