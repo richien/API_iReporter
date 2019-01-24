@@ -2,6 +2,9 @@ from flask.views import MethodView
 from flask import jsonify, request
 from api.validator import Validate
 from api.models.incident_model import Incident
+from api.models.database import incidentdb_api
+
+
 from data import incidents_data
 
 
@@ -12,76 +15,80 @@ class InterventionsView(MethodView):
 
     def post(self):
 
-        request_data = request.get_json()
-        error_message = {}
         try:
-            validation_result = Validate.validate_incident_post_request(
-                request_data)
+            error_message = {'status': 500}
+            if request.json:
+                request_data = request.get_json()
+                validation_result = Validate.validate_incident_post_request(
+                    request_data)
+            else:
+                error_message = {
+                    'status': 400,
+                    'error': "Invalid request - request body cannot be empty"}
+                raise ValueError("Empty request body")
             if validation_result["is_valid"]:
                 if request_data['type'].lower() == 'intervention':
                     intervention = Incident(**request_data)
-                    incidents.append(intervention.to_dict())
-                    intervention_id = intervention.id
-                    message = {
-                        'status': 201,
-                        'data': [{
-                            'id': intervention_id,
-                            'message': 'Created intervention record'
-                        }]
-                    }
-                    return jsonify(message), 201
+                    intervention = incidentdb_api.create_incident(**intervention.to_dict())
+                    message = {"status": 201,
+                                "data": [{
+                                    "id": intervention['incident_id'],
+                                            "message": "Created intervention record"
+                                            }]
+                                }
+                    return jsonify(message), message['status']
                 else:
-                    error_message = {
-                        'status': 400, 'error': 'Type field should be intervention'}
+                    error_message = {'status': 400,
+                                     'error': 'Type field should be intervention'}
                     raise Exception('Invalid request field')
             else:
                 error_message = validation_result['message']
                 raise Exception("Validation Error")
+        except ValueError as error:
+            error_message.update({"error-type": str(error)})
+            return jsonify(error_message), error_message['status']
         except Exception as error:
             error_message.update({"error-type": str(error)})
             return jsonify(error_message), error_message['status']
 
+
     def get(self, intervention_id):
+
         if not intervention_id:
             interventions = []
+            incidents = incidentdb_api.get_all_intervention_incidents()
             for data in incidents:
                 if data['type'].lower() == 'intervention':
-                    intervention = Incident(**data)
+                    intervention = Incident(data['incident_id'], data['createdon'], **data)
                     interventions.append(intervention.to_dict())
+                    
             if not interventions:
                 message = {'status': 200, 'data': ["No records found"]}
             else:
                 message = {'status': 200, 'data': interventions}
         else:
-            request_data = request.get_json()
             try:
-                if not "intervention_id" in request_data.keys() or request_data['intervention_id'] != intervention_id:
-                    error_message = {
-                        'status': 400,
-                        'error': "Invalid request - invalid intervention_id supplied or key error in request body"
-                    }
-                    raise KeyError("Invalid request")
                 intervention = None
-                for index, data in enumerate(incidents):
-                    if incidents[index]['id'] == intervention_id:
-                        intervention = Incident(**data)
+                incident = incidentdb_api.get_incident_by_id(intervention_id)
+                if incident and incident['incident_id'] == intervention_id:
+                        intervention = Incident(incident['incident_id'], incident['createdon'], **incident)
                 if intervention:
                     message = {
                         "status": 200,
-                        "data": [{
-                            "id": intervention.id,
-                            "message": intervention.to_dict()
-                        }]
+                        "data": [intervention.to_dict()]
                     }
                 else:
                     message = {
                         'status': 200,
                         'data': [{
                             "id": intervention_id,
-                            "message": f"No record  with intervention_id: {intervention_id} was found"
+                            "message": f"No record  with ID:{intervention_id} was found"
                         }]
                     }
-            except KeyError as error:
-                error_message.update({"error-type": str(error)})
-                return jsonify(error_message), 400
-        return jsonify(message), 200
+            except Exception as error:
+                error_message = {
+                    'status': 400,
+                    'error': error
+                }
+                return jsonify(error_message), error_message['status']
+        return jsonify(message), message['status']

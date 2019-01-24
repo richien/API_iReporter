@@ -2,12 +2,14 @@ import random
 from datetime import date
 import data
 import re
+from api.models.database import userdb_api
 
 
 class User:
-    def __init__(self, user_id=None, **kwargs):
+    def __init__(self, user_id=None, registered=None, **kwargs):
 
-        self.id = user_id or random.randint(1000, 9000)
+        self.id = user_id 
+        self.registered = registered
         self.firstname = kwargs['firstname']
         self.lastname = kwargs['lastname']
         self.othernames = kwargs['othernames']
@@ -15,13 +17,12 @@ class User:
         self.phonenumber = kwargs['phonenumber']
         self.username = kwargs['username']
         self.password = kwargs['password']
-        self.registered = date.today()
         self.isAdmin = kwargs['isAdmin']
 
     def to_dict(self):
 
         user_dict = {
-            'id': self.id,
+            # 'id': self.id,
             'firstname': self.firstname,
             'lastname': self.lastname,
             'othernames': self.othernames,
@@ -29,7 +30,7 @@ class User:
             'phonenumber': self.phonenumber,
             'username': self.username,
             'password': self.password,
-            'registered': self.registered,
+            # 'registered': self.registered,
             'isAdmin': self.isAdmin
         }
         return user_dict
@@ -50,28 +51,27 @@ class User:
         return user_dict
 
     def create_user(self):
-
-        return data.do_create(self, self.to_dict())
+        result = userdb_api.create_user(**self.to_dict())
+        return result
 
     def check_user_exists(self):
-
-        username = data.check_username(self.username)
-        email = data.check_email(self.email)
-        if username and email:
-            message = {
-                "exists": True,
-                "error": "A user with that account already exists"
-            }
-        elif username:
-            message = {
-                "exists": True,
-                "error": "A user with that username already exists"
-            }
-        elif email:
-            message = {
-                "exists": True,
-                "error": "A user with that email address already exists"
-            }
+        result = userdb_api.check_username_or_email_exists(self.username, self.email)
+        if result:
+            if result[0]['username'] and result[0]['email']:
+                message = {
+                    "exists": True,
+                    "error": "A user with that account already exists"
+                }
+            elif result[0]['username']:
+                message = {
+                    "exists": True,
+                    "error": "A user with that username already exists"
+                }
+            elif result[0]['email']:
+                message = {
+                    "exists": True,
+                    "error": "A user with that email address already exists"
+                }
         else:
             message = {
                 "exists": False,

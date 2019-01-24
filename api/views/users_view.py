@@ -39,15 +39,7 @@ class UsersView(MethodView):
                     "data": ["There are no users registered"]
                 }
         else:
-
-            request_data = request.get_json()
             try:
-                if not "user_id" in request_data.keys() or request_data['user_id'] != user_id:
-                    error_message = {
-                        'status': 400,
-                        'error':  "Invalid request - invalid user_id supplied or key error in request body"
-                    }
-                    raise KeyError("Invalid request")
                 user = None
                 for usr in enumerate(users):
                     if usr[1]['id'] == user_id:
@@ -74,7 +66,10 @@ class UsersView(MethodView):
                 else:
                     message = {'status': 200, 'data': [
                         f'No user with ID: {user_id} was found']}
-            except KeyError as error:
-                error_message.update({"error-type": str(error)})
+            except Exception as error:
+                error_message = {
+                    'status': 400,
+                    'error': error
+                }
                 return jsonify(error_message), error_message['status']
-        return jsonify(message), 200
+        return jsonify(message), message['status']

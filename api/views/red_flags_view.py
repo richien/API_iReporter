@@ -1,10 +1,10 @@
-from flask import request, jsonify
+from flask import jsonify, request
 from flask.views import MethodView
-from api.models.incident_model import Incident
-import data
-from api.validator import Validate
 
-incidents_data = data.incidents_data
+from api.auth.authenticate import Authenticate
+from api.models.database import incidentdb_api
+from api.models.incident_model import Incident
+from api.validator import Validate
 
 
 class RedFlagsView(MethodView):
@@ -13,63 +13,67 @@ class RedFlagsView(MethodView):
 
         if not red_flag_id:
             red_flags = []
-            for data in incidents_data['data']:
+            incidents = incidentdb_api.get_all_redflag_incidents()
+            for data in incidents:
                 if data['type'].lower() == 'red-flag':
-                    red_flag = Incident(**data)
+                    red_flag = Incident(data['incident_id'], data['createdon'], **data)
                     red_flags.append(red_flag.to_dict())
+                    
             if not red_flags:
                 message = {'status': 200, 'data': ["No records found"]}
             else:
                 message = {'status': 200, 'data': red_flags}
         else:
-            request_data = request.get_json()
             try:
-                if "red_flag_id" not in request_data.keys() or request_data['red_flag_id'] != red_flag_id:
-                    error_message = {
-                        'status': 400,
-                        'error': "Invalid request - invalid red_flag_id supplied or key error in request body"
-                    }
-                    raise KeyError("Invalid request")
                 red_flag = None
-                for index, data in enumerate(incidents_data['data']):
-                    if incidents_data['data'][index]['id'] == red_flag_id:
-                        red_flag = Incident(**data)
+                incident = incidentdb_api.get_incident_by_id(red_flag_id)
+                if incident and incident['incident_id'] == red_flag_id:
+                        red_flag = Incident(incident['incident_id'], incident['createdon'], **incident)
                 if red_flag:
                     message = {
                         "status": 200,
-                        "data": red_flag.to_dict()
+                        "data": [red_flag.to_dict()]
                     }
                 else:
                     message = {
                         'status': 200,
                         'data': [{
                             "id": red_flag_id,
-                            "message": f"No record  with red_flag_id: {red_flag_id} was found"
+                            "message": f"No record  with ID:{red_flag_id} was found"
                         }]
                     }
-            except KeyError as error:
-                error_message.update({"error-type": str(error)})
-                return jsonify(error_message), 400
-        return jsonify(message), 200
+            except Exception as error:
+                error_message = {
+                    'status': 400,
+                    'error': error
+                }
+                return jsonify(error_message), error_message['status']
+        return jsonify(message), message['status']
 
     def post(self):
 
-        request_data = request.get_json()
         try:
-            validation_result = Validate.validate_incident_post_request(
-                request_data)
+            error_message = {'status': 500}
+            if request.json:
+                request_data = request.get_json()
+                validation_result = Validate.validate_incident_post_request(
+                    request_data)
+            else:
+                error_message = {
+                    'status': 400,
+                    'error': "Invalid request - request body cannot be empty"}
+                raise ValueError("Empty request body")
             if validation_result["is_valid"]:
                 if request_data['type'].lower() == 'red-flag':
                     red_flag = Incident(**request_data)
-                    incidents_data['data'].append(red_flag.to_dict())
-                    red_flag_id = red_flag.id
+                    red_flag_id = incidentdb_api.create_incident(**red_flag.to_dict())
                     message = {"status": 201,
-                               "data": [{
-                                   "id": red_flag_id,
-                                        "message": "Created red-flag record"
-                                        }]
-                               }
-                    return jsonify(message), 201
+                                "data": [{
+                                    "id": red_flag_id['incident_id'],
+                                            "message": "Created red-flag record"
+                                            }]
+                                }
+                    return jsonify(message), message['status']
                 else:
                     error_message = {'status': 400,
                                      'error': 'Type field should be red-flag'}
@@ -77,31 +81,35 @@ class RedFlagsView(MethodView):
             else:
                 error_message = validation_result['message']
                 raise Exception("Validation Error")
+        except ValueError as error:
+            error_message.update({"error-type": str(error)})
+            return jsonify(error_message), error_message['status']
         except Exception as error:
             error_message.update({"error-type": str(error)})
             return jsonify(error_message), error_message['status']
 
     def patch(self, red_flag_id):
 
-        request_data = request.get_json()
         try:
-            error_message = {}
-            if  request_data["red_flag_id"]:
-                if request_data['red_flag_id'] != red_flag_id:
-                    error_message = {
-                        'status': 400,
-                        'error': "Invalid request - red_flag_id in request body does not match id in url"
-                    }
-                    raise ValueError("Invalid request")
+            if not request.json:
+                error_message = {
+                    'status': 400,
+                    'error': "Invalid request - request body cannot be empty"
+                }
+                raise ValueError("Empty request body")
+
+            request_data = request.get_json()
             red_flag = None
-            for index, data in enumerate(incidents_data['data']):
-                if incidents_data['data'][index]['id'] == red_flag_id:
-                    red_flag = Incident(**data)
+            incident = incidentdb_api.get_incident_by_id(red_flag_id)
+            if incident and incident['incident_id'] == red_flag_id:
+                    red_flag = Incident(
+                        incident['incident_id'], 
+                        incident['createdon'], 
+                        **incident)                   
             if not red_flag:
                 error_message = {
                     "status": 404,
-                    "error":  "No record  with ID:{0} was found".format(red_flag_id)
-                }
+                    "error": "No record  with ID:{0} was found".format(red_flag_id)}
                 raise Exception("Resource Not Found")
             if 'location' in request_data.keys():
                 if Validate.is_valid_location(request_data['location']):
@@ -113,7 +121,7 @@ class RedFlagsView(MethodView):
                             "data": [{
                                 "id": red_flag_id,
                                 "message": "Updated red-flag record's location",
-                                "content": updated_data
+                                "content": red_flag.to_dict()
                             }]
                         }
                 else:
@@ -131,54 +139,43 @@ class RedFlagsView(MethodView):
                             "data": [{
                                 "id": red_flag_id,
                                 "message": "Updated red-flag record's comment",
-                                "content": updated_data
+                                "content": red_flag.to_dict()
                             }]
                         }
                 else:
                     message = {
                         "status": 400,
-                        "error":  "Failed to update red-flag record's comment"
+                        "error": "Failed to update red-flag record's comment"
                     }
             else:
                 message = {
                     "status": 404,
-                    "error":  "Resource not found -  Invalid field in request body"
-                }
+                    "error": "Resource not found -  Invalid field in request body"}
             return jsonify(message), message['status']
-        except KeyError as error:
-            error_message.update({"error-type": f'Key Error : {error}'})
-            return jsonify(error_message), 400
         except ValueError as error:
             error_message.update({"error-type": str(error)})
-            return jsonify(error_message), 400
+            return jsonify(error_message), error_message['status']
         except Exception as error:
             error_message.update({"error-type": str(error)})
-            return jsonify(error_message), 404
+            return jsonify(error_message), error_message['status']
 
     def delete(self, red_flag_id):
 
-        request_data = request.get_json()
         try:
-            if "red_flag_id"not in request_data.keys() or request_data['red_flag_id'] != red_flag_id:
-                error_message = {
-                    'status': 400,
-                    'error': "Invalid request - invalid red_flag_id supplied or key error in request body"
-                }
-                raise KeyError("Invalid request body")
-            is_deleted = False
-            found = False
-            for index, data in enumerate(incidents_data['data']):
-                if incidents_data['data'][index]['id'] == red_flag_id:
-                    red_flag = Incident(**data)
-                    is_deleted = red_flag.delete_incident()
-                    found = True
-            if not found:
+            red_flag = None
+            incident = incidentdb_api.get_incident_by_id(red_flag_id)
+            if incident:
+                red_flag = Incident(
+                        incident['incident_id'], 
+                        incident['createdon'], 
+                        **incident)
+            if not red_flag:
                 error_message = {
                     "status": 404,
-                    "error": "No record  with ID:{0} was found".format(red_flag_id)
-                }
+                    "error": "No record  with ID:{0} was found".format(red_flag_id)}
                 raise Exception("Record not found")
-            if is_deleted:
+            else:
+                red_flag.delete_incident();
                 message = {
                     "status": 200,
                     "data": [{
@@ -186,10 +183,7 @@ class RedFlagsView(MethodView):
                         "message": "Red-flag record deleted",
                     }]
                 }
-            return jsonify(message), 200
-        except KeyError as error:
-            error_message.update({"error-type": str(error)})
-            return jsonify(error_message), 400
+            return jsonify(message), message['status']
         except Exception as error:
             error_message.update({"error-type": str(error)})
-            return jsonify(error_message), 404
+            return jsonify(error_message), error_message['status']

@@ -31,6 +31,7 @@ werkzeug = "==0.14.1"
 wrapt = "==1.10.11"
 gunicorn = "*"
 flask-jwt = "*"
+psycopg2 = "*"
 
 [requires]
 python_version = "3.7"

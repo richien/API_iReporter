@@ -7,7 +7,7 @@ class Validate:
     def validate_incident_post_request(request):
 
         required_fields = [
-            "createdBy",
+            "createdby",
             "type",
             "location",
             "status",
@@ -29,8 +29,7 @@ class Validate:
         if not Validate.is_valid_incident_type(request):
             message = {
                 'status': 400,
-                'error':  "Invalid request body - invalid Incident type supplied"
-            }
+                'error': "Invalid request body - invalid Incident type supplied"}
             is_valid = False
         return {"is_valid": is_valid, "message": message}
 
@@ -65,8 +64,7 @@ class Validate:
             elif Validate.is_empty_string(request['{0}'.format(field)]):
                 message = {
                     'status': 400,
-                    'error': "Invalid request body -field '{0}' cannot be empty".format(field)
-                }
+                    'error': "Invalid request body -field '{0}' cannot be empty".format(field)}
                 is_valid = False
                 break
             elif field == "password" and not User.is_valid_password(request['password']):
@@ -107,7 +105,7 @@ class Validate:
         if "password" not in request.keys():
             message = {
                 'status': 400,
-                'error':  "Invalid request body - error in request body, missing required field 'password'"
+                'error': "Invalid request body - error in request body, missing required field 'password'"
             }
             is_valid = False
         return {"is_valid": is_valid, "message": message}
@@ -116,7 +114,8 @@ class Validate:
     def is_valid_location(location):
         latlong = location.split(',')
         if len(latlong) == 2:
-            # if float(latlong[0]) in range(-90, 90) and float(latlong[1]) in range(-180, 180):
+            # if float(latlong[0]) in range(-90, 90) and float(latlong[1]) in
+            # range(-180, 180):
             is_valid = True
         else:
             is_valid = False

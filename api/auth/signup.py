@@ -8,16 +8,23 @@ from api.auth.authenticate import Authenticate
 from api.models.user_model import User
 from api.validator import Validate
 
-users = data.incidents_data["users"]
 
 
 class Signup(MethodView):
 
     def post(self):
 
-        request_data = request.get_json()
         try:
-            validation_result = Validate.validate_signup_details(request_data)
+            if request.json:
+                request_data = request.get_json()
+                validation_result = Validate.validate_signup_details(
+                    request_data)
+            else:
+                error_message = {
+                    'status': 400,
+                    'error': "Invalid request - request body cannot be empty"
+                }
+                raise ValueError("Empty request body")
             if validation_result["is_valid"]:
                 valid_request = validation_result["request"]
                 user = User(**valid_request)
@@ -26,9 +33,11 @@ class Signup(MethodView):
                     password_hash = generate_password_hash(
                         user.password, method='sha256')
                     user.password = password_hash
-                    users.append(user.to_dict())
+                    user_id = user.create_user()
+                    user.id = user_id['user_id']
                     token = Authenticate.generate_access_token(
                         user.id, user.isAdmin)
+                    
                     message = {
                         "status": 201,
                         "data": [{
@@ -52,5 +61,6 @@ class Signup(MethodView):
             error_message.update({"error-type": str(error)})
             return jsonify(error_message), error_message['status']
         except Exception as error:
+            error_message = {"status": 400}
             error_message.update({"error-type": str(error)})
             return jsonify(error_message), error_message['status']
