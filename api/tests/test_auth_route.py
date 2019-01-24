@@ -28,21 +28,6 @@ class TestAuthenticationRoutes(unittest.TestCase):
         self.assertIn("registered successfully",
                       response_data["data"][0]["message"])
 
-    # def test_signup_with_empty_required_fields(self):
-    #     data = {
-    #         "firstname": "Henry",
-    #         "lastname": "Jones",
-    #         "othernames": "",
-    #         "email": "hjones@email.com",
-    #         "phonenumber": "0773287332",
-    #         "username": "hjones",
-    #         "password": "W3l(0M3_"
-    #     }
-    #     response = self.app_tester.post('/api/v1/auth/signup', json=data)
-    #     response_data = json.loads(response.data.decode())
-    #     self.assertEqual(response.status_code, 400)
-    #     self.assertIn("'firstname' cannot be empty", response_data["error"])
-
     def test_signup_with_existing_username(self):
 
         self.app_tester.post('/api/v1/auth/signup', json=self.input_data)

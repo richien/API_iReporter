@@ -1,13 +1,10 @@
-from flask import request, jsonify
+from flask import jsonify, request
 from flask.views import MethodView
-from api.models.incident_model import Incident
-import data
-from api.validator import Validate
-from api.models.database import incidentdb_api
+
 from api.auth.authenticate import Authenticate
 from api.models.database import incidentdb_api
-
-incidents = data.incidents_data['data']
+from api.models.incident_model import Incident
+from api.validator import Validate
 
 
 class RedFlagsView(MethodView):

@@ -2,7 +2,6 @@ import unittest
 import json
 from api import app
 from datetime import datetime
-from data import incidents_data
 from api.models.database import incidentdb_api
 
 
