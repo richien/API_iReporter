@@ -3,6 +3,17 @@ language: python
 python: 
 - "3.6.6"
 
+service:
+- postgresql
+
+before_install:
+- export APP_SETTINGS="config.TestingConfig"
+- export SECRET_KEY='totally_secret'
+
+before_script:
+- psql -c 'create database pgtestdb;' -U postgres
+- python -m api.models.database.schema
+
 install:
 - pip install -r requirements.txt
 script:
