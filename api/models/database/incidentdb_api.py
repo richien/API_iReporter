@@ -62,6 +62,28 @@ def get_all_redflag_incidents():
     finally:
         conn.down()
 
+def get_all_intervention_incidents():
+    """
+    Retrieve all intervention with most 
+    recent records first.
+    """
+    sql = """
+        SELECT *
+        FROM incidents
+        WHERE type = 'intervention'
+        ORDER BY createdOn DESC
+    """
+    try:
+        conn = Connect()
+        cur = conn.up()
+        cur.execute(sql)
+        rows = cur.fetchall()
+        return rows
+    except Exception as error:
+        return error
+    finally:
+        conn.down()
+
 def get_incident_by_id(incident_id):
     """
     Retrieve an incident by ID

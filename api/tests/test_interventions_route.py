@@ -86,40 +86,24 @@ class TestInterventions(unittest.TestCase):
         response = self.app_tester.post(
             '/api/v1/interventions', json=input_data)
         response_data = json.loads(response.data.decode())
-
-        print(f"RESPONSE: {response_data}")
         self.assertEqual(response.status_code, 400)
         self.assertIn("field should be intervention", response_data['error'])
 
-    # def test_get_interventions_with_data_present(self):
-    #     data = {
-    #         "comment": "I almost got runover by a car that was dodging potholes!",
-    #         "createdby": 5000,
-    #         "createdOn": "Sun, 13 Jan 2019 00:00:00 GMT",
-    #         "id": 73691,
-    #         "images": [
-    #             "image_1.png",
-    #             "image_2.jpg"],
-    #         "location": "33.92300, 44.9084551",
-    #         "status": "draft",
-    #         "title": "Roads in poor condition",
-    #         "type": "intervention",
-    #         "videos": ["vid_1.mp4"]}
-    #     incidents.append(data)
-    #     response = self.app_tester.get('/api/v1/interventions')
-    #     response_data = json.loads(response.data.decode())
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertEqual(200, response_data['status'])
-    #     self.assertIn(data, response_data['data'][:])
-
-    def test_get_interventions_with_data_absent(self):
-
-        incidents.clear()
+    def test_get_interventions_with_data_present(self):
+        
         response = self.app_tester.get('/api/v1/interventions')
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 200)
         self.assertEqual(200, response_data['status'])
-        self.assertIn("No records found", response_data['data'])
+
+    # def test_get_interventions_with_data_absent(self):
+
+
+    #     response = self.app_tester.get('/api/v1/interventions')
+    #     response_data = json.loads(response.data.decode())
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertEqual(200, response_data['status'])
+    #     self.assertIn("No records found", response_data['data'])
 
     # def test_get_intervention_by_id_with_valid_request_body(self):
 

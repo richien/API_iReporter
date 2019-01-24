@@ -1,6 +1,5 @@
 import random
 from datetime import date
-import data
 from api.models.database import incidentdb_api
 
 
@@ -33,9 +32,6 @@ class Incident:
             'title': self.title
         }
         return incident_dict
-
-    def create_incident(self):
-        return data.do_create(self, self.to_dict())
 
     def update_fields(self, location=None, comment=None):
 

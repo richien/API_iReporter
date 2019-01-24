@@ -53,12 +53,15 @@ class InterventionsView(MethodView):
 
 
     def get(self, intervention_id):
+
         if not intervention_id:
             interventions = []
+            incidents = incidentdb_api.get_all_intervention_incidents()
             for data in incidents:
                 if data['type'].lower() == 'intervention':
-                    intervention = Incident(**data)
+                    intervention = Incident(data['incident_id'], data['createdon'], **data)
                     interventions.append(intervention.to_dict())
+                    
             if not interventions:
                 message = {'status': 200, 'data': ["No records found"]}
             else:
@@ -66,28 +69,26 @@ class InterventionsView(MethodView):
         else:
             try:
                 intervention = None
-                for index, data in enumerate(incidents):
-                    if incidents[index]['id'] == intervention_id:
-                        intervention = Incident(**data)
+                incident = incidentdb_api.get_incident_by_id(intervention_id)
+                if incident and incident['incident_id'] == intervention_id:
+                        intervention = Incident(incident['incident_id'], incident['createdon'], **incident)
                 if intervention:
                     message = {
                         "status": 200,
-                        "data": [{
-                            "id": intervention.id,
-                            "message": intervention.to_dict()
-                        }]
+                        "data": [intervention.to_dict()]
                     }
                 else:
                     message = {
                         'status': 200,
                         'data': [{
                             "id": intervention_id,
-                            "message": f"No record  with ID: {intervention_id} was found"
+                            "message": f"No record  with ID:{intervention_id} was found"
                         }]
                     }
             except Exception as error:
                 error_message = {
                     'status': 400,
-                    'error': error}
+                    'error': error
+                }
                 return jsonify(error_message), error_message['status']
         return jsonify(message), message['status']
