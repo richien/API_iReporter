@@ -62,7 +62,7 @@ class TestRedFlagsRoute(unittest.TestCase):
         self.assertEqual(response.status_code, 201)
         self.assertIn("Created red-flag record",
                       response_data['data'][0]['message'])
-        self.assertIs(type(response_data['data'][0]['id']['incident_id']), int)
+        self.assertIs(type(response_data['data'][0]['id']), int)
 
     def test_create_red_flag_with_no_data(self):
 

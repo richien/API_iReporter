@@ -69,7 +69,7 @@ class RedFlagsView(MethodView):
                     red_flag_id = incidentdb_api.create_incident(**red_flag.to_dict())
                     message = {"status": 201,
                                 "data": [{
-                                    "id": red_flag_id,
+                                    "id": red_flag_id['incident_id'],
                                             "message": "Created red-flag record"
                                             }]
                                 }
