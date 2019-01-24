@@ -3,6 +3,7 @@ import json
 from api import app
 from data import incidents_data
 from api.models.database import incidentdb_api
+from api.models.database import userdb_api
 
 incidents = incidents_data['data']
 
@@ -11,8 +12,19 @@ class TestInterventions(unittest.TestCase):
 
     def setUp(self):
         self.app_tester = app.test_client()
+        self.user_data = {
+            "firstname": "Jane",
+            "lastname": "Jones",
+            "othernames": "",
+            "email": "jane@email.com",
+            "phonenumber": "0775778887",
+            "username": "jane",
+            "password": "my_password",
+            "isAdmin" : False
+        }
+        user_id = userdb_api.create_user(**self.user_data)
         self.input_data = {
-            "createdby": 498,
+            "createdby": user_id['user_id'],
             "type": "intervention",
             "location": "33.92300, 44.9084551",
             "status": "draft",
@@ -26,6 +38,7 @@ class TestInterventions(unittest.TestCase):
     def tearDown(self):
         incidentdb_api.delete_incidents_by_user(
             self.input_data['createdby'])
+        userdb_api.delete_user_by_email(self.user_data['email'])
 
 
     def test_create_intervention_with_valid_data(self):
@@ -54,7 +67,6 @@ class TestInterventions(unittest.TestCase):
             '/api/v1/interventions', json=input_data)
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 400)
-        #self.assertIn("invalid Incident type", response_data['error'])
 
     def test_create_intervention_with_missing_fields(self):
 
@@ -96,15 +108,7 @@ class TestInterventions(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(200, response_data['status'])
 
-    # def test_get_interventions_with_data_absent(self):
-
-
-    #     response = self.app_tester.get('/api/v1/interventions')
-    #     response_data = json.loads(response.data.decode())
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertEqual(200, response_data['status'])
-    #     self.assertIn("No records found", response_data['data'])
-
+  
     def test_get_intervention_by_id_with_valid_request_body(self):
 
         intervention_id = self.data['incident_id']

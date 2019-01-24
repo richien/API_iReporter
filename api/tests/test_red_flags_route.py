@@ -3,6 +3,7 @@ import json
 from api import app
 from datetime import datetime
 from api.models.database import incidentdb_api
+from api.models.database import userdb_api
 
 
 class TestRedFlagsRoute(unittest.TestCase):
@@ -13,6 +14,16 @@ class TestRedFlagsRoute(unittest.TestCase):
 
     def setUp(self):
         self.app_tester = app.test_client()
+        self.user_data = {
+            "firstname": "Henry",
+            "lastname": "Jones",
+            "othernames": "",
+            "email": "email@email.com",
+            "phonenumber": "0775778887",
+            "username": "henry",
+            "password": "my_password"
+        }
+        user_id = userdb_api.create_user(**self.user_data)
         self.input_data = {
             "createdby": 498,
             "type": "red-flag",
@@ -24,6 +35,7 @@ class TestRedFlagsRoute(unittest.TestCase):
             "title": "Roads in poor condition"
          }
         self.data = incidentdb_api.create_incident(**self.input_data)
+        userdb_api.delete_user_by_email(self.user_data['email'])
 
     def tearDown(self):
         incidentdb_api.delete_incidents_by_user(
