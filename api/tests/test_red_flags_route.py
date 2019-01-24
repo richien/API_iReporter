@@ -7,6 +7,10 @@ from api.models.database import incidentdb_api
 
 class TestRedFlagsRoute(unittest.TestCase):
 
+    def create_app(self):
+        app.config.from_object('config.TestingConfig')
+        return app
+
     def setUp(self):
         self.app_tester = app.test_client()
         self.input_data = {

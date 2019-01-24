@@ -1,6 +1,5 @@
 import random
 from datetime import date
-import data
 import re
 from api.models.database import userdb_api
 

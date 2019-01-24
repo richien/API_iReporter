@@ -3,7 +3,6 @@ from flask.views import MethodView
 from flask_jwt import JWT, current_identity, jwt_required
 from werkzeug.security import generate_password_hash
 
-import data
 from api.auth.authenticate import Authenticate
 from api.models.user_model import User
 from api.validator import Validate

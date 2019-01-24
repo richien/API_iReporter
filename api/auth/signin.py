@@ -2,7 +2,6 @@ from flask import jsonify, request
 from flask.views import MethodView
 from werkzeug.security import check_password_hash
 
-import data
 from api.models.user_model import User
 from api.auth.authenticate import Authenticate
 from api.validator import Validate

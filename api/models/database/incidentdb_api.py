@@ -104,27 +104,27 @@ def get_incident_by_id(incident_id):
     finally:
         conn.down()
 
-def get_all_intervention_incidents():
-    """
-    Retrieve all interventions with most 
-    recent records first.
-    """
-    sql = """
-        SELECT *
-        FROM incidents
-        WHERE type = 'intervention'
-        ORDER BY createdOn DESC
-    """
-    try:
-        conn = Connect()
-        cur = conn.up()
-        cur.execute(sql)
-        rows = cur.fetchall()
-        return rows
-    except Exception as error:
-        return error
-    finally:
-        conn.down()
+# def get_all_intervention_incidents():
+#     """
+#     Retrieve all interventions with most 
+#     recent records first.
+#     """
+#     sql = """
+#         SELECT *
+#         FROM incidents
+#         WHERE type = 'intervention'
+#         ORDER BY createdOn DESC
+#     """
+#     try:
+#         conn = Connect()
+#         cur = conn.up()
+#         cur.execute(sql)
+#         rows = cur.fetchall()
+#         return rows
+#     except Exception as error:
+#         return error
+#     finally:
+#         conn.down()
 
 def update_location(incident_id, location=None):
     """

@@ -5,12 +5,6 @@ from api.models.incident_model import Incident
 from api.models.database import incidentdb_api
 
 
-from data import incidents_data
-
-
-incidents = incidents_data['data']
-
-
 class InterventionsView(MethodView):
 
     def post(self):
