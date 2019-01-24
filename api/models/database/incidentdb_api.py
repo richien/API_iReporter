@@ -23,7 +23,7 @@ def create_incident(**incident):
         conn = Connect()
         cur = conn.up()
         cur.execute(sql, (
-            incident['createdBy'],
+            incident['createdby'],
             incident['type'],
             incident['location'],
             incident['status'],
@@ -150,12 +150,48 @@ def update_comment(incident_id, comment=None):
 
 def delete_user_by_type_and_user_id(type, user_id):
     """
-    Delete all users.
+    Delete a user by incident type and user ID.
     """
     sql_delete = f"""
         DELETE FROM users
         WHERE type = '{type}'
         AND user_id = {user_id}; 
+    """
+    try:
+        conn = Connect()
+        cur = conn.up()
+        cur.execute(sql_delete)
+        conn.commit()
+    except Exception as error:
+        return error
+    finally:
+        conn.down()
+    
+def delete_incident_by_id(incident_id):
+    """
+    Delete incident by id.
+    """
+    sql_delete = f"""
+        DELETE FROM incidents
+        WHERE incident_id = {incident_id}; 
+    """
+    try:
+        conn = Connect()
+        cur = conn.up()
+        cur.execute(sql_delete)
+        conn.commit()
+    except Exception as error:
+        return error
+    finally:
+        conn.down()
+
+def delete_incidents_by_user(user_id):
+    """
+    Delete all incidents by a user.
+    """
+    sql_delete = f"""
+        DELETE FROM incidents
+        WHERE createdby = {user_id}; 
     """
     try:
         conn = Connect()

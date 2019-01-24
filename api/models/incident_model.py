@@ -23,7 +23,7 @@ class Incident:
         incident_dict = {
             'id': self.id,
             'createdOn': self.createdOn,
-            'createdBy': self.createdBy,
+            'createdby': self.createdBy,
             'type': self.type,
             'location': self.location,
             'status': self.status,
@@ -51,7 +51,6 @@ class Incident:
             return updated_data
 
     def delete_incident(self):
-        deleted = data.do_delete(self.id)
+        deleted = incidentdb_api.delete_incident_by_id(self.id)
         if deleted:
-            del self
             return deleted

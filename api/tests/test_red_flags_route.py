@@ -20,11 +20,11 @@ class TestRedFlagsRoute(unittest.TestCase):
             "comment": "Accidental post!",
             "title": "Roads in poor condition"
          }
-        self.data = {"id": 36}
+        self.data = incidentdb_api.create_incident(**self.input_data)
 
     def tearDown(self):
-        incidentdb_api.delete_user_by_type_and_user_id(
-            self.input_data['type'], self.input_data['createdby'])
+        incidentdb_api.delete_incidents_by_user(
+            self.input_data['createdby'])
 
 
     def test_get_red_flags_with_data_present(self):
@@ -36,7 +36,7 @@ class TestRedFlagsRoute(unittest.TestCase):
 
     def test_get_red_flag_by_id(self):
         
-        red_flag_id = self.data['id']
+        red_flag_id = self.data['incident_id']
         response = self.app_tester.get(
             '/api/v1/red-flags/{0}'.format(red_flag_id))
         response_data = json.loads(response.data.decode())
@@ -97,7 +97,7 @@ class TestRedFlagsRoute(unittest.TestCase):
             "location": "00.0000, 00.0001"
         }
 
-        red_flag_id = self.data['id']
+        red_flag_id = self.data['incident_id']
         response = self.app_tester.patch(
             '/api/v1/red-flags/{0}/location'.format(red_flag_id),
             json=input_data)
@@ -114,7 +114,7 @@ class TestRedFlagsRoute(unittest.TestCase):
             "location": "11.12345"
         }
 
-        red_flag_id = self.data['id']
+        red_flag_id = self.data['incident_id']
         response = self.app_tester.patch(
             '/api/v1/red-flags/{0}/location'.format(red_flag_id),
             json=input_data)
@@ -129,7 +129,7 @@ class TestRedFlagsRoute(unittest.TestCase):
             "comment": "Comment updated"
         }
 
-        red_flag_id = self.data['id']
+        red_flag_id = self.data['incident_id']
         response = self.app_tester.patch(
             '/api/v1/red-flags/{0}/comment'.format(red_flag_id),
             json=input_data)
@@ -146,7 +146,7 @@ class TestRedFlagsRoute(unittest.TestCase):
             "coment": "Updated comment"
         }
 
-        red_flag_id = self.data['id']
+        red_flag_id = self.data['incident_id']
         response = self.app_tester.patch(
             '/api/v1/red-flags/{0}/comment'.format(red_flag_id),
             json=input_data)
@@ -156,7 +156,7 @@ class TestRedFlagsRoute(unittest.TestCase):
 
     def test_edit_red_flag_with_data_absent(self):
 
-        red_flag_id = self.data['id']
+        red_flag_id = self.data['incident_id']
         response = self.app_tester.patch(
             '/api/v1/red-flags/{0}/comment'.format(red_flag_id))
         response_data = json.loads(response.data.decode())
@@ -172,50 +172,34 @@ class TestRedFlagsRoute(unittest.TestCase):
             "comment": " "
         }
 
-        red_flag_id = self.data['id']
+        red_flag_id = self.data['incident_id']
         response = self.app_tester.patch(
             '/api/v1/red-flags/{0}/comment'.format(red_flag_id),
             json=input_data)
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 400)
-        self.assertIn("Failed to update red-flag record's comment",
-                      response_data['error'])
+        self.assertIn(
+            "Failed to update red-flag record's comment", 
+            response_data['error'])
 
-    # def test_delete_red_flag(self):
+    def test_delete_red_flag(self):
 
-    #     input_data = {
-    #         "createdby": 5000,
-    #         "type": "red-flag",
-    #         "location": "33.92300, 44.9084551",
-    #         "status": "draft",
-    #         "images": [
-    #             "image_1.png",
-    #             "image_2.jpg"],
-    #         "videos": ["vid_1.mp4"],
-    #         "comment": "I almost got runover by a car that was dodging potholes!",
-    #         "title": "Roads in poor condition"}
+        red_flag_id = self.data["incident_id"]
+        response = self.app_tester.delete(
+            '/api/v1/red-flags/{0}'.format(red_flag_id))
+        response_data = json.loads(response.data)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(red_flag_id, response_data['data'][0]['id'])
 
-    #     response = self.app_tester.post('/api/v1/red-flags', json=input_data)
-    #     response_data = json.loads(response.data.decode())
-    #     red_flag_id = response_data['data'][0]['id']
+    def test_delete_red_flag_with_data_absent(self):
 
-    #     input_data = {"red_flag_id": red_flag_id}
-
-    #     response = self.app_tester.delete(
-    #         '/api/v1/red-flags/{0}'.format(red_flag_id), json=input_data)
-    #     response_data = json.loads(response.data)
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertEqual(red_flag_id, response_data['data'][0]['id'])
-
-    # def test_delete_red_flag_with_data_absent(self):
-
-    #     red_flags.clear()
-    #     input_data = {"red_flag_id": 12}
-    #     red_flag_id = input_data['red_flag_id']
-    #     response = self.app_tester.delete(
-    #         '/api/v1/red-flags/{0}'.format(red_flag_id))
-    #     response_data = json.loads(response.data.decode())
-    #     self.assertEqual(response.status_code, 404)
-    #     self.assertEqual(404, response_data['status'])
-    #     self.assertEqual(f"No record  with ID:{red_flag_id} was found",
-    #                      response_data['error'])
+        input_data = {"red_flag_id": 0}
+        red_flag_id = input_data['red_flag_id']
+        response = self.app_tester.delete(
+            '/api/v1/red-flags/{0}'.format(red_flag_id))
+        response_data = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(404, response_data['status'])
+        self.assertEqual(
+            f"No record  with ID:{red_flag_id} was found", 
+            response_data['error'])

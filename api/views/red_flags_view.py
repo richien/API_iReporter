@@ -165,19 +165,20 @@ class RedFlagsView(MethodView):
     def delete(self, red_flag_id):
 
         try:
-            is_deleted = False
-            found = False
-            for index, data in enumerate(incidents):
-                if incidents[index]['id'] == red_flag_id:
-                    red_flag = Incident(**data)
-                    is_deleted = red_flag.delete_incident()
-                    found = True
-            if not found:
+            red_flag = None
+            incident = incidentdb_api.get_incident_by_id(red_flag_id)
+            if incident:
+                red_flag = Incident(
+                        incident['incident_id'], 
+                        incident['createdon'], 
+                        **incident)
+            if not red_flag:
                 error_message = {
                     "status": 404,
                     "error": "No record  with ID:{0} was found".format(red_flag_id)}
                 raise Exception("Record not found")
-            if is_deleted:
+            else:
+                red_flag.delete_incident();
                 message = {
                     "status": 200,
                     "data": [{
