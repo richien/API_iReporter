@@ -105,34 +105,17 @@ class TestInterventions(unittest.TestCase):
     #     self.assertEqual(200, response_data['status'])
     #     self.assertIn("No records found", response_data['data'])
 
-    # def test_get_intervention_by_id_with_valid_request_body(self):
+    def test_get_intervention_by_id_with_valid_request_body(self):
 
-    #     data = {
-    #         "comment": "I almost got runover by a car that was dodging potholes!",
-    #         "createdBy": 5000,
-    #         "createdOn": "Sun, 13 Jan 2019 00:00:00 GMT",
-    #         "id": 73691,
-    #         "images": [
-    #             "image_1.png",
-    #             "image_2.jpg"],
-    #         "location": "33.92300, 44.9084551",
-    #         "status": "draft",
-    #         "title": "Roads in poor condition",
-    #         "type": "intervention",
-    #         "videos": ["vid_1.mp4"]}
-    #     incidents.append(data)
-    #     input_data = {"intervention_id": 73691}
-    #     intervention_id = input_data['intervention_id']
-    #     response = self.app_tester.get(
-    #         f'/api/v1/interventions/{intervention_id}', json=input_data)
-    #     response_data = json.loads(response.data.decode())
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertEqual(200, response_data['status'])
-    #     self.assertEqual(data, response_data['data'][0]['message'])
+        intervention_id = self.data['incident_id']
+        response = self.app_tester.get(
+            f'/api/v1/interventions/{intervention_id}', json=self.input_data)
+        response_data = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(200, response_data['status'])
 
     def test_get_intervention_by_id_with_data_absent(self):
 
-        incidents.clear()
         data = {"id": 12}
         intervention_id = data['id']
         response = self.app_tester.get(
@@ -140,5 +123,5 @@ class TestInterventions(unittest.TestCase):
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 200)
         self.assertEqual(200, response_data['status'])
-        self.assertEqual("No record  with ID: 12 was found",
+        self.assertEqual("No record  with ID:12 was found",
                          response_data['data'][0]['message'])
