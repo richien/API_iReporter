@@ -48,7 +48,7 @@ From within the virtual environment, you can run the test code and view the test
 
 **Supported Routes**
 
-Read the API-DOCS.md file for information about supported routes
+Read the [API-DOCS](https://documenter.getpostman.com/view/6204022/RzthQAyD) file for information about supported routes
 
 ## Built With
 * Python 3.7.1
