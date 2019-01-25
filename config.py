@@ -1,8 +1,8 @@
 import os
 basedir = os.path.abspath(os.path.dirname(__file__))
-postgres_local_base = 'postgresql://irepo_dev:T3rr1613@localhost:5432/'
+postgres_local_base = 'postgresql://postgres:@localhost:/'
 dev_database_name = 'db_ireporter_api'
-test_database_name = 'pgtestdb'
+test_database_name = 'travis_ci_test'
 
 class BaseConfig:
     """Base configuration."""
