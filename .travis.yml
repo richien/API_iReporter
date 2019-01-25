@@ -23,14 +23,6 @@ script:
   
 after_success:
 - coveralls
-addons:
-  postgresql: "11"
-  apt:
-    packages:
-    - postgresql-11
-    - postgresql-client-11
-env:
-  global:
-  - PGPORT=5433
+
 
 
