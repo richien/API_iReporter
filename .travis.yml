@@ -8,7 +8,8 @@ service:
 
 before_install:
 - export APP_SETTINGS="config.TestingConfig"
-- export SECRET_KEY='totally_secret'
+- export SECRET_KEY="totally_secret"
+- export COVERALLS_REPO_TOKEN="d2bOCqb0r0iOclTNnvLtowjbThnO78LUZ"
 
 before_script:
 - psql -c 'create database pgtestdb;' -U postgres
