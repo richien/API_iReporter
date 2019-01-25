@@ -5,12 +5,6 @@ from api.models.incident_model import Incident
 from api.models.database import incidentdb_api
 
 
-from data import incidents_data
-
-
-incidents = incidents_data['data']
-
-
 class InterventionsView(MethodView):
 
     def post(self):
@@ -92,3 +86,74 @@ class InterventionsView(MethodView):
                 }
                 return jsonify(error_message), error_message['status']
         return jsonify(message), message['status']
+
+    def patch(self, intervention_id):
+
+        try:
+            if not request.json:
+                error_message = {
+                    'status': 400,
+                    'error': "Invalid request - request body cannot be empty"
+                }
+                raise ValueError("Empty request body")
+
+            request_data = request.get_json()
+            intervention = None
+            incident = incidentdb_api.get_incident_by_id(intervention_id)
+            if incident and incident['incident_id'] == intervention_id:
+                    intervention = Incident(
+                        incident['incident_id'], 
+                        incident['createdon'], 
+                        **incident)                   
+            if not intervention:
+                error_message = {
+                    "status": 404,
+                    "error": "No record  with ID:{0} was found".format(intervention_id)}
+                raise Exception("Resource Not Found")
+            if 'location' in request_data.keys():
+                if Validate.is_valid_location(request_data['location']):
+                    updated_data = intervention.update_fields(
+                        location=request_data['location'])
+                    if updated_data:
+                        message = {
+                            "status": 200,
+                            "data": [{
+                                "id": intervention_id,
+                                "message": "Updated intervention record's location",
+                                "content": intervention.to_dict()
+                            }]
+                        }
+                else:
+                    message = {
+                        "status": 400,
+                        "error": "Failed to update intervention record's location"
+                    }
+            elif 'comment' in request_data.keys():
+                if not Validate.is_empty_string(request_data['comment']):
+                    updated_data = intervention.update_fields(
+                        comment=request_data['comment'])
+                    if updated_data:
+                        message = {
+                            "status": 200,
+                            "data": [{
+                                "id": intervention_id,
+                                "message": "Updated intervention record's comment",
+                                "content": intervention.to_dict()
+                            }]
+                        }
+                else:
+                    message = {
+                        "status": 400,
+                        "error": "Failed to update intervention record's comment"
+                    }
+            else:
+                message = {
+                    "status": 404,
+                    "error": "Resource not found -  Invalid field in request body"}
+            return jsonify(message), message['status']
+        except ValueError as error:
+            error_message.update({"error-type": str(error)})
+            return jsonify(error_message), error_message['status']
+        except Exception as error:
+            error_message.update({"error-type": str(error)})
+            return jsonify(error_message), error_message['status']

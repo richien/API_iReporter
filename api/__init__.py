@@ -1,8 +1,14 @@
+import os
 from flask import Flask, jsonify 
+
 
 app = Flask(__name__)
 
-app.config['JWT_SECRET_KEY'] = "esi5xKgrycPdTE5f9d1"
+app_settings = os.getenv(
+	'APP_SETTINGS',
+	'config.DevelopmentConfig'
+)
+app.config.from_object(app_settings)
 
 from api.routes.urls import Routes
 

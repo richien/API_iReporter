@@ -3,14 +3,30 @@ import json
 from api import app
 from datetime import datetime
 from api.models.database import incidentdb_api
+from api.models.database import userdb_api
 
 
 class TestRedFlagsRoute(unittest.TestCase):
 
+    def create_app(self):
+        app.config.from_object('config.TestingConfig')
+        return app
+
     def setUp(self):
         self.app_tester = app.test_client()
+        self.user_data = {
+            "firstname": "Jane",
+            "lastname": "Jones",
+            "othernames": "",
+            "email": "jane@email.com",
+            "phonenumber": "0775778887",
+            "username": "jane",
+            "password": "my_password",
+            "isAdmin" : False
+        }
+        user_id = userdb_api.create_user(**self.user_data)
         self.input_data = {
-            "createdby": 498,
+            "createdby": user_id['user_id'],
             "type": "red-flag",
             "location": "33.92300, 44.9084551",
             "status": "draft",

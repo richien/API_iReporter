@@ -6,7 +6,7 @@ from flask_jwt import JWT, current_identity, jwt, jwt_required
 
 from api import app
 
-secret_key = app.config["JWT_SECRET_KEY"]
+secret_key = app.config["SECRET_KEY"]
 
 
 class Authenticate:

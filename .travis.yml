@@ -3,6 +3,19 @@ language: python
 python: 
 - "3.6.6"
 
+service:
+- postgresql
+
+before_install:
+- export APP_SETTINGS="config.TestingConfig"
+- export SECRET_KEY="totally_secret"
+- export COVERALLS_REPO_TOKEN="d2bOCqb0r0iOclTNnvLtowjbThnO78LUZ"
+- export DATABASE_URI='postgresql://postgres:@localhost:'
+
+before_script:
+  - psql -c 'create database travis_ci_test;' -U postgres
+  - python -m api.models.database.schema
+
 install:
 - pip install -r requirements.txt
 script:
@@ -10,5 +23,6 @@ script:
   
 after_success:
 - coveralls
+
 
 

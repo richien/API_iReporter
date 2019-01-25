@@ -1,13 +1,16 @@
-from config import config
+from urllib.parse import urlparse
 import psycopg2
 import psycopg2.extras
+from api import app
 
+uri = app.config['DATABASE_URI']
 
 class Connect():
 
     def __init__(self):
         self.cursor = None
         self.connect = None
+        self.dsn = None
 
     def up(self):
         """
@@ -15,7 +18,8 @@ class Connect():
         and return a Cursor object.
         """
         try:
-            params = config()
+            self.attributes
+            params = self.attributes()
             self.connect = psycopg2.connect(**params)
             self.cursor = self.connect.cursor(cursor_factory = psycopg2.extras.RealDictCursor)
             return self.cursor
@@ -33,3 +37,19 @@ class Connect():
     
     def commit(self):
         self.connect.commit()
+
+
+    def attributes(self):
+        result = urlparse(uri)
+        username = result.username
+        password = result.password
+        database = result.path[1:]
+        hostname = result.hostname
+        
+        dsn = {
+            'user': username,'password': password,
+            'dbname': database,'host': hostname
+        }
+        return dsn
+
+ 
