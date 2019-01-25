@@ -117,19 +117,6 @@ class TestInterventions(unittest.TestCase):
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 200)
         self.assertEqual(200, response_data['status'])
-
-    def test_get_intervention_by_id_with_data_absent(self):
-
-        data = {"id": 12}
-        intervention_id = data['id']
-        response = self.app_tester.get(
-            f'/api/v1/interventions/{intervention_id}')
-        response_data = json.loads(response.data.decode())
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(200, response_data['status'])
-        self.assertEqual(
-            "No record  with ID:12 was found", 
-            response_data['data'][0]['message'])
     
     def test_edit_intervention_location(self):
 
