@@ -19,7 +19,7 @@ class TestingConfig(BaseConfig):
     """Testing configuration."""
     DEBUG = True
     TESTING = True
-    DATABASE_URI = postgres_local_base +  test_database_name
+    HEROKU_DATABASE_URI = postgres_local_base +  test_database_name
 
 class ProductionConfig(BaseConfig):
     """Production configuration."""
