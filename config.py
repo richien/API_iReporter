@@ -1,6 +1,6 @@
 import os
 basedir = os.path.abspath(os.path.dirname(__file__))
-postgres_local_base = 'postgresql://irepo_dev:T3rr1613@localhost/'
+postgres_local_base = 'postgresql://postgres:@localhost/'
 dev_database_name = 'db_ireporter_api'
 test_database_name = 'pgtestdb'
 
