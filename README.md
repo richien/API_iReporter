@@ -4,7 +4,7 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/a6ce65585611a0f514e6/maintainability)](https://codeclimate.com/github/richien/API_iReporter/maintainability)
 
 The api endpoints for the iReporter application of the Andela bootcamp challenge 15. 
-It can be accessed on [Heroku](https://irepo-api.herokuapp.com/api/v1/interventions).
+It can be accessed on [Heroku](https://irepo-api.herokuapp.com/api/v1/).
 
 ## Getting Stated
 
