@@ -13,7 +13,7 @@ class BaseConfig:
 class DevelopmentConfig(BaseConfig):
     """Development configuration."""
     DEBUG = True
-    DATABASE_URI = postgres_local_base + dev_database_name
+    HEROKU_DATABASE_URI = heroku_base + dev_database_name
 
 class TestingConfig(BaseConfig):
     """Testing configuration."""
@@ -25,4 +25,4 @@ class ProductionConfig(BaseConfig):
     """Production configuration."""
     SECRET_KEY = 'really_secret'
     DEBUG = False
-    DATABASE_URI = 'postgresql:///example'
+    HEROKU_DATABASE_URI = 'postgresql:///example'
