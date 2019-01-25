@@ -10,7 +10,7 @@ before_install:
 - export APP_SETTINGS="config.TestingConfig"
 - export SECRET_KEY="totally_secret"
 - export COVERALLS_REPO_TOKEN="d2bOCqb0r0iOclTNnvLtowjbThnO78LUZ"
-- export DATABASE_URI='postgresql://postgres:@localhost:'
+- export HEROKU_DATABASE_URI='postgresql://postgres:@localhost:'
 
 before_script:
   - psql -c 'create database travis_ci_test;' -U postgres
