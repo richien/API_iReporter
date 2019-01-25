@@ -34,7 +34,6 @@ class TestAuthenticationRoutes(unittest.TestCase):
         response = self.app_tester.post('/api/v1/auth/signup', json=self.input_data)
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 400)
-        #self.assertIn("username already exists", response_data["error"])
 
     def test_signup_with_existing_email(self):
 
@@ -42,7 +41,6 @@ class TestAuthenticationRoutes(unittest.TestCase):
         response = self.app_tester.post('/api/v1/auth/signup', json=self.input_data)
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 400)
-        #self.assertIn("email address already exists", response_data["error"])
 
     def test_signup_with_existing_username_and_email(self):
         self.app_tester.post('/api/v1/auth/signup', json=self.input_data)
@@ -55,7 +53,6 @@ class TestAuthenticationRoutes(unittest.TestCase):
 
         response = self.app_tester.post('/api/v1/auth/signup', json=self.input_data)
         response_data = json.loads(response.data.decode())
-        print(f"RESPONSE DATA: {response_data}")
         token = response_data["data"][0]["access_token"]
 
         input_data = {
