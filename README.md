@@ -46,7 +46,7 @@ It can be accessed on [Heroku](https://irepo-api.herokuapp.com/api/v1/interventi
 
     Set up the environment variables in the termnal
 
-    ```export APP_SETTINGS="config.DevelopmentConfig"```
+
     ```export SECRETKEY="your-secret-key"```
     ```export COVERALLS_REPO_TOKEN="coveralls-repo-token"```
     ```export DATABASE_URI="<you postres uri>"```

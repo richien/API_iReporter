@@ -1,13 +1,16 @@
 import os
 from flask import Flask, jsonify 
+from dotenv import load_dotenv
 
 
 app = Flask(__name__)
 
-app_settings = os.getenv(
-	'APP_SETTINGS',
-	'config.DevelopmentConfig'
-)
+APP_ROOT = os.path.join(os.path.dirname(__file__), '..')
+dotenv_path = os.path.join(APP_ROOT, '.env')
+load_dotenv(dotenv_path)
+
+app_settings = os.getenv('APP_SETTINGS')
+
 app.config.from_object(app_settings)
 
 from api.routes.urls import Routes

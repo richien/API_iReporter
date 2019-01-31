@@ -3,6 +3,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 postgres_local_base = 'postgresql://postgres:@localhost:/'
 dev_database_name = 'db_ireporter_api'
 test_database_name = 'travis_ci_test'
+database_uri = os.getenv('DATABASE_URI')
 
 class BaseConfig:
     """Base configuration."""
@@ -12,7 +13,7 @@ class BaseConfig:
 class DevelopmentConfig(BaseConfig):
     """Development configuration."""
     DEBUG = True
-    DATABASE_URI = postgres_local_base + dev_database_name
+    DATABASE_URI = database_uri
 
 class TestingConfig(BaseConfig):
     """Testing configuration."""
