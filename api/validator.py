@@ -1,4 +1,6 @@
 from api.models.user_model import User
+from flask import g
+from api.auth.authenticate import Authenticate
 
 
 class Validate:
@@ -120,3 +122,25 @@ class Validate:
         else:
             is_valid = False
         return is_valid
+
+    @staticmethod
+    def validate_token(token):
+        """
+        Check whether a token is valid and create a global variable
+        with the user's ID and role.
+        Return boolean
+        """
+        valid = {'is_valid': True, 'error': None}
+        try:
+            if  not token['error']: 
+                identity = Authenticate.get_identity(token['token'])
+                if not identity['error']:
+                    g.user_id = identity['user_id']
+                    g.isAdmin = Authenticate.get_role(token['token'])['isAdmin']
+                else:
+                    raise Exception(identity['error'])
+            else:
+                raise Exception(token['error-type'])
+        except Exception as error:
+            valid = {'is_valid': False, 'status': 401, 'error': str(error)}
+        return valid

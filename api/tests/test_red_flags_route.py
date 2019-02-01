@@ -44,28 +44,65 @@ class TestRedFlagsRoute(unittest.TestCase):
 
     def test_get_red_flags_with_data_present(self):
 
-        response = self.app_tester.get('/api/v1/red-flags')
+        response = self.app_tester.post(
+            '/api/v1/auth/login',
+            json={
+            "username": "test1",
+            "password": "my_password"
+            })
+        response_data = json.loads(response.data.decode())
+        token = response_data['data'][0]['access_token']
+
+        response = self.app_tester.get(
+            '/api/v1/red-flags',
+            headers=dict(
+                Authorization = 'Bearer ' + f"{token}"))
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 200)
         self.assertEqual(200, response_data['status'])
 
     def test_get_red_flag_by_id(self):
-        
+
+        response = self.app_tester.post(
+            '/api/v1/auth/login',
+            json={
+            "username": "test1",
+            "password": "my_password"
+            })
+        response_data = json.loads(response.data.decode())
+        print(response_data)
+        token = response_data['data'][0]['access_token']
+
         red_flag_id = self.data['incident_id']
         response = self.app_tester.get(
-            '/api/v1/red-flags/{0}'.format(red_flag_id))
+            '/api/v1/red-flags/{0}'.format(red_flag_id),
+            headers=dict(
+                Authorization = 'Bearer ' + f"{token}"))
         response_data = json.loads(response.data.decode())
+
         self.assertEqual(response.status_code, 200)
         self.assertEqual(type(response_data['data'][0]['id']), int)
         self.assertEqual(red_flag_id, response_data['data'][0]['id'])
 
     def test_get_red_flag_by_id_with_data_absent(self):
 
+        response = self.app_tester.post(
+            '/api/v1/auth/login',
+            json={
+            "username": "test1",
+            "password": "my_password"
+            })
+        response_data = json.loads(response.data.decode())
+        token = response_data['data'][0]['access_token']
+
         input_data = {"red_flag_id": 12}
         red_flag_id = input_data['red_flag_id']
         response = self.app_tester.get(
-            f'/api/v1/red-flags/{red_flag_id}')
+            f'/api/v1/red-flags/{red_flag_id}',
+            headers=dict(
+                Authorization = 'Bearer ' + f"{token}"))
         response_data = json.loads(response.data.decode())
+
         self.assertEqual(response.status_code, 200)
         self.assertEqual(200, response_data['status'])
         self.assertEqual("No record  with ID:12 was found",
