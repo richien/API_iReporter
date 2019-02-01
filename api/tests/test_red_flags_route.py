@@ -70,7 +70,6 @@ class TestRedFlagsRoute(unittest.TestCase):
             "password": "my_password"
             })
         response_data = json.loads(response.data.decode())
-        print(response_data)
         token = response_data['data'][0]['access_token']
 
         red_flag_id = self.data['incident_id']
@@ -110,7 +109,20 @@ class TestRedFlagsRoute(unittest.TestCase):
 
     def test_create_red_flag_with_data(self):
 
-        response = self.app_tester.post('/api/v1/red-flags', json=self.input_data)
+        response = self.app_tester.post(
+            '/api/v1/auth/login',
+            json={
+            "username": "test1",
+            "password": "my_password"
+            })
+        response_data = json.loads(response.data.decode())
+        token = response_data['data'][0]['access_token']
+
+        response = self.app_tester.post(
+            '/api/v1/red-flags',
+            json=self.input_data,
+            headers=dict(
+                Authorization = 'Bearer ' + f"{token}"))
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 201)
         self.assertIn("Created red-flag record",
@@ -128,6 +140,15 @@ class TestRedFlagsRoute(unittest.TestCase):
 
     def test_create_red_flag_with_invalid_type_field(self):
 
+        response = self.app_tester.post(
+            '/api/v1/auth/login',
+            json={
+            "username": "test1",
+            "password": "my_password"
+            })
+        response_data = json.loads(response.data.decode())
+        token = response_data['data'][0]['access_token']
+
         input_data = {
             "createdby": 1000,
             "type": "intervention",
@@ -138,9 +159,12 @@ class TestRedFlagsRoute(unittest.TestCase):
             "comment": "Umeme employee asking for money to reconnect power.",
             "title": "No electricity after paying bill"
         }
-        response = self.app_tester.post('/api/v1/red-flags', json=input_data)
+        response = self.app_tester.post(
+            '/api/v1/red-flags',
+            json=input_data,
+            headers=dict(
+                Authorization = 'Bearer ' + f"{token}"))
         response_data = json.loads(response.data.decode())
-        print(response_data)
         self.assertEqual(response.status_code, 400)
         self.assertIn(
             "Unrecorgnised Incident type",

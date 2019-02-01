@@ -1,7 +1,7 @@
 import random
 from datetime import date
 from api.models.database import incidentdb_api
-from flask import jsonify
+from api.validator import Validate
 
 
 class Incident:
@@ -53,7 +53,7 @@ class Incident:
             return deleted
 
     @staticmethod
-    def createIncident(data, type):
+    def create_incident(data, type):
         try:
             if data['type'].lower() == 'red-flag' and type == 'red-flag':
                 red_flag = Incident(**data)
@@ -78,3 +78,67 @@ class Incident:
         except Exception as error:
             error_message.update({"error-type": str(error)})
             return error_message
+    
+    @staticmethod
+    def get_incident(incident_id):
+        incident_obj = None
+        try:
+            incident = incidentdb_api.get_incident_by_id(incident_id)
+            if incident and incident['incident_id'] == incident_id:
+                incident_obj = Incident(
+                    incident['incident_id'],
+                    incident['createdon'],
+                    **incident) 
+                return incident_obj               
+            if not incident_obj:
+                error_message = {
+                        "status": 404,
+                        "error": "No record  with ID:{0} was found".format(incident_id)}
+                raise Exception("Resource Not Found")
+        except Exception as error:
+            error_message.update({"error-type": str(error)})
+            return error_message
+
+    @staticmethod
+    def update_location(data, incident, type):
+        if Validate.is_valid_location(data['location']):
+            updated_data = incident.update_fields(
+                location=data['location'])
+            if updated_data:
+                message = {
+                    "status": 200,
+                    "data": [{
+                        "id": incident.id,
+                        "message": f"Updated {type} record's location",
+                        "content": incident.to_dict()
+                    }]}
+        else:
+            message = {
+                "status": 400,
+                "error": f"Failed to update {type} record's location"}
+        return message
+    
+    @staticmethod
+    def update_comment(data, incident, type):
+        if not Validate.is_empty_string(data['comment']):
+            updated_data = incident.update_fields(
+                comment=data['comment'])
+            if updated_data:
+                message = {
+                    "status": 200,
+                    "data": [{
+                        "id": incident.id,
+                        "message": f"Updated {type} record's comment",
+                        "content": incident.to_dict()
+                    }]}
+        else:
+            message = {
+                "status": 400,
+                "error": f"Failed to update {type} record's comment"}
+        return message
+    
+    
+            
+
+                        
+        

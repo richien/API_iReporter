@@ -161,3 +161,18 @@ class Validate:
         except ValueError as error:
             validation_result.update({"message": error_message, "error": str(error)})
         return validation_result
+
+    @staticmethod
+    def validate_request_body(request):
+        validation_result = {'is_valid': False, 'message': None}
+        try:
+            if request.json:
+                validation_result['is_valid'] = True
+            else:
+                error_message = {
+                    'status': 400,
+                    'error': "Invalid request - request body cannot be empty"}
+                raise ValueError("Empty request body")
+        except ValueError as error:
+            validation_result.update({"message": error_message, "error": str(error)})
+        return validation_result
