@@ -1,5 +1,6 @@
 import os
 from flask import Flask, jsonify 
+from flask_cors import CORS
 from dotenv import load_dotenv
 
 
@@ -12,6 +13,7 @@ load_dotenv(dotenv_path)
 app_settings = os.getenv('APP_SETTINGS')
 
 app.config.from_object(app_settings)
+CORS(app)
 
 from api.routes.urls import Routes
 

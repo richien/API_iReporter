@@ -25,4 +25,4 @@ class ProductionConfig(BaseConfig):
     """Production configuration."""
     SECRET_KEY = 'really_secret'
     DEBUG = False
-    DATABASE_URI = 'postgresql:///example'
+    DATABASE_URI = database_uri
