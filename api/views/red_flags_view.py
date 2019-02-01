@@ -75,38 +75,17 @@ class RedFlagsView(MethodView):
 
     def post(self):
 
+        token = Authenticate.retrieve_token_from_request(request)
+        error_message = {'status': 400}
         try:
-            error_message = {'status': 500}
-            if request.json:
-                request_data = request.get_json()
-                validation_result = Validate.validate_incident_post_request(
-                    request_data)
-            else:
-                error_message = {
-                    'status': 400,
-                    'error': "Invalid request - request body cannot be empty"}
-                raise ValueError("Empty request body")
+            validation_result = Validate.validate_request(request)
             if validation_result["is_valid"]:
-                if request_data['type'].lower() == 'red-flag':
-                    red_flag = Incident(**request_data)
-                    red_flag_id = incidentdb_api.create_incident(**red_flag.to_dict())
-                    message = {"status": 201,
-                                "data": [{
-                                    "id": red_flag_id['incident_id'],
-                                            "message": "Created red-flag record"
-                                            }]
-                                }
-                    return jsonify(message), message['status']
-                else:
-                    error_message = {'status': 400,
-                                     'error': 'Type field should be red-flag'}
-                    raise Exception('Invalid request field')
+                request_data = request.get_json()
+                message = Incident.createIncident(request_data, 'red-flag')
+                return jsonify(message), message['status']
             else:
                 error_message = validation_result['message']
                 raise Exception("Validation Error")
-        except ValueError as error:
-            error_message.update({"error-type": str(error)})
-            return jsonify(error_message), error_message['status']
         except Exception as error:
             error_message.update({"error-type": str(error)})
             return jsonify(error_message), error_message['status']

@@ -1,5 +1,5 @@
 from api.models.user_model import User
-from flask import g
+from flask import g, jsonify
 from api.auth.authenticate import Authenticate
 
 
@@ -144,3 +144,20 @@ class Validate:
         except Exception as error:
             valid = {'is_valid': False, 'status': 401, 'error': str(error)}
         return valid
+
+    @staticmethod
+    def validate_request(request):
+        validation_result = {'is_valid': False, 'message': None}
+        try:
+            if request.json:
+                request_data = request.get_json()
+                validation_result = Validate.validate_incident_post_request(
+                    request_data)
+            else:
+                error_message = {
+                    'status': 400,
+                    'error': "Invalid request - request body cannot be empty"}
+                raise ValueError("Empty request body")
+        except ValueError as error:
+            validation_result.update({"message": error_message, "error": str(error)})
+        return validation_result

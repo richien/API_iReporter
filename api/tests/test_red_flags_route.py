@@ -140,8 +140,11 @@ class TestRedFlagsRoute(unittest.TestCase):
         }
         response = self.app_tester.post('/api/v1/red-flags', json=input_data)
         response_data = json.loads(response.data.decode())
+        print(response_data)
         self.assertEqual(response.status_code, 400)
-        self.assertIn("field should be red-flag", response_data['error'])
+        self.assertIn(
+            "Unrecorgnised Incident type",
+            response_data['error'])
 
     def test_edit_red_flag_location(self):
 

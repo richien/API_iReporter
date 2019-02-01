@@ -1,6 +1,7 @@
 import random
 from datetime import date
 from api.models.database import incidentdb_api
+from flask import jsonify
 
 
 class Incident:
@@ -50,3 +51,30 @@ class Incident:
         deleted = incidentdb_api.delete_incident_by_id(self.id)
         if deleted:
             return deleted
+
+    @staticmethod
+    def createIncident(data, type):
+        try:
+            if data['type'].lower() == 'red-flag' and type == 'red-flag':
+                red_flag = Incident(**data)
+                red_flag_id = incidentdb_api.create_incident(**red_flag.to_dict())
+                message = {"status": 201,
+                            "data": [{
+                                "id": red_flag_id['incident_id'],
+                                "message": "Created red-flag record"}]}
+                return message
+            elif data['type'].lower() == 'intervention' and type == 'intervention':
+                intervention = Incident(**data)
+                intervention_id = incidentdb_api.create_incident(**intervention.to_dict())
+                message = {"status": 201,
+                            "data": [{
+                                "id": intervention_id['incident_id'],
+                                "message": "Created intervention record"}]}
+                return message
+            else:
+                error_message = {'status': 400,
+                                 'error': 'Unrecorgnised Incident type'}
+                raise Exception('Invalid request field')
+        except Exception as error:
+            error_message.update({"error-type": str(error)})
+            return error_message
