@@ -2,6 +2,7 @@ import random
 from datetime import date
 from api.models.database import incidentdb_api
 from api.validator import Validate
+from flask import g
 
 
 class Incident:
@@ -135,6 +136,25 @@ class Incident:
             message = {
                 "status": 400,
                 "error": f"Failed to update {type} record's comment"}
+        return message
+
+    @staticmethod
+    def update_incident(data, incident):
+        if g.user_id == incident.createdBy or g.isAdmin == True:
+            if 'location' in data.keys():
+                message = Incident.update_location(data, incident, 'red-flag')
+
+            elif 'comment' in data.keys():
+                message = Incident.update_comment(data, incident, 'red-flag')
+            else:
+                message = {
+                    "status": 404,
+                    "error": "Resource not found -  Invalid field in request body"}
+        else:
+            message = {
+                'status': 401,
+                'error': "Unauthorized: User not authorised to edit incident"
+                }
         return message
     
     

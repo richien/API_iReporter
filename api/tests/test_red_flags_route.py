@@ -172,14 +172,27 @@ class TestRedFlagsRoute(unittest.TestCase):
 
     def test_edit_red_flag_location(self):
 
+        response = self.app_tester.post(
+            '/api/v1/auth/login',
+            json={
+            "username": "test1",
+            "password": "my_password"
+            })
+        response_data = json.loads(response.data.decode())
+        token = response_data['data'][0]['access_token']
+        self.input_data['createdby'] = response_data['data'][0]['user']['id']
+        data = incidentdb_api.create_incident(**self.input_data)
+
         input_data = input_data = {
             "location": "00.0000, 00.0001"
         }
 
-        red_flag_id = self.data['incident_id']
+        red_flag_id = data['incident_id']
         response = self.app_tester.patch(
             '/api/v1/red-flags/{0}/location'.format(red_flag_id),
-            json=input_data)
+            json=input_data,
+            headers=dict(
+                Authorization = 'Bearer ' + f"{token}"))
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 200)
         self.assertIn("Updated red-flag record's location",
@@ -189,14 +202,27 @@ class TestRedFlagsRoute(unittest.TestCase):
     
     def test_edit_red_flag_location_with_invalid_location(self):
 
+        response = self.app_tester.post(
+            '/api/v1/auth/login',
+            json={
+            "username": "test1",
+            "password": "my_password"
+            })
+        response_data = json.loads(response.data.decode())
+        token = response_data['data'][0]['access_token']
+        self.input_data['createdby'] = response_data['data'][0]['user']['id']
+        data = incidentdb_api.create_incident(**self.input_data)
+
         input_data = input_data = {
             "location": "11.12345"
         }
 
-        red_flag_id = self.data['incident_id']
+        red_flag_id = data['incident_id']
         response = self.app_tester.patch(
             '/api/v1/red-flags/{0}/location'.format(red_flag_id),
-            json=input_data)
+            json=input_data,
+            headers=dict(
+                Authorization = 'Bearer ' + f"{token}"))
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 400)
         self.assertIn("Failed to update red-flag record's location",
@@ -204,14 +230,27 @@ class TestRedFlagsRoute(unittest.TestCase):
 
     def test_edit_red_flag_comment(self):
 
+        response = self.app_tester.post(
+            '/api/v1/auth/login',
+            json={
+            "username": "test1",
+            "password": "my_password"
+            })
+        response_data = json.loads(response.data.decode())
+        token = response_data['data'][0]['access_token']
+        self.input_data['createdby'] = response_data['data'][0]['user']['id']
+        data = incidentdb_api.create_incident(**self.input_data)
+
         input_data = input_data = {
             "comment": "Comment updated"
         }
 
-        red_flag_id = self.data['incident_id']
+        red_flag_id = data['incident_id']
         response = self.app_tester.patch(
             '/api/v1/red-flags/{0}/comment'.format(red_flag_id),
-            json=input_data)
+            json=input_data,
+            headers=dict(
+                Authorization = 'Bearer ' + f"{token}"))
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 200)
         self.assertIn("Updated red-flag record's comment",
@@ -221,14 +260,27 @@ class TestRedFlagsRoute(unittest.TestCase):
 
     def test_edit_red_flag_unknown_field_in_request_body(self):
 
+        response = self.app_tester.post(
+            '/api/v1/auth/login',
+            json={
+            "username": "test1",
+            "password": "my_password"
+            })
+        response_data = json.loads(response.data.decode())
+        token = response_data['data'][0]['access_token']
+        self.input_data['createdby'] = response_data['data'][0]['user']['id']
+        data = incidentdb_api.create_incident(**self.input_data)
+
         input_data = input_data = {
             "coment": "Updated comment"
         }
 
-        red_flag_id = self.data['incident_id']
+        red_flag_id = data['incident_id']
         response = self.app_tester.patch(
             '/api/v1/red-flags/{0}/comment'.format(red_flag_id),
-            json=input_data)
+            json=input_data,
+            headers=dict(
+                Authorization = 'Bearer ' + f"{token}"))
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 404)
         self.assertIn("Invalid field in request body", response_data['error'])
@@ -247,14 +299,27 @@ class TestRedFlagsRoute(unittest.TestCase):
 
     def test_edit_red_flag_comment_with_empty_string(self):
 
+        response = self.app_tester.post(
+            '/api/v1/auth/login',
+            json={
+            "username": "test1",
+            "password": "my_password"
+            })
+        response_data = json.loads(response.data.decode())
+        token = response_data['data'][0]['access_token']
+        self.input_data['createdby'] = response_data['data'][0]['user']['id']
+        data = incidentdb_api.create_incident(**self.input_data)
+
         input_data = input_data = {
             "comment": " "
         }
 
-        red_flag_id = self.data['incident_id']
+        red_flag_id = data['incident_id']
         response = self.app_tester.patch(
             '/api/v1/red-flags/{0}/comment'.format(red_flag_id),
-            json=input_data)
+            json=input_data,
+            headers=dict(
+                Authorization = 'Bearer ' + f"{token}"))
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 400)
         self.assertIn(
