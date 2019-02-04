@@ -150,8 +150,20 @@ class TestInterventions(unittest.TestCase):
         self.assertIn("Unrecorgnised Incident type", response_data['error'])
 
     def test_get_interventions_with_data_present(self):
+
+        response = self.app_tester.post(
+            '/api/v1/auth/login',
+            json={
+            "username": "jane",
+            "password": "entersaysme"
+            })
+        response_data = json.loads(response.data.decode())
+        token = response_data['data'][0]['access_token']
         
-        response = self.app_tester.get('/api/v1/interventions')
+        response = self.app_tester.get(
+            '/api/v1/interventions',
+            headers=dict(
+                Authorization = 'Bearer ' + f"{token}"))
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 200)
         self.assertEqual(200, response_data['status'])
@@ -159,9 +171,21 @@ class TestInterventions(unittest.TestCase):
   
     def test_get_intervention_by_id_with_valid_request_body(self):
 
+        response = self.app_tester.post(
+            '/api/v1/auth/login',
+            json={
+            "username": "jane",
+            "password": "entersaysme"
+            })
+        response_data = json.loads(response.data.decode())
+        token = response_data['data'][0]['access_token']
+
         intervention_id = self.data['incident_id']
         response = self.app_tester.get(
-            f'/api/v1/interventions/{intervention_id}', json=self.input_data)
+            f'/api/v1/interventions/{intervention_id}',
+            json=self.input_data,
+            headers=dict(
+                Authorization = 'Bearer ' + f"{token}"))
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 200)
         self.assertEqual(200, response_data['status'])

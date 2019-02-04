@@ -38,44 +38,42 @@ class InterventionsView(MethodView):
 
     def get(self, intervention_id):
 
+        token = Authenticate.retrieve_token_from_request(request)
+        
         if not intervention_id:
-            interventions = []
-            incidents = incidentdb_api.get_all_intervention_incidents()
-            for data in incidents:
-                if data['type'].lower() == 'intervention':
-                    intervention = Incident(data['incident_id'], data['createdon'], **data)
-                    interventions.append(intervention.to_dict())
-                    
-            if not interventions:
-                message = {'status': 200, 'data': ["No records found"]}
+            is_valid_token = Validate.validate_token(token)
+            if  is_valid_token['is_valid']:
+                red_flags = []
+                incidents = incidentdb_api.get_all_intervention_incidents()
+                for data in incidents:
+                    red_flag = Incident(data['incident_id'], data['createdon'], **data)
+                    red_flags.append(red_flag.to_dict())
+                            
+                if not red_flags:
+                    message = {'status': 404, 'data': ["No records found"]}
+                else:
+                    message = {'status': 200, 'data': red_flags}
+                return jsonify(message), message['status']
             else:
-                message = {'status': 200, 'data': interventions}
+                error_message = {
+                    'status': is_valid_token['status'],
+                    'error': is_valid_token['error']}
+            
         else:
             try:
-                intervention = None
-                incident = incidentdb_api.get_incident_by_id(intervention_id)
-                if incident and incident['incident_id'] == intervention_id:
-                        intervention = Incident(incident['incident_id'], incident['createdon'], **incident)
-                if intervention:
-                    message = {
-                        "status": 200,
-                        "data": [intervention.to_dict()]
-                    }
+                red_flag = Incident.get_incident(intervention_id)
+                is_valid_token = Validate.validate_token(token)
+                if  is_valid_token['is_valid'] and not red_flag['error']:
+                    message = {'status': 200, 'data': [red_flag['incident'].to_dict()]}
+                    return jsonify(message), message['status']
                 else:
-                    message = {
-                        'status': 200,
-                        'data': [{
-                            "id": intervention_id,
-                            "message": f"No record  with ID:{intervention_id} was found"
-                        }]
-                    }
+                    error_message = {
+                    'status': is_valid_token['status'] or red_flag['error']['status'],
+                    'error': is_valid_token['error'] or red_flag['error']['error']}
+                    raise Exception
             except Exception as error:
-                error_message = {
-                    'status': 400,
-                    'error': error
-                }
-                return jsonify(error_message), error_message['status']
-        return jsonify(message), message['status']
+                error_message.update({"error-type": str(error)})
+        return jsonify(error_message), error_message['status'] 
 
     def patch(self, intervention_id):
 
