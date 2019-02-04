@@ -24,54 +24,31 @@ class RedFlagsView(MethodView):
                     red_flags.append(red_flag.to_dict())
                             
                 if not red_flags:
-                    message = {'status': 200, 'data': ["No records found"]}
+                    message = {'status': 404, 'data': ["No records found"]}
                 else:
                     message = {'status': 200, 'data': red_flags}
+                return jsonify(message), message['status']
             else:
                 error_message = {
                     'status': is_valid_token['status'],
-                    'error': is_valid_token['error']
-                }
-                return jsonify(error_message), error_message['status']
+                    'error': is_valid_token['error']}
             
         else:
             try:
-                red_flag = None
+                red_flag = Incident.get_incident(red_flag_id)
                 is_valid_token = Validate.validate_token(token)
-                if  is_valid_token['is_valid']:
-                    incident = incidentdb_api.get_incident_by_id(red_flag_id)
-                    if incident and incident['incident_id'] == red_flag_id:
-                            red_flag = Incident(incident['incident_id'], incident['createdon'], **incident)
-                    if red_flag:
-                        message = {
-                            "status": 200,
-                            "data": [red_flag.to_dict()]
-                        }
-                    else:
-                        message = {
-                            'status': 200,
-                            'data': [{
-                                "id": red_flag_id,
-                                "message": f"No record  with ID:{red_flag_id} was found"
-                            }]
-                        }
+                if  is_valid_token['is_valid'] and not red_flag['error']:
+                    message = {'status': 200, 'data': [red_flag['incident'].to_dict()]}
+                    return jsonify(message), message['status']
                 else:
                     error_message = {
-                    'status': is_valid_token['status'],
-                    'error': is_valid_token['error']
-                    }
-                    raise jwt.InvalidTokenError('Unauthorized')
-            except jwt.InvalidTokenError as error:
-                error_message.update({'error-type': str(error)})
-                return jsonify(error_message), error_message['status']
+                    'status': is_valid_token['status'] or red_flag['error']['status'],
+                    'error': is_valid_token['error'] or red_flag['error']['error']}
+                    raise Exception
             except Exception as error:
-                error_message = {
-                    'status': 400,
-                    'error': error
-                }
-                return jsonify(error_message), error_message['status']
-        
-        return jsonify(message), message['status']
+                error_message.update({"error-type": str(error)})
+        return jsonify(error_message), error_message['status']       
+            
 
     def post(self):
 
@@ -88,8 +65,7 @@ class RedFlagsView(MethodView):
                 else:
                     error_message = {
                     'status': is_valid_token['status'],
-                    'error': is_valid_token['error']
-                    }
+                    'error': is_valid_token['error']}
                     raise jwt.InvalidTokenError('Unauthorized')
             else:
                 error_message = validation_result['message']
@@ -110,20 +86,17 @@ class RedFlagsView(MethodView):
                 request_data = request.get_json()
                 red_flag = Incident.get_incident(red_flag_id)
                 is_valid_token = Validate.validate_token(token)
-                if  is_valid_token['is_valid']:
-                    message = Incident.update_incident(request_data, red_flag)
+                if  is_valid_token['is_valid'] and not red_flag['error']:
+                    message = Incident.update_incident(request_data, red_flag['incident'])
                     return jsonify(message), message['status']
                 else:
                     error_message = {
-                    'status': is_valid_token['status'],
-                    'error': is_valid_token['error']
-                    }
-                    raise jwt.InvalidTokenError('Unauthorized')
+                    'status': is_valid_token['status'] or red_flag['error']['status'],
+                    'error': is_valid_token['error'] or red_flag['error']['error']}
+                    raise Exception
             else:
                 error_message = validation_result['message']
                 raise Exception("Validation Error")
-        except jwt.InvalidTokenError as error:
-            error_message.update({'error-type': str(error)})
         except ValueError as error:
             error_message.update({"error-type": str(error)})
         except Exception as error:
@@ -132,29 +105,24 @@ class RedFlagsView(MethodView):
 
     def delete(self, red_flag_id):
 
+        token = Authenticate.retrieve_token_from_request(request)
+        error_message = {'status': 400}
         try:
-            red_flag = None
-            incident = incidentdb_api.get_incident_by_id(red_flag_id)
-            if incident:
-                red_flag = Incident(
-                        incident['incident_id'], 
-                        incident['createdon'], 
-                        **incident)
-            if not red_flag:
-                error_message = {
-                    "status": 404,
-                    "error": "No record  with ID:{0} was found".format(red_flag_id)}
-                raise Exception("Record not found")
-            else:
-                red_flag.delete_incident()
+            red_flag = Incident.get_incident(red_flag_id)
+            is_valid_token = Validate.validate_token(token)
+            if  is_valid_token['is_valid'] and not red_flag['error']:
+                red_flag['incident'].delete_incident()
                 message = {
-                    "status": 200,
-                    "data": [{
-                        "id": red_flag_id,
-                        "message": "Red-flag record deleted",
-                    }]
-                }
-            return jsonify(message), message['status']
+                        "status": 200,
+                        "data": [{
+                            "id": red_flag_id,
+                            "message": "Red-flag record deleted"}]}
+                return jsonify(message), message['status']
+            else:
+                error_message = {
+                    'status': is_valid_token['status'] or red_flag['error']['status'],
+                    'error': is_valid_token['error'] or red_flag['error']['error']}
+                raise Exception
         except Exception as error:
             error_message.update({"error-type": str(error)})
-            return jsonify(error_message), error_message['status']
+        return jsonify(error_message), error_message['status']

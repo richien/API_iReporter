@@ -130,7 +130,7 @@ class Validate:
         with the user's ID and role.
         Return boolean
         """
-        valid = {'is_valid': True, 'error': None}
+        valid = {'is_valid': True, 'status': None, 'error': None}
         try:
             if  not token['error']: 
                 identity = Authenticate.get_identity(token['token'])

@@ -83,14 +83,14 @@ class Incident:
     @staticmethod
     def get_incident(incident_id):
         incident_obj = None
+        error_message = None
         try:
             incident = incidentdb_api.get_incident_by_id(incident_id)
             if incident and incident['incident_id'] == incident_id:
                 incident_obj = Incident(
                     incident['incident_id'],
                     incident['createdon'],
-                    **incident) 
-                return incident_obj               
+                    **incident)              
             if not incident_obj:
                 error_message = {
                         "status": 404,
@@ -98,7 +98,7 @@ class Incident:
                 raise Exception("Resource Not Found")
         except Exception as error:
             error_message.update({"error-type": str(error)})
-            return error_message
+        return {'incident': incident_obj, 'error': error_message}
 
     @staticmethod
     def update_location(data, incident, type):

@@ -104,28 +104,6 @@ def get_incident_by_id(incident_id):
     finally:
         conn.down()
 
-# def get_all_intervention_incidents():
-#     """
-#     Retrieve all interventions with most 
-#     recent records first.
-#     """
-#     sql = """
-#         SELECT *
-#         FROM incidents
-#         WHERE type = 'intervention'
-#         ORDER BY createdOn DESC
-#     """
-#     try:
-#         conn = Connect()
-#         cur = conn.up()
-#         cur.execute(sql)
-#         rows = cur.fetchall()
-#         return rows
-#     except Exception as error:
-#         return error
-#     finally:
-#         conn.down()
-
 def update_location(incident_id, location=None):
     """
     Update an incident's location.
@@ -214,6 +192,23 @@ def delete_incidents_by_user(user_id):
     sql_delete = f"""
         DELETE FROM incidents
         WHERE createdby = {user_id}; 
+    """
+    try:
+        conn = Connect()
+        cur = conn.up()
+        cur.execute(sql_delete)
+        conn.commit()
+    except Exception as error:
+        return error
+    finally:
+        conn.down()
+    
+def delete_all_incidents():
+    """
+    Delete all incidents.
+    """
+    sql_delete = f"""
+        DELETE FROM incidents; 
     """
     try:
         conn = Connect()
