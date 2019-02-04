@@ -19,7 +19,7 @@ class TestInterventions(unittest.TestCase):
             "email": "jane@email.com",
             "phonenumber": "0775778887",
             "username": "jane",
-            "password": "my_password",
+            "password": """sha256$M0lFuN76$f4f847832c559f5a38c317d334aeb110184dad95063dd28559bb40a4b69be0d6""",
             "isAdmin" : False
         }
         user_id = userdb_api.create_user(**self.user_data)
@@ -44,7 +44,19 @@ class TestInterventions(unittest.TestCase):
     def test_create_intervention_with_valid_data(self):
 
         response = self.app_tester.post(
-            '/api/v1/interventions', json=self.input_data)
+            '/api/v1/auth/login',
+            json={
+            "username": "jane",
+            "password": "entersaysme"
+            })
+        response_data = json.loads(response.data.decode())
+        token = response_data['data'][0]['access_token']
+
+        response = self.app_tester.post(
+            '/api/v1/interventions', 
+            json=self.input_data,
+            headers=dict(
+                Authorization = 'Bearer ' + f"{token}"))
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 201)
         self.assertIn("Created intervention",
@@ -52,6 +64,15 @@ class TestInterventions(unittest.TestCase):
         self.assertIs(type(response_data['data'][0]['id']), int)
 
     def test_create_intervention_with_invalid_incident_type(self):
+
+        response = self.app_tester.post(
+            '/api/v1/auth/login',
+            json={
+            "username": "jane",
+            "password": "entersaysme"
+            })
+        response_data = json.loads(response.data.decode())
+        token = response_data['data'][0]['access_token']
 
         input_data = {
             "createdby": 498,
@@ -64,11 +85,23 @@ class TestInterventions(unittest.TestCase):
             "title": "Roads in poor condition"
          }
         response = self.app_tester.post(
-            '/api/v1/interventions', json=input_data)
+            '/api/v1/interventions', 
+            json=input_data,
+            headers=dict(
+                Authorization = 'Bearer ' + f"{token}"))
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 400)
 
     def test_create_intervention_with_missing_fields(self):
+
+        response = self.app_tester.post(
+            '/api/v1/auth/login',
+            json={
+            "username": "jane",
+            "password": "entersaysme"
+            })
+        response_data = json.loads(response.data.decode())
+        token = response_data['data'][0]['access_token']
 
         input_data = {
             "createdBy": 1000,
@@ -78,12 +111,24 @@ class TestInterventions(unittest.TestCase):
             "title": "No electricity after paying bill"
         }
         response = self.app_tester.post(
-            '/api/v1/interventions', json=input_data)
+            '/api/v1/interventions', 
+            json=input_data,
+            headers=dict(
+                Authorization = 'Bearer ' + f"{token}"))
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 400)
         self.assertIn("Invalid request body ", response_data['error'])
 
     def test_create_intervention_with_invalid_type_field(self):
+
+        response = self.app_tester.post(
+            '/api/v1/auth/login',
+            json={
+            "username": "jane",
+            "password": "entersaysme"
+            })
+        response_data = json.loads(response.data.decode())
+        token = response_data['data'][0]['access_token']
 
         input_data = {
             "createdby": 1000,
@@ -96,10 +141,13 @@ class TestInterventions(unittest.TestCase):
             "title": "No electricity after paying bill"
         }
         response = self.app_tester.post(
-            '/api/v1/interventions', json=input_data)
+            '/api/v1/interventions', 
+            json=input_data,
+            headers=dict(
+                Authorization = 'Bearer ' + f"{token}"))
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 400)
-        self.assertIn("field should be intervention", response_data['error'])
+        self.assertIn("Unrecorgnised Incident type", response_data['error'])
 
     def test_get_interventions_with_data_present(self):
         
