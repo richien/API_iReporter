@@ -346,4 +346,50 @@ class TestInterventions(unittest.TestCase):
         self.assertIn(
             "Failed to update intervention record's comment", 
             response_data['error'])
+
+    def test_delete_intervention(self):
+
+        response = self.app_tester.post(
+            '/api/v1/auth/login',
+            json={
+            "username": "jane",
+            "password": "entersaysme"
+            })
+        response_data = json.loads(response.data.decode())
+        token = response_data['data'][0]['access_token']
+
+        intervention_id = self.data["incident_id"]
+        response = self.app_tester.delete(
+            '/api/v1/interventions/{0}'.format(intervention_id),
+            headers=dict(
+                Authorization = 'Bearer ' + f"{token}"))
+        response_data = json.loads(response.data)
+        print(response_data)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(intervention_id, response_data['data'][0]['id'])
+
+    def test_delete_intervention_with_data_absent(self):
+
+        response = self.app_tester.post(
+            '/api/v1/auth/login',
+            json={
+            "username": "jane",
+            "password": "entersaysme"
+            })
+        response_data = json.loads(response.data.decode())
+        token = response_data['data'][0]['access_token']
+
+        input_data = {"intervention_id": 0}
+        intervention_id = input_data['intervention_id']
+        response = self.app_tester.delete(
+            '/api/v1/interventions/{0}'.format(intervention_id),
+            headers=dict(
+                Authorization = 'Bearer ' + f"{token}"))
+        response_data = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(404, response_data['status'])
+        self.assertEqual(
+            f"No record  with ID:{intervention_id} was found", 
+            response_data['error'])
+
     

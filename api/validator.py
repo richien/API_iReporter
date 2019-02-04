@@ -116,8 +116,6 @@ class Validate:
     def is_valid_location(location):
         latlong = location.split(',')
         if len(latlong) == 2:
-            # if float(latlong[0]) in range(-90, 90) and float(latlong[1]) in
-            # range(-180, 180):
             is_valid = True
         else:
             is_valid = False

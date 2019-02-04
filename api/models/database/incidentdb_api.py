@@ -173,13 +173,15 @@ def delete_incident_by_id(incident_id):
     """
     sql_delete = f"""
         DELETE FROM incidents
-        WHERE incident_id = {incident_id}; 
+        WHERE incident_id = {incident_id}
+        RETURNING incident_id; 
     """
     try:
         conn = Connect()
         cur = conn.up()
         cur.execute(sql_delete)
         conn.commit()
+        return True
     except Exception as error:
         return error
     finally:

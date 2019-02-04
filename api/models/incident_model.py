@@ -49,9 +49,20 @@ class Incident:
             return updated_data
 
     def delete_incident(self):
-        deleted = incidentdb_api.delete_incident_by_id(self.id)
-        if deleted:
-            return deleted
+        if g.user_id == self.createdBy or g.isAdmin == True:
+            deleted = incidentdb_api.delete_incident_by_id(self.id)
+            if deleted:
+                message = {
+                    "status": 200,
+                    "data": [{
+                        "id": self.id,
+                        "message": f"{self.type} record deleted"}]}
+        else:
+            message = {
+                'status': 401,
+                'error': "Unauthorized: User not authorised to delete incident"
+                }
+        return message
 
     @staticmethod
     def create_incident(data, type):

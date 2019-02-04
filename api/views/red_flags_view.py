@@ -112,11 +112,7 @@ class RedFlagsView(MethodView):
             is_valid_token = Validate.validate_token(token)
             if  is_valid_token['is_valid'] and not red_flag['error']:
                 red_flag['incident'].delete_incident()
-                message = {
-                        "status": 200,
-                        "data": [{
-                            "id": red_flag_id,
-                            "message": "Red-flag record deleted"}]}
+                message = red_flag['incident'].delete_incident()
                 return jsonify(message), message['status']
             else:
                 error_message = {

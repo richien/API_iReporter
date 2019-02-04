@@ -345,7 +345,6 @@ class TestRedFlagsRoute(unittest.TestCase):
             headers=dict(
                 Authorization = 'Bearer ' + f"{token}"))
         response_data = json.loads(response.data)
-        print(f"RESPONSE DATA: {response_data}")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(red_flag_id, response_data['data'][0]['id'])
 
