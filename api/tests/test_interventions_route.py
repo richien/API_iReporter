@@ -192,6 +192,15 @@ class TestInterventions(unittest.TestCase):
     
     def test_edit_intervention_location(self):
 
+        response = self.app_tester.post(
+            '/api/v1/auth/login',
+            json={
+            "username": "jane",
+            "password": "entersaysme"
+            })
+        response_data = json.loads(response.data.decode())
+        token = response_data['data'][0]['access_token']
+
         input_data = input_data = {
             "location": "00.0000, 00.0001"
         }
@@ -199,7 +208,9 @@ class TestInterventions(unittest.TestCase):
         intervention_id = self.data['incident_id']
         response = self.app_tester.patch(
             '/api/v1/interventions/{0}/location'.format(intervention_id),
-            json=input_data)
+            json=input_data,
+            headers=dict(
+                Authorization = 'Bearer ' + f"{token}"))
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 200)
         self.assertIn("Updated intervention record's location",
@@ -209,6 +220,15 @@ class TestInterventions(unittest.TestCase):
     
     def test_edit_intervention_location_with_invalid_location(self):
 
+        response = self.app_tester.post(
+            '/api/v1/auth/login',
+            json={
+            "username": "jane",
+            "password": "entersaysme"
+            })
+        response_data = json.loads(response.data.decode())
+        token = response_data['data'][0]['access_token']
+
         input_data = input_data = {
             "location": "11.12345"
         }
@@ -216,13 +236,24 @@ class TestInterventions(unittest.TestCase):
         intervention_id = self.data['incident_id']
         response = self.app_tester.patch(
             '/api/v1/interventions/{0}/location'.format(intervention_id),
-            json=input_data)
+            json=input_data,
+            headers=dict(
+                Authorization = 'Bearer ' + f"{token}"))
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 400)
         self.assertIn("Failed to update intervention record's location",
                       response_data['error'])
 
     def test_edit_intervention_comment(self):
+
+        response = self.app_tester.post(
+            '/api/v1/auth/login',
+            json={
+            "username": "jane",
+            "password": "entersaysme"
+            })
+        response_data = json.loads(response.data.decode())
+        token = response_data['data'][0]['access_token']
 
         input_data = input_data = {
             "comment": "Comment updated"
@@ -231,7 +262,9 @@ class TestInterventions(unittest.TestCase):
         intervention_id = self.data['incident_id']
         response = self.app_tester.patch(
             '/api/v1/interventions/{0}/comment'.format(intervention_id),
-            json=input_data)
+            json=input_data,
+            headers=dict(
+                Authorization = 'Bearer ' + f"{token}"))
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 200)
         self.assertIn("Updated intervention record's comment",
@@ -241,6 +274,15 @@ class TestInterventions(unittest.TestCase):
 
     def test_edit_intervention_unknown_field_in_request_body(self):
 
+        response = self.app_tester.post(
+            '/api/v1/auth/login',
+            json={
+            "username": "jane",
+            "password": "entersaysme"
+            })
+        response_data = json.loads(response.data.decode())
+        token = response_data['data'][0]['access_token']
+
         input_data = input_data = {
             "coment": "Updated comment"
         }
@@ -248,16 +290,29 @@ class TestInterventions(unittest.TestCase):
         intervention_id = self.data['incident_id']
         response = self.app_tester.patch(
             '/api/v1/interventions/{0}/comment'.format(intervention_id),
-            json=input_data)
+            json=input_data,
+            headers=dict(
+                Authorization = 'Bearer ' + f"{token}"))
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 404)
         self.assertIn("Invalid field in request body", response_data['error'])
 
     def test_edit_intervention_with_data_absent(self):
 
+        response = self.app_tester.post(
+            '/api/v1/auth/login',
+            json={
+            "username": "jane",
+            "password": "entersaysme"
+            })
+        response_data = json.loads(response.data.decode())
+        token = response_data['data'][0]['access_token']
+
         intervention_id = self.data['incident_id']
         response = self.app_tester.patch(
-            '/api/v1/interventions/{0}/comment'.format(intervention_id))
+            '/api/v1/interventions/{0}/comment'.format(intervention_id),
+            headers=dict(
+                Authorization = 'Bearer ' + f"{token}"))
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 400)
         self.assertEqual(400, response_data['status'])
@@ -267,6 +322,15 @@ class TestInterventions(unittest.TestCase):
 
     def test_edit_intervention_comment_with_empty_string(self):
 
+        response = self.app_tester.post(
+            '/api/v1/auth/login',
+            json={
+            "username": "jane",
+            "password": "entersaysme"
+            })
+        response_data = json.loads(response.data.decode())
+        token = response_data['data'][0]['access_token']
+
         input_data = input_data = {
             "comment": " "
         }
@@ -274,7 +338,9 @@ class TestInterventions(unittest.TestCase):
         intervention_id = self.data['incident_id']
         response = self.app_tester.patch(
             '/api/v1/interventions/{0}/comment'.format(intervention_id),
-            json=input_data)
+            json=input_data,
+            headers=dict(
+                Authorization = 'Bearer ' + f"{token}"))
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 400)
         self.assertIn(

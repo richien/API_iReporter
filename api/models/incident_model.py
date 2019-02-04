@@ -139,13 +139,13 @@ class Incident:
         return message
 
     @staticmethod
-    def update_incident(data, incident):
+    def update_incident(data, incident, type):
         if g.user_id == incident.createdBy or g.isAdmin == True:
             if 'location' in data.keys():
-                message = Incident.update_location(data, incident, 'red-flag')
+                message = Incident.update_location(data, incident, type)
 
             elif 'comment' in data.keys():
-                message = Incident.update_comment(data, incident, 'red-flag')
+                message = Incident.update_comment(data, incident, type)
             else:
                 message = {
                     "status": 404,

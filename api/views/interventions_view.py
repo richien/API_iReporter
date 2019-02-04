@@ -43,16 +43,16 @@ class InterventionsView(MethodView):
         if not intervention_id:
             is_valid_token = Validate.validate_token(token)
             if  is_valid_token['is_valid']:
-                red_flags = []
+                interventions = []
                 incidents = incidentdb_api.get_all_intervention_incidents()
                 for data in incidents:
-                    red_flag = Incident(data['incident_id'], data['createdon'], **data)
-                    red_flags.append(red_flag.to_dict())
+                    intervention = Incident(data['incident_id'], data['createdon'], **data)
+                    interventions.append(intervention.to_dict())
                             
-                if not red_flags:
+                if not interventions:
                     message = {'status': 404, 'data': ["No records found"]}
                 else:
-                    message = {'status': 200, 'data': red_flags}
+                    message = {'status': 200, 'data': interventions}
                 return jsonify(message), message['status']
             else:
                 error_message = {
@@ -61,15 +61,15 @@ class InterventionsView(MethodView):
             
         else:
             try:
-                red_flag = Incident.get_incident(intervention_id)
+                intervention = Incident.get_incident(intervention_id)
                 is_valid_token = Validate.validate_token(token)
-                if  is_valid_token['is_valid'] and not red_flag['error']:
-                    message = {'status': 200, 'data': [red_flag['incident'].to_dict()]}
+                if  is_valid_token['is_valid'] and not intervention['error']:
+                    message = {'status': 200, 'data': [intervention['incident'].to_dict()]}
                     return jsonify(message), message['status']
                 else:
                     error_message = {
-                    'status': is_valid_token['status'] or red_flag['error']['status'],
-                    'error': is_valid_token['error'] or red_flag['error']['error']}
+                    'status': is_valid_token['status'] or intervention['error']['status'],
+                    'error': is_valid_token['error'] or intervention['error']['error']}
                     raise Exception
             except Exception as error:
                 error_message.update({"error-type": str(error)})
@@ -77,71 +77,27 @@ class InterventionsView(MethodView):
 
     def patch(self, intervention_id):
 
+        token = Authenticate.retrieve_token_from_request(request)
+        error_message = {'status': 400}
         try:
-            if not request.json:
-                error_message = {
-                    'status': 400,
-                    'error': "Invalid request - request body cannot be empty"
-                }
-                raise ValueError("Empty request body")
-
-            request_data = request.get_json()
-            intervention = None
-            incident = incidentdb_api.get_incident_by_id(intervention_id)
-            if incident and incident['incident_id'] == intervention_id:
-                    intervention = Incident(
-                        incident['incident_id'], 
-                        incident['createdon'], 
-                        **incident)                   
-            if not intervention:
-                error_message = {
-                    "status": 404,
-                    "error": "No record  with ID:{0} was found".format(intervention_id)}
-                raise Exception("Resource Not Found")
-            if 'location' in request_data.keys():
-                if Validate.is_valid_location(request_data['location']):
-                    updated_data = intervention.update_fields(
-                        location=request_data['location'])
-                    if updated_data:
-                        message = {
-                            "status": 200,
-                            "data": [{
-                                "id": intervention_id,
-                                "message": "Updated intervention record's location",
-                                "content": intervention.to_dict()
-                            }]
-                        }
+            validation_result = Validate.validate_request_body(request)
+            if validation_result["is_valid"]:
+                request_data = request.get_json()
+                intervention = Incident.get_incident(intervention_id)
+                is_valid_token = Validate.validate_token(token)
+                if  is_valid_token['is_valid'] and not intervention['error']:
+                    message = Incident.update_incident(request_data, intervention['incident'], 'intervention')
+                    return jsonify(message), message['status']
                 else:
-                    message = {
-                        "status": 400,
-                        "error": "Failed to update intervention record's location"
-                    }
-            elif 'comment' in request_data.keys():
-                if not Validate.is_empty_string(request_data['comment']):
-                    updated_data = intervention.update_fields(
-                        comment=request_data['comment'])
-                    if updated_data:
-                        message = {
-                            "status": 200,
-                            "data": [{
-                                "id": intervention_id,
-                                "message": "Updated intervention record's comment",
-                                "content": intervention.to_dict()
-                            }]
-                        }
-                else:
-                    message = {
-                        "status": 400,
-                        "error": "Failed to update intervention record's comment"
-                    }
+                    error_message = {
+                    'status': is_valid_token['status'] or intervention['error']['status'],
+                    'error': is_valid_token['error'] or intervention['error']['error']}
+                    raise Exception
             else:
-                message = {
-                    "status": 404,
-                    "error": "Resource not found -  Invalid field in request body"}
-            return jsonify(message), message['status']
+                error_message = validation_result['message']
+                raise Exception("Validation Error")
         except ValueError as error:
             error_message.update({"error-type": str(error)})
-            return jsonify(error_message), error_message['status']
         except Exception as error:
             error_message.update({"error-type": str(error)})
-            return jsonify(error_message), error_message['status']
+        return jsonify(error_message), error_message['status']
