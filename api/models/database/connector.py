@@ -3,7 +3,7 @@ import psycopg2
 import psycopg2.extras
 from api import app
 
-uri = app.config['HEROKU_DATABASE_URL']
+uri = app.config['DATABASE_URL']
 
 class Connect():
 
