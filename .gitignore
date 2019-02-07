@@ -4,4 +4,4 @@ pytest_cache*
 .coveragerc*
 .vscode*
 database.ini
-
+.env
