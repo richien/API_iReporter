@@ -94,7 +94,9 @@
             "version": "==1.0.2"
         },
         "flask-cors": {
-            "hashes":["sha256:7ad56ee3b90d4955148fc25a2ecaa1124fc84298471e266a7fea59aeac4405a5"],
+            "hashes":[
+                "7ad56ee3b90d4955148fc25a2ecaa1124fc84298471e266a7fea59aeac4405a5"
+            ],
             "index": "pypi",
             "version": "==3.0.7"
         },
