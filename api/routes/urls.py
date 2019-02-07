@@ -52,4 +52,6 @@ class Routes:
         app.add_url_rule('/api/v1/interventions/<int:intervention_id>/location',
                          view_func=interventions_view, methods=['PATCH'])
         app.add_url_rule('/api/v1/interventions/<int:intervention_id>/comment',
-                         view_func=interventions_view, methods=['PATCH'])
+                         view_func=interventions_view, methods=['PATCH']),
+        app.add_url_rule('/api/v1/interventions/<int:intervention_id>',
+                         view_func=interventions_view, methods=['DELETE'])

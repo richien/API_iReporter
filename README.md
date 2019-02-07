@@ -4,7 +4,7 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/a6ce65585611a0f514e6/maintainability)](https://codeclimate.com/github/richien/API_iReporter/maintainability)
 
 The api endpoints for the iReporter application of the Andela bootcamp challenge 15. 
-It can be accessed on [Heroku](https://irepo-api.herokuapp.com/api/v1/interventions).
+It can be accessed on [Heroku](https://irepo-api.herokuapp.com/api/v1/).
 
 ## Getting Stated
 
@@ -46,7 +46,7 @@ It can be accessed on [Heroku](https://irepo-api.herokuapp.com/api/v1/interventi
 
     Set up the environment variables in the termnal
 
-    ```export APP_SETTINGS="config.DevelopmentConfig"```
+
     ```export SECRETKEY="your-secret-key"```
     ```export COVERALLS_REPO_TOKEN="coveralls-repo-token"```
     ```export DATABASE_URI="<you postres uri>"```
@@ -72,7 +72,7 @@ From within the virtual environment, you can run the test code and view the test
 
 **Supported Routes**
 
-Read the API-DOCS.md file for information about supported routes
+Read the [API-DOCS](https://documenter.getpostman.com/view/6204022/RzthQAyD) file for information about supported routes
 
 ## Built With
 * Python 3.7.1

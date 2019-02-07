@@ -1,4 +1,6 @@
 from api.models.user_model import User
+from flask import g, jsonify
+from api.auth.authenticate import Authenticate
 
 
 class Validate:
@@ -114,9 +116,61 @@ class Validate:
     def is_valid_location(location):
         latlong = location.split(',')
         if len(latlong) == 2:
-            # if float(latlong[0]) in range(-90, 90) and float(latlong[1]) in
-            # range(-180, 180):
             is_valid = True
         else:
             is_valid = False
         return is_valid
+
+    @staticmethod
+    def validate_token(token):
+        """
+        Check whether a token is valid and create a global variable
+        with the user's ID and role.
+        Return boolean
+        """
+        valid = {'is_valid': True, 'status': None, 'error': None}
+        try:
+            if  not token['error']: 
+                identity = Authenticate.get_identity(token['token'])
+                if not identity['error']:
+                    g.user_id = identity['user_id']
+                    g.isAdmin = Authenticate.get_role(token['token'])['isAdmin']
+                else:
+                    raise Exception(identity['error'])
+            else:
+                raise Exception(token['error-type'])
+        except Exception as error:
+            valid = {'is_valid': False, 'status': 401, 'error': str(error)}
+        return valid
+
+    @staticmethod
+    def validate_request(request):
+        validation_result = {'is_valid': False, 'message': None}
+        try:
+            if request.json:
+                request_data = request.get_json()
+                validation_result = Validate.validate_incident_post_request(
+                    request_data)
+            else:
+                error_message = {
+                    'status': 400,
+                    'error': "Invalid request - request body cannot be empty"}
+                raise ValueError("Empty request body")
+        except ValueError as error:
+            validation_result.update({"message": error_message, "error": str(error)})
+        return validation_result
+
+    @staticmethod
+    def validate_request_body(request):
+        validation_result = {'is_valid': False, 'message': None}
+        try:
+            if request.json:
+                validation_result['is_valid'] = True
+            else:
+                error_message = {
+                    'status': 400,
+                    'error': "Invalid request - request body cannot be empty"}
+                raise ValueError("Empty request body")
+        except ValueError as error:
+            validation_result.update({"message": error_message, "error": str(error)})
+        return validation_result
