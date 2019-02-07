@@ -93,6 +93,11 @@
             "index": "pypi",
             "version": "==1.0.2"
         },
+        "flask-cors": {
+            "hashes":["sha256:7ad56ee3b90d4955148fc25a2ecaa1124fc84298471e266a7fea59aeac4405a5"],
+            "index": "pypi",
+            "version": "==3.0.7"
+        },
         "flask-jwt": {
             "hashes": [
                 "sha256:49c0672fbde0f1cd3374bd834918d28956e3c521c7e00089cdc5380d323bd0ad"
