@@ -33,6 +33,7 @@ wrapt = "==1.10.11"
 gunicorn = "*"
 flask-jwt = "*"
 psycopg2 = "*"
+python-dotenv = "==0.10.1"
 
 [requires]
 python_version = "3.7"
