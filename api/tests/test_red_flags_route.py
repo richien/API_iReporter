@@ -24,9 +24,9 @@ class TestRedFlagsRoute(unittest.TestCase):
             "password": """sha256$M0lFuN76$f4f847832c559f5a38c317d334aeb110184dad95063dd28559bb40a4b69be0d6""",
             "isAdmin" : False
         }
-        user_id = userdb_api.create_user(**self.user_data)
+        self.user_id = userdb_api.create_user(**self.user_data)
         self.input_data = {
-            "createdby": user_id['user_id'],
+            "createdby": self.user_id['user_id'],
             "type": "red-flag",
             "location": "33.92300, 44.9084551",
             "status": "draft",
@@ -371,3 +371,50 @@ class TestRedFlagsRoute(unittest.TestCase):
         self.assertEqual(
             f"No record  with ID:{red_flag_id} was found", 
             response_data['error'])
+
+    def test_get_red_flags_by_user(self):
+        response = self.app_tester.post(
+            '/api/v1/auth/login',
+            json={
+            "username": "jane",
+            "password": "entersaysme"
+            })
+        response_data = json.loads(response.data.decode())
+        token = response_data['data'][0]['access_token']
+
+        self.input_data['createdby'] = response_data['data'][0]['user']['id']
+        incidentdb_api.create_incident(**self.input_data)
+
+        user_id =  self.input_data['createdby']   
+        response = self.app_tester.get(
+            f'/api/v1/red-flags/{user_id}/users',
+            headers=dict(
+                Authorization = 'Bearer ' + f'{token}'
+            )
+        )
+        response_data = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 200)  
+    
+    def test_get_red_flags_by_user_with_no_data(self):
+        response = self.app_tester.post(
+            '/api/v1/auth/login',
+            json={
+            "username": "jane",
+            "password": "entersaysme"
+            })
+        response_data = json.loads(response.data.decode())
+        token = response_data['data'][0]['access_token']
+
+        self.input_data['createdby'] = response_data['data'][0]['user']['id']
+        incidentdb_api.delete_incidents_by_user(
+            self.input_data['createdby'])
+        
+        user_id =  self.input_data['createdby']   
+        response = self.app_tester.get(
+            f'/api/v1/red-flags/{user_id}/users',
+            headers=dict(
+                Authorization = 'Bearer ' + f'{token}'
+            )
+        )
+        response_data = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 404)  

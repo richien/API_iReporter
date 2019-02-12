@@ -393,3 +393,28 @@ class TestInterventions(unittest.TestCase):
             response_data['error'])
 
     
+    def test_get_interventions_by_user(self):
+        response = self.app_tester.post(
+            '/api/v1/auth/login',
+            json={
+            "username": "jane",
+            "password": "entersaysme"
+            })
+        response_data = json.loads(response.data.decode())
+        token = response_data['data'][0]['access_token']
+
+        self.input_data['createdby'] = response_data['data'][0]['user']['id']
+        data = incidentdb_api.create_incident(**self.input_data)
+        print(data, f"user {self.input_data['createdby']}")
+        print(response_data['data'][0]['user']['id'])
+ 
+        user_id =  self.input_data['createdby']   
+        response = self.app_tester.get(
+            f'/api/v1/interventions/{user_id}/users',
+            headers=dict(
+                Authorization = 'Bearer ' + f'{token}'
+            )
+        )
+        response_data = json.loads(response.data.decode())
+        print(response_data)
+        self.assertEqual(response.status_code, 200) 
