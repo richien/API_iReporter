@@ -38,11 +38,11 @@ class Incident:
     def update_fields(self, location=None, comment=None, status=None):
 
         updated_data = None
-        if location:
+        if location and self.status == 'draft':
             updated_data = incidentdb_api.update_location(self.id, location=location)
             if updated_data.get('incident_id'):
                 self.location = location
-        elif comment:
+        elif comment and self.status == 'draft':
             updated_data = incidentdb_api.update_comment(self.id, comment=comment)
             if updated_data['incident_id']:
                 self.comment = comment
@@ -117,6 +117,9 @@ class Incident:
 
     @staticmethod
     def update_location(data, incident, type):
+        message = {
+            'status': 400, 
+            'error': f"Invalid Operation: Cannot update status {incident.status}"}
         if Validate.is_valid_location(data['location']) and incident.type == type:
             updated_data = incident.update_fields(
                 location=data['location'])
@@ -136,6 +139,9 @@ class Incident:
     
     @staticmethod
     def update_comment(data, incident, type):
+        message = {
+            'status': 400, 
+            'error': f"Invalid Operation: Cannot update status {incident.status}"}
         if not Validate.is_empty_string(data['comment']) and incident.type == type:
             updated_data = incident.update_fields(
                 comment=data['comment'])
