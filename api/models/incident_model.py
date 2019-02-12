@@ -117,7 +117,7 @@ class Incident:
 
     @staticmethod
     def update_location(data, incident, type):
-        if Validate.is_valid_location(data['location']):
+        if Validate.is_valid_location(data['location']) and incident.type == type:
             updated_data = incident.update_fields(
                 location=data['location'])
             if updated_data:
@@ -136,7 +136,7 @@ class Incident:
     
     @staticmethod
     def update_comment(data, incident, type):
-        if not Validate.is_empty_string(data['comment']):
+        if not Validate.is_empty_string(data['comment']) and incident.type == type:
             updated_data = incident.update_fields(
                 comment=data['comment'])
             if updated_data:
@@ -158,7 +158,7 @@ class Incident:
         message = {
             'status': 400, 
             'error': f"Invalid Operation: Cannot update status {data['status']}"}
-        if Validate.is_valid_status(data['status']):
+        if Validate.is_valid_status(data['status']) and incident.type == type:
             updated_data = incident.update_fields(
                 status=data['status'])
             if updated_data:

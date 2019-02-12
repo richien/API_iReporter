@@ -4,7 +4,7 @@ from api.views.red_flags_view import RedFlagsView
 from api.views.users_view import UsersView
 from api.views.interventions_view import InterventionsView
 from api.views.user_incidents import UserRedFlagsView, UserInterventionsView
-from api.views.update_incidents import UpdateRedFlagsStatusView
+from api.views.update_incidents import UpdateRedFlagStatusView, UpdateInterventionStatusView
 
 
 class Routes:
@@ -18,7 +18,8 @@ class Routes:
         interventions_view = InterventionsView.as_view('intervention')
         user_red_flags_view = UserRedFlagsView.as_view('user_redflags')
         user_interventions_view = UserInterventionsView.as_view('user_interventions')
-        update_red_flags_status_view = UpdateRedFlagsStatusView.as_view('update_redflag_status')
+        update_red_flag_status_view = UpdateRedFlagStatusView.as_view('update_redflag_status')
+        update_intervention_status_view = UpdateInterventionStatusView.as_view('update_intervention_status')
 
         app.add_url_rule(
             '/api/v1/red-flags',
@@ -43,7 +44,7 @@ class Routes:
             methods=['PATCH'])
         app.add_url_rule(
             '/api/v1/red-flags/<int:incident_id>/status',
-            view_func=update_red_flags_status_view, 
+            view_func=update_red_flag_status_view, 
             methods=['PATCH'])
         app.add_url_rule(
             '/api/v1/red-flags/<int:red_flag_id>',
@@ -90,6 +91,10 @@ class Routes:
             '/api/v1/interventions/<int:intervention_id>/comment',
             view_func=interventions_view, 
             methods=['PATCH']),
+        app.add_url_rule(
+            '/api/v1/interventions/<int:incident_id>/status',
+            view_func=update_intervention_status_view, 
+            methods=['PATCH'])
         app.add_url_rule(
             '/api/v1/interventions/<int:intervention_id>',
             view_func=interventions_view, 

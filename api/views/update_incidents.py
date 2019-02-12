@@ -58,11 +58,11 @@ class UpdateInterventionsCommentView(BaseView):
     def __init__(self):
         super().__init__('intervention')
 
-class UpdateRedFlagsStatusView(BaseView):
+class UpdateRedFlagStatusView(BaseView):
     def __init__(self):
         super().__init__('red-flag')
             
-class UpdateInterventionsStatusView(BaseView):
+class UpdateInterventionStatusView(BaseView):
     def __init__(self):
         super().__init__('intervention')
 
