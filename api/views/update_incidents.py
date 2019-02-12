@@ -41,19 +41,19 @@ class BaseView(MethodView):
         return jsonify(error_message), error_message['status']
 
 
-class UpdateRedFlagsLocationView(BaseView):
+class UpdateRedFlagLocationView(BaseView):
     def __init__(self):
         super().__init__('red-flag')
             
-class UpdateInterventionsLocationView(BaseView):
+class UpdateInterventionLocationView(BaseView):
     def __init__(self):
         super().__init__('intervention')
 
-class UpdateRedFlagsCommentView(BaseView):
+class UpdateRedFlagCommentView(BaseView):
     def __init__(self):
         super().__init__('red-flag')            
 
-class UpdateInterventionsCommentView(BaseView):
+class UpdateInterventionCommentView(BaseView):
     def __init__(self):
         super().__init__('intervention')
 

@@ -53,7 +53,7 @@ class Incident:
         return updated_data
 
     def delete_incident(self):
-        if g.user_id == self.createdBy or g.isAdmin == True:
+        if g.user_id == self.createdBy and self.status == 'draft':
             deleted = incidentdb_api.delete_incident_by_id(self.id)
             if deleted:
                 message = {
