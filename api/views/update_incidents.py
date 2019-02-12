@@ -45,7 +45,6 @@ class UpdateRedFlagsLocationView(BaseView):
     def __init__(self):
         super().__init__('red-flag')
             
-
 class UpdateInterventionsLocationView(BaseView):
     def __init__(self):
         super().__init__('intervention')
