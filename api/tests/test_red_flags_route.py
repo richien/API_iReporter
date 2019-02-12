@@ -297,8 +297,8 @@ class TestRedFlagsRoute(unittest.TestCase):
             headers=dict(
                 Authorization = 'Bearer ' + f"{token}"))
         response_data = json.loads(response.data.decode())
-        self.assertEqual(response.status_code, 404)
-        self.assertIn("Invalid field in request body", response_data['error'])
+        self.assertEqual(response.status_code, 401)
+        self.assertIn("Unauthorized", response_data['error'])
 
     def test_edit_red_flag_with_data_absent(self):
 
@@ -432,7 +432,7 @@ class TestRedFlagsRoute(unittest.TestCase):
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 404)  
 
-    def test_edit_red_flag_status(self):
+    def test_update_red_flag_status(self):
 
         response = self.app_tester.post(
             '/api/v1/auth/login',
@@ -467,5 +467,5 @@ class TestRedFlagsRoute(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn("Updated red-flag record's status",
                       response_data['data'][0]['message'])
-        self.assertEqual("Status updated",
+        self.assertEqual("under-investigation",
                          response_data['data'][0]['content']['status'])

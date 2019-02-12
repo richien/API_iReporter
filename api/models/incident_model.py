@@ -35,18 +35,22 @@ class Incident:
         }
         return incident_dict
 
-    def update_fields(self, location=None, comment=None):
+    def update_fields(self, location=None, comment=None, status=None):
 
+        updated_data = None
         if location:
             updated_data = incidentdb_api.update_location(self.id, location=location)
             if updated_data.get('incident_id'):
                 self.location = location
-            return updated_data
         elif comment:
             updated_data = incidentdb_api.update_comment(self.id, comment=comment)
             if updated_data['incident_id']:
                 self.comment = comment
-            return updated_data
+        elif status and self.status == 'draft':
+            updated_data = incidentdb_api.update_status(self.id, status=status)
+            if updated_data['incident_id']:
+                self.status = status
+        return updated_data
 
     def delete_incident(self):
         if g.user_id == self.createdBy or g.isAdmin == True:
@@ -150,8 +154,30 @@ class Incident:
         return message
 
     @staticmethod
+    def update_status(data, incident, type):
+        message = {
+            'status': 400, 
+            'error': f"Invalid Operation: Cannot update status {data['status']}"}
+        if Validate.is_valid_status(data['status']):
+            updated_data = incident.update_fields(
+                status=data['status'])
+            if updated_data:
+                message = {
+                    "status": 200,
+                    "data": [{
+                        "id": incident.id,
+                        "message": f"Updated {type} record's status",
+                        "content": incident.to_dict()
+                    }]}
+        else:
+            message = {
+                "status": 400,
+                "error": f"Failed to update {type} record's status"}
+        return message
+
+    @staticmethod
     def update_incident(data, incident, type):
-        if g.user_id == incident.createdBy or g.isAdmin == True:
+        if g.user_id == incident.createdBy:
             if 'location' in data.keys():
                 message = Incident.update_location(data, incident, type)
 
@@ -159,8 +185,10 @@ class Incident:
                 message = Incident.update_comment(data, incident, type)
             else:
                 message = {
-                    "status": 404,
-                    "error": "Resource not found -  Invalid field in request body"}
+                    "status": 401,
+                    "error": "Unauthorized: User not authorised to edit incident"}
+        elif g.isAdmin  and 'status' in data.keys():
+            message = Incident.update_status(data, incident, type)
         else:
             message = {
                 'status': 401,

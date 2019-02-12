@@ -173,11 +173,11 @@ def update_comment(incident_id, comment=None):
 
 def update_status(incident_id, status=None):
     """
-    Update an incident's location.
+    Update an incident's status.
     """
     sql = f"""
         UPDATE incidents
-        SET location='{status}'
+        SET status='{status}'
         WHERE incident_id = {incident_id}
         RETURNING incident_id
     """    
