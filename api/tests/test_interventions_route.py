@@ -294,8 +294,8 @@ class TestInterventions(unittest.TestCase):
             headers=dict(
                 Authorization = 'Bearer ' + f"{token}"))
         response_data = json.loads(response.data.decode())
-        self.assertEqual(response.status_code, 404)
-        self.assertIn("Invalid field in request body", response_data['error'])
+        self.assertEqual(response.status_code, 401)
+        self.assertIn("Unauthorized", response_data['error'])
 
     def test_edit_intervention_with_data_absent(self):
 

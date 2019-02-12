@@ -171,6 +171,28 @@ def update_comment(incident_id, comment=None):
     finally:
         conn.down()
 
+def update_status(incident_id, status=None):
+    """
+    Update an incident's status.
+    """
+    sql = f"""
+        UPDATE incidents
+        SET status='{status}'
+        WHERE incident_id = {incident_id}
+        RETURNING incident_id
+    """    
+    try:
+        conn = Connect()
+        cur = conn.up()
+        cur.execute(sql)
+        row = cur.fetchone()
+        conn.commit()
+        return row
+    except Exception as error:
+        return error
+    finally:
+        conn.down()
+
 def delete_user_by_type_and_user_id(type, user_id):
     """
     Delete a user by incident type and user ID.

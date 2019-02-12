@@ -24,7 +24,18 @@ class TestRedFlagsRoute(unittest.TestCase):
             "password": """sha256$M0lFuN76$f4f847832c559f5a38c317d334aeb110184dad95063dd28559bb40a4b69be0d6""",
             "isAdmin" : False
         }
+        self.user_data_admin = {
+            "firstname": "Jane",
+            "lastname": "Jones",
+            "othernames": "",
+            "email": "adminJane@email.com",
+            "phonenumber": "0775778887",
+            "username": "adminJane",
+            "password": """sha256$M0lFuN76$f4f847832c559f5a38c317d334aeb110184dad95063dd28559bb40a4b69be0d6""",
+            "isAdmin" : True
+        }
         self.user_id = userdb_api.create_user(**self.user_data)
+        self.admin_id = userdb_api.create_user(**self.user_data_admin)
         self.input_data = {
             "createdby": self.user_id['user_id'],
             "type": "red-flag",
@@ -42,6 +53,8 @@ class TestRedFlagsRoute(unittest.TestCase):
             self.input_data['createdby'])
         userdb_api.delete_user_by_email(
             self.user_data['email'])
+        userdb_api.delete_user_by_email(
+            self.user_data_admin['email'])
 
 
     def test_get_red_flags_with_data_present(self):
@@ -284,8 +297,8 @@ class TestRedFlagsRoute(unittest.TestCase):
             headers=dict(
                 Authorization = 'Bearer ' + f"{token}"))
         response_data = json.loads(response.data.decode())
-        self.assertEqual(response.status_code, 404)
-        self.assertIn("Invalid field in request body", response_data['error'])
+        self.assertEqual(response.status_code, 401)
+        self.assertIn("Unauthorized", response_data['error'])
 
     def test_edit_red_flag_with_data_absent(self):
 
@@ -418,3 +431,41 @@ class TestRedFlagsRoute(unittest.TestCase):
         )
         response_data = json.loads(response.data.decode())
         self.assertEqual(response.status_code, 404)  
+
+    def test_update_red_flag_status(self):
+
+        response = self.app_tester.post(
+            '/api/v1/auth/login',
+            json={
+            "username": "jane",
+            "password": "entersaysme"
+            })
+        response_data = json.loads(response.data.decode())
+        self.input_data['createdby'] = response_data['data'][0]['user']['id']
+        data = incidentdb_api.create_incident(**self.input_data)
+
+        response = self.app_tester.post(
+            '/api/v1/auth/login',
+            json={
+            "username": "adminJane",
+            "password": "entersaysme"
+            })
+        response_data = json.loads(response.data.decode())
+        token = response_data['data'][0]['access_token']
+
+        input_data = input_data = {
+            "status": "under-investigation"
+        }
+
+        red_flag_id = data['incident_id']
+        response = self.app_tester.patch(
+            '/api/v1/red-flags/{0}/status'.format(red_flag_id),
+            json=input_data,
+            headers=dict(
+                Authorization = 'Bearer ' + f"{token}"))
+        response_data = json.loads(response.data.decode())
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Updated red-flag record's status",
+                      response_data['data'][0]['message'])
+        self.assertEqual("under-investigation",
+                         response_data['data'][0]['content']['status'])

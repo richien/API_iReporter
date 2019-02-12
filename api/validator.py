@@ -120,6 +120,19 @@ class Validate:
         else:
             is_valid = False
         return is_valid
+    
+    @staticmethod
+    def is_valid_status(status):
+        expected = [
+            'under-investigation',
+            'resolved',
+            'rejected'
+        ]
+        if status in expected:
+            is_valid = True
+        else:
+            is_valid = False
+        return is_valid
 
     @staticmethod
     def validate_token(token):
