@@ -113,6 +113,7 @@ def get_incidents_by_user(user_id, type):
         FROM incidents
         WHERE createdby = '{user_id}'
         AND type = '{type}'
+        ORDER BY createdOn DESC
     """
     try:
         conn = Connect()

@@ -406,7 +406,6 @@ class TestRedFlagsRoute(unittest.TestCase):
         token = response_data['data'][0]['access_token']
 
         self.input_data['createdby'] = response_data['data'][0]['user']['id']
-        # data = incidentdb_api.create_incident(**self.input_data)
         incidentdb_api.delete_incidents_by_user(
             self.input_data['createdby'])
         

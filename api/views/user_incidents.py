@@ -22,7 +22,7 @@ class BaseView(MethodView):
                 incident_list = []
                 incidents = incidentdb_api.get_incidents_by_user(user_id, self.type)
                 for data in incidents:
-                    incident = Incident(**data)
+                    incident = Incident(data['incident_id'], data['createdon'], **data)
                     incident_list.append(incident.to_dict())
                             
                 if not incident_list:
