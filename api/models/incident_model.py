@@ -46,7 +46,7 @@ class Incident:
             updated_data = incidentdb_api.update_comment(self.id, comment=comment)
             if updated_data['incident_id']:
                 self.comment = comment
-        elif status and self.status == 'draft':
+        elif status and self.status == 'draft' or self.status == 'under-investigation':
             updated_data = incidentdb_api.update_status(self.id, status=status)
             if updated_data['incident_id']:
                 self.status = status
