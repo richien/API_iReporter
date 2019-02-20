@@ -76,6 +76,51 @@ class User:
                 "exists": False,
             }
         return message
+    
+    @staticmethod
+    def get_users():
+        users_list = []
+        users = userdb_api.get_all_users()
+        for data in users:
+            kwargs = {
+                'user_id': data['user_id'],
+                'firstname': data['firstname'],
+                'lastname': data['lastname'],
+                'othernames': data['othernames'],
+                'email': data['email'],
+                'phonenumber': data['phonenumber'],
+                'username': data['username'],
+                'password': data['password'],
+                'registered': data['registered'],
+                'isAdmin': data['isadmin']
+            }
+            user = User(**kwargs)
+            users_list.append(user.to_dict_minimal())            
+        if not users_list:
+            message = {'status': 404, 'data': ["No records found"]}
+        else:
+            message = {'status': 200, 'data': users_list}
+        return message        
+
+    @staticmethod
+    def get_user(user_id):
+        user_obj = None
+        error_message = None
+        try:
+            user = userdb_api.get_user_by_id(user_id)
+            if user:
+                user_obj = User(
+                    user['id'],
+                    user['registered'],
+                    **user)              
+            if not user_obj:
+                error_message = {
+                        "status": 404,
+                        "error": "No record  with ID:{0} was found".format(user_id)}
+                raise Exception("Resource Not Found")
+        except Exception as error:
+            error_message.update({"error-type": str(error)})
+        return {'user': user_obj, 'error': error_message}
 
     @staticmethod
     def is_valid_password(pwd):

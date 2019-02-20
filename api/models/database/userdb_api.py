@@ -117,16 +117,7 @@ def get_all_users():
     
     """
     sql = """
-       SELECT (
-            user_id,
-            firstname,
-            lastname,
-            othernames,
-            email,
-            phonenumber,
-            username,
-            registered,
-            isAdmin) 
+       SELECT *
         FROM users
         ORDER BY registered DESC;
     """
@@ -141,6 +132,40 @@ def get_all_users():
         return error
     finally:
         conn.down()
+
+def get_user_by_id(user_id):
+    """
+    Retrieve a user given a user ID.
+    
+    """
+    sql = """
+       SELECT (
+            user_id,
+            firstname,
+            lastname,
+            othernames,
+            email,
+            phonenumber,
+            username,
+            registered,
+            isAdmin) 
+        FROM users
+        WHERE user_id = '{user_id}'
+        ORDER BY registered DESC;
+    """
+
+    try:
+        conn = Connect()
+        cur = conn.up()
+        cur.execute(sql)
+        row = cur.fetchone()
+        return row
+    except Exception as error:
+        return error
+    finally:
+        conn.down()
+
+
 
 def delete_user_by_email(email):
     """
