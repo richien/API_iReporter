@@ -143,6 +143,8 @@ class Validate:
         """
         valid = {'is_valid': True, 'status': None, 'error': None}
         try:
+            g.user_id = None
+            g.isAdmin = None
             if  not token['error']: 
                 identity = Authenticate.get_identity(token['token'])
                 if not identity['error']:

@@ -20,14 +20,14 @@ class UsersView(MethodView):
                 message = User.get_users();
                 return jsonify(message), message['status']
             else:
-                if not g.isAdmin:
-                    error_message = {
-                        'status': 401,
-                        'error': 'Unauthorized - Cannot access this route'}
-                else:
+                if is_valid_token['error']:
                     error_message = {
                         'status': is_valid_token['status'],
                         'error': is_valid_token['error']}
+                else:
+                    error_message = {
+                        'status': 401,
+                        'error': 'Unauthorized - Cannot access this route'}
         else:
             try:
                 user = User.get_user(user_id)
